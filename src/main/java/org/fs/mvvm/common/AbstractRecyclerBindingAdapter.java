@@ -34,6 +34,7 @@ import java.util.List;
 import java8.util.stream.Collectors;
 import java8.util.stream.IntStreams;
 import java8.util.stream.StreamSupport;
+import org.fs.mvvm.commands.Action;
 import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEvent;
 import org.fs.mvvm.utils.Preconditions;
@@ -50,15 +51,17 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
 
   private final ObservableList<D>             itemSource;
   private final WeakReference<Context>        contextReference;
-  private final BusManager<SelectedEvent<D>>  busManager;
+  private final BusManager                    busManager;
   private final List<Integer>                 selection;
   private final int                           selectionMode;
+
+  private Action<List<Integer>>               selectedCallback;
 
   private Subscription eventSubs;
 
   public AbstractRecyclerBindingAdapter(Context context, ObservableList<D> itemSource, int selectionMode) {
     this.itemSource = itemSource;
-    this.busManager = new BusManager<>();
+    this.busManager = new BusManager();
     this.selection = new ArrayList<>();
     Preconditions.checkConditionMeet(selectionMode >= SINGLE_SELECTION_MODE && selectionMode <= MULTIPLE_SELECTION_MODE,
         "invalid selection mode, select proper one.");
@@ -78,6 +81,14 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     itemSource.removeOnListChangedCallback(itemSourceObserver);
     busManager.unregister(eventSubs);
     eventSubs = null;
+  }
+
+  /**
+   * Callback to receive result of selection as integers
+   * @param selectedCallback selected callbacks
+   */
+  public final void setSelectedCallback(Action<List<Integer>> selectedCallback) {
+    this.selectedCallback = selectedCallback;
   }
 
   @Override public final void onViewDetachedFromWindow(V viewHolder) {
@@ -191,6 +202,10 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
       int innerPosition = selection.indexOf(position);
       selection.remove(innerPosition);
     }
+    //notify viewModel if we provide callback
+    if (selectedCallback != null) {
+      selectedCallback.execute(selection);
+    }
     notifyItemChanged(position);
   }
 
@@ -250,7 +265,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
    * @param viewType type of viewHolder we create according to viewType
    * @return ViewHolder instance for this adapter
    */
-  protected abstract V createDataViewHolder(ViewDataBinding binding, BusManager<SelectedEvent<D>> busManager, int viewType);
+  protected abstract V createDataViewHolder(ViewDataBinding binding, BusManager busManager, int viewType);
 
   /**
    * Returns layout resources for viewType

@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.common;
+package org.fs.mvvm.data;
 
-import android.databinding.ViewDataBinding;
-import org.fs.mvvm.data.SimpleListItem;
-import org.fs.mvvm.managers.BusManager;
-import org.fs.mvvm.managers.SelectedEvent;
+public final class Validation {
 
-public class SimpleRecyclerBindingHolder extends AbstractRecyclerBindingHolder<SimpleListItem> {
-  /**
-   * Public constructor that needs to take 2 args.
-   *
-   * @param binding viewDataBinding instance.
-   * @param busManager busManager instance.
-   */
-  public SimpleRecyclerBindingHolder(ViewDataBinding binding, BusManager<SelectedEvent<SimpleListItem>> busManager) {
-    super(binding, busManager);
+  private final boolean isSuccess;
+
+  public Validation(boolean isSuccess) {
+    this.isSuccess = isSuccess;
+  }
+
+  public boolean isSuccess() {
+    return this.isSuccess;
   }
 }

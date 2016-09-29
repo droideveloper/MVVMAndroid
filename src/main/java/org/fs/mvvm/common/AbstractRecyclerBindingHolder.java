@@ -28,7 +28,7 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
   /**
    * BusManager that will handle communication with adapter
    */
-  private final BusManager<SelectedEvent<D>> busManager;
+  private final BusManager busManager;
   /**
    * ViewDataBinding that will manipulate my data on view
    */
@@ -44,7 +44,7 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
    * @param binding viewDataBinding instance.
    * @param busManager busManager instance.
    */
-  public AbstractRecyclerBindingHolder(ViewDataBinding binding, BusManager<SelectedEvent<D>> busManager) {
+  public AbstractRecyclerBindingHolder(ViewDataBinding binding, BusManager busManager) {
     super(binding.getRoot());
     this.binding = binding;
     this.busManager = busManager;

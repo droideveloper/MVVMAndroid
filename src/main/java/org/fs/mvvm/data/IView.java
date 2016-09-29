@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
- * Copyright (C) 2016 Fatih.
+/*
+ * MVVM Copyright (C) 2016 Fatih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +12,13 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- -->
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+ */
+package org.fs.mvvm.data;
 
-  <data>
-    <variable name="item"
-              type="org.fs.mvvm.data.SimpleListItem" />
-  </data>
+public interface IView {
 
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="@{item.textString}"  />
+  /**
+   * TYPE_DEFINITION
+   */
 
-</layout>
+}

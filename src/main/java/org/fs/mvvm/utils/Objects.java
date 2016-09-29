@@ -46,4 +46,22 @@ public final class Objects {
     }
     return false;
   }
+
+  /**
+   * Casts object to parameter we looking for
+   * if it's not same type then we do nothing
+   *
+   * @param o object instance to cast
+   * @param <T> Type of cast
+   * @return T or null
+   */
+  @SuppressWarnings("unchecked")
+  public static <T> T toObject(Object o) {
+    if (o == null) return null;
+    try {
+      return (T) o;
+    } catch (ClassCastException ignored) {
+      return null;
+    }
+  }
 }
