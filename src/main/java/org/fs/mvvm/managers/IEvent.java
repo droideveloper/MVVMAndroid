@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
- * Copyright (C) 2016 Fatih.
+/*
+ * MVVM Copyright (C) 2016 Fatih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- -->
-<resources>
-  <item name="onPageChangeListener" type="id" />
-  <item name="item" type="id" />
-</resources>
+ */
+package org.fs.mvvm.managers;
+
+public interface IEvent { /* TYPE_DEFINED */ }

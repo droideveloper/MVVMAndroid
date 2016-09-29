@@ -17,11 +17,13 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
 import android.databinding.adapters.ListenerUtil;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import org.fs.mvvm.R;
 import org.fs.mvvm.listeners.OnPageScrollStateChanged;
 import org.fs.mvvm.listeners.OnPageScrolled;
 import org.fs.mvvm.listeners.OnPageSelected;
+import org.fs.mvvm.utils.Preconditions;
 
 public final class ViewPagerCompatBindingAdapter {
 
@@ -37,6 +39,15 @@ public final class ViewPagerCompatBindingAdapter {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
+  /**
+   * Registers OnPageScrolled, OnPageSelected or OnPageScrollStateChanged on ViewPager
+   * by single or multiple with any combination defined by user needs.
+   *
+   * @param viewPager viewPager to bind listeners.
+   * @param pageScrolled pageScrolled listener to bind viewPager.
+   * @param pageSelected pageSelected listener to bind viewPager.
+   * @param pageScrollStateChanged pageScrollStateChanged listener to bind viewPager
+   */
   @BindingAdapter(value = {
       ANDROID_PAGE_SCROLLED,
       ANDROID_PAGE_SELECTED,
@@ -78,6 +89,12 @@ public final class ViewPagerCompatBindingAdapter {
     }
   }
 
+  /**
+   * Registers an ViewPager.PageTransformer on ViewPager
+   *
+   * @param viewPager viewPager to bind pagerAnimation
+   * @param pageAnimator pagerAnimation to bind viewPager
+   */
   @BindingAdapter(
       ANDROID_PAGE_ANIMATOR
   )
@@ -87,5 +104,19 @@ public final class ViewPagerCompatBindingAdapter {
     } else {
       viewPager.setPageTransformer(false, pageAnimator);
     }
+  }
+
+  /**
+   * Registers an PagerAdapter instance with ViewPager
+   *
+   * @param viewPager viewPager to bind adapter
+   * @param adapter adapter to bind viewPager
+   */
+  @BindingAdapter(
+      ANDROID_ITEM_SOURCE
+  )
+  public static void registerPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
+    Preconditions.checkNotNull(adapter, "adapter is null");
+    viewPager.setAdapter(adapter);
   }
 }

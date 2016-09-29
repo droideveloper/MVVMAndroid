@@ -37,4 +37,16 @@ public final class Preconditions {
       throw new IllegalArgumentException(errorMessage);
     }
   }
+
+  /**
+   * Checks if any condition true or not if not true exception thrown with provided error string
+   *
+   * @param condition condition to check
+   * @param errorMessage error message to be shown
+   */
+  public static void checkConditionMeet(boolean condition, String errorMessage) {
+    if (!condition) {
+      throw new IllegalArgumentException(errorMessage);
+    }
+  }
 }
