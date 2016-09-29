@@ -55,7 +55,8 @@ public final class ImageViewCompatBindingAdapter {
     if (error != null) {
       loadRequest = loadRequest.error(error);
     }
-    loadRequest.into(viewImage);
+    loadRequest.crossFade()
+        .into(viewImage);
   }
 
   /**
@@ -75,7 +76,8 @@ public final class ImageViewCompatBindingAdapter {
     if (placeholder != null) {
       loadRequest = loadRequest.placeholder(placeholder);
     }
-    loadRequest.into(viewImage);
+    loadRequest.crossFade()
+        .into(viewImage);
   }
 
   /**
@@ -95,6 +97,7 @@ public final class ImageViewCompatBindingAdapter {
     if (error != null) {
       loadRequest = loadRequest.error(error);
     }
-    loadRequest.into(viewImage);
+    loadRequest.crossFade()
+        .into(viewImage);
   }
 }
