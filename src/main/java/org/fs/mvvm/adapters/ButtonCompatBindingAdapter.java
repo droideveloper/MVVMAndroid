@@ -19,14 +19,13 @@ import android.databinding.BindingAdapter;
 import android.widget.Button;
 import org.fs.mvvm.commands.ParameterizedRelayCommand;
 import org.fs.mvvm.commands.RelayCommand;
-import org.fs.mvvm.utils.Preconditions;
 
-public final class ButtonBindingAdapter {
+public final class ButtonCompatBindingAdapter {
 
   private final static String ANDROID_COMMAND = "android:command";
   private final static String ANDROID_COMMAND_PARAMETER = "android:commandParameter";
 
-  private ButtonBindingAdapter() {
+  private ButtonCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
@@ -40,8 +39,11 @@ public final class ButtonBindingAdapter {
       ANDROID_COMMAND
   )
   public static void registerCommand(Button buttonView, RelayCommand command) {
-    Preconditions.checkNotNull(command, "command is null");
-    buttonView.setOnClickListener(view -> command.execute(null));
+    if (command == null) {
+      buttonView.setOnClickListener(null);
+    } else {
+      buttonView.setOnClickListener(view -> command.execute(null));
+    }
   }
 
   /**
@@ -57,11 +59,14 @@ public final class ButtonBindingAdapter {
       ANDROID_COMMAND_PARAMETER
   })
   public static <T> void registerCommandAndParameter(Button buttonView, ParameterizedRelayCommand<T> command, T param) {
-    Preconditions.checkNotNull(command, "command is null");
-    buttonView.setOnClickListener(view -> {
-      if (command.canExecute(param)) {
-        command.execute(param);
-      }
-    });
+    if (command == null) {
+      buttonView.setOnClickListener(null);
+    } else {
+      buttonView.setOnClickListener(view -> {
+        if (command.canExecute(param)) {
+          command.execute(param);
+        }
+      });
+    }
   }
 }
