@@ -16,7 +16,9 @@
 package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
+import android.databinding.adapters.ListenerUtil;
 import android.view.View;
+import org.fs.mvvm.R;
 import org.fs.mvvm.commands.ParameterizedRelayCommand;
 import org.fs.mvvm.commands.RelayCommand;
 
@@ -59,14 +61,18 @@ public final class ViewCompatBindingAdapter {
       ANDROID_COMMAND_PARAMETER
   })
   public static <T> void registerCommandAndParameter(View view, ParameterizedRelayCommand<T> command, T param) {
+    final View.OnClickListener newListener;
     if (command == null) {
-      view.setOnClickListener(null);
+      newListener = null;
     } else {
-      view.setOnClickListener(v -> {
+      newListener = v -> {
         if (command.canExecute(param)) {
           command.execute(param);
         }
-      });
+      };
+      //register this
+      ListenerUtil.trackListener(view, newListener, R.id.onClickListener);
     }
+    view.setOnClickListener(newListener);
   }
 }

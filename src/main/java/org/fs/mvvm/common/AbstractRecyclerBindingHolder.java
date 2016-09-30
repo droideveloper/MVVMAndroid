@@ -17,8 +17,10 @@ package org.fs.mvvm.common;
 
 import android.databinding.BaseObservable;
 import android.databinding.ViewDataBinding;
+import android.databinding.adapters.ListenerUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import org.fs.mvvm.R;
 import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEvent;
 
@@ -37,6 +39,11 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
    * My data that needs to extend BaseObservable
    */
   private D item;
+
+  /**
+   * just to be sure we track it it might mostly null
+   */
+  private View.OnClickListener previousListener;
 
   /**
    * Public constructor that needs to take 2 args.
@@ -98,6 +105,7 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
    * tracks attach for adding listener to root view
    */
   public final void onAttach() {
+    previousListener = ListenerUtil.getListener(view(), R.id.onClickListener);
     view().setOnClickListener(this);
   }
 
@@ -105,6 +113,7 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
    * tracks detach for removing listener to root view
    */
   public final void onDetach() {
+    previousListener = null;
     view().setOnClickListener(null);
   }
 
@@ -114,5 +123,8 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
    */
   @Override public final void onClick(View v) {
     busManager.send(new SelectedEvent<>(item(), getAdapterPosition()));
+    if (previousListener != null) {
+      previousListener.onClick(v);
+    }
   }
 }

@@ -16,4 +16,5 @@
  -->
 <resources>
   <item name="onPageChangeListener" type="id" />
+  <item name="onClickListener" type="id" />
 </resources>
