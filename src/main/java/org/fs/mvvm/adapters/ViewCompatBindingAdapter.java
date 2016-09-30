@@ -16,40 +16,40 @@
 package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
-import android.widget.Button;
+import android.view.View;
 import org.fs.mvvm.commands.ParameterizedRelayCommand;
 import org.fs.mvvm.commands.RelayCommand;
 
-public final class ButtonCompatBindingAdapter {
+public final class ViewCompatBindingAdapter {
 
   private final static String ANDROID_COMMAND = "android:command";
   private final static String ANDROID_COMMAND_PARAMETER = "android:commandParameter";
 
-  private ButtonCompatBindingAdapter() {
+  private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
   /**
-   * Registers button with RelayCommand that has no parameters
+   * Registers view with RelayCommand that has no parameters
    *
-   * @param buttonView view to register for click
+   * @param view view to register for click
    * @param command command to execute
    */
   @BindingAdapter(
       ANDROID_COMMAND
   )
-  public static void registerCommand(Button buttonView, RelayCommand command) {
+  public static void registerCommand(View view, RelayCommand command) {
     if (command == null) {
-      buttonView.setOnClickListener(null);
+      view.setOnClickListener(null);
     } else {
-      buttonView.setOnClickListener(view -> command.execute(null));
+      view.setOnClickListener(v -> command.execute(null));
     }
   }
 
   /**
-   * Registers button with ParameterizedRelayCommand that has parameter type of T.
+   * Registers view with ParameterizedRelayCommand that has parameter type of T.
    *
-   * @param buttonView view to register for click
+   * @param view view to register for click
    * @param command command to execute
    * @param param command parameter
    * @param <T> type of parameter
@@ -58,11 +58,11 @@ public final class ButtonCompatBindingAdapter {
       ANDROID_COMMAND,
       ANDROID_COMMAND_PARAMETER
   })
-  public static <T> void registerCommandAndParameter(Button buttonView, ParameterizedRelayCommand<T> command, T param) {
+  public static <T> void registerCommandAndParameter(View view, ParameterizedRelayCommand<T> command, T param) {
     if (command == null) {
-      buttonView.setOnClickListener(null);
+      view.setOnClickListener(null);
     } else {
-      buttonView.setOnClickListener(view -> {
+      view.setOnClickListener(v -> {
         if (command.canExecute(param)) {
           command.execute(param);
         }

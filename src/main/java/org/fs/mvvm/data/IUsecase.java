@@ -20,11 +20,29 @@ import rx.Observable;
 
 public interface IUsecase<T> {
 
+  /**
+   * checks subscription is unsubscribed or not
+   *
+   * @return a boolean.
+   */
   boolean isUnsubscribed();
 
+  /**
+   * cancels if subscription is active.
+   */
   void unsubscribe();
 
+  /**
+   * Gets observer of usecase
+   *
+   * @return an observer type of T
+   */
   Observable<T> sync();
 
+  /**
+   * async execution of usecase
+   *
+   * @param callback callback that we get results
+   */
   void async(Callback<T> callback);
 }

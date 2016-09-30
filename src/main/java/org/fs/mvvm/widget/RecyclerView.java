@@ -35,10 +35,20 @@ public class RecyclerView extends android.support.v7.widget.RecyclerView {
     super(context, attrs, defStyle);
   }
 
+  /**
+   * Sets this in here since we do not have such property in recyclerView
+   *
+   * @param selectedPosition selectedPosition of recyclerView
+   */
   public void setSelectedPosition(int selectedPosition) {
     this.selectedPosition = selectedPosition;
   }
 
+  /**
+   * Gets selectedPosition
+   *
+   * @return an int.
+   */
   public int getSelectedPosition() {
     return this.selectedPosition;
   }
