@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.data;
+package org.fs.mvvm.listeners;
 
-import org.fs.mvvm.listeners.Callback;
-import rx.Observable;
+public interface Callback<T> {
 
-public interface IUsecase<T> {
+  /**
+   * execution result as T
+   * @param data result of execution
+   */
+  void onSuccess(T data);
 
-  boolean isUnsubscribed();
+  /**
+   * on error occured in execution
+   * @param error error if occured
+   */
+  void onError(Throwable error);
 
-  void unsubscribe();
-
-  Observable<T> sync();
-
-  void async(Callback<T> callback);
+  /**
+   * on execution completed
+   */
+  void onCompleted();
 }
