@@ -19,6 +19,7 @@ import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
+import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
 import android.databinding.InverseBindingMethod;
 import android.databinding.InverseBindingMethods;
@@ -45,9 +46,24 @@ public final class RecyclerViewCompatBindingAdapter {
   private final static String ANDROID_TOUCH_HELPER    = "android:touchHelper";
 
   public final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
+  private final static String ANDROID_SELECTED_POSITION_ATTR_CHANGED = "android:selectedPositionAttrChanged";
 
   private RecyclerViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  /**
+   * Gets value from here
+   *
+   * @param viewRecycler selection change
+   * @return int position
+   */
+  @InverseBindingAdapter(
+      event = ANDROID_SELECTED_POSITION_ATTR_CHANGED,
+      attribute = ANDROID_SELECTED_POSITION
+  )
+  public static int provideSelectedPosition(RecyclerView viewRecycler) {
+    return viewRecycler.getSelectedPosition();
   }
 
   /**
@@ -118,15 +134,19 @@ public final class RecyclerViewCompatBindingAdapter {
    * @param <V> V type of the ViewHolder of Adapter.
    */
   @BindingAdapter(
-    value = ANDROID_ITEM_SOURCE,
-  requireAll = false)
+    value = {
+        ANDROID_ITEM_SOURCE,
+        ANDROID_SELECTED_POSITION_ATTR_CHANGED
+    },
+    requireAll = false
+  )
   public static <T extends AbstractRecyclerBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>>
-    void registerAdapter(RecyclerView viewRecycler, T itemSource, InverseBindingListener attrChanged) {
+    void registerAdapter(RecyclerView viewRecycler, T itemSource, InverseBindingListener selectedPositionAttrChanged) {
       Preconditions.checkNotNull(itemSource, "itemSource is null");
       itemSource.addInverseCallback((position) -> {
         viewRecycler.setSelectedPosition(position);
-        if (attrChanged != null) {
-          attrChanged.onChange();
+        if (selectedPositionAttrChanged != null) {
+          selectedPositionAttrChanged.onChange();
         }
       });
       viewRecycler.setAdapter(itemSource);
