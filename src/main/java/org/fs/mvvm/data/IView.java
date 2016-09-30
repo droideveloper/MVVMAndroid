@@ -15,10 +15,50 @@
  */
 package org.fs.mvvm.data;
 
+import android.content.Context;
+import android.support.annotation.IdRes;
+import android.view.View;
+import android.widget.Button;
+
 public interface IView {
 
   /**
-   * TYPE_DEFINITION
+   * Shows user error on SnackBar instance with
+   * long duration
+   *
+   * @param errorString errorString to show
    */
+  void showError(String errorString);
 
+  /**
+   * Shows user error on SnackBar instance with
+   * long duration and button provided text also
+   * callback can be provided for it's click
+   *
+   * @param errorString errorString to show
+   * @param buttonViewText action to provide for user
+   * @param callback callback to receive action
+   */
+  void showError(String errorString, Button buttonViewText, View.OnClickListener callback);
+
+  /**
+   * Returns string value from R.string.xxx
+   *
+   * @param stringId string id to look for
+   * @return String value of id
+   */
+  String getStringResource(@IdRes int stringId);
+
+  /**
+   * Checks whether view is available or not
+   *
+   * @return true or false
+   */
+  boolean isAvailable();
+
+  /**
+   * Context from view
+   * @return context instance
+   */
+  Context getContext();
 }
