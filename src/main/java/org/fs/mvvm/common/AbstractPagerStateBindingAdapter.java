@@ -86,6 +86,33 @@ public abstract class AbstractPagerStateBindingAdapter<D extends BaseObservable>
   }
 
   /**
+   * Gets item at position for this adapter entity
+   *
+   * @param position position of entity
+   * @return D type of entity or null if position is invalid.
+   */
+  public final D getItemAt(int position) {
+    if (position >= 0 && position < getCount()) {
+      return itemSource.get(position);
+    }
+    return null;
+  }
+
+  /**
+   * Gets index of item on adapter
+   *
+   * @param item item to search
+   * @return index of found item or -1 if not found
+   */
+  public final int getIndexOf(D item) {
+    if (item == null) {
+      return  -1;
+    } else {
+      return itemSource.indexOf(item);
+    }
+  }
+
+  /**
    * Converted in similar side as if it's recyclerAdapter for easy use all
    *
    * @param item item of this adapter for position
@@ -147,19 +174,6 @@ public abstract class AbstractPagerStateBindingAdapter<D extends BaseObservable>
     PrintWriter ptrWriter = new PrintWriter(strWriter);
     error.printStackTrace(ptrWriter);
     log(Log.ERROR, strWriter.toString());
-  }
-
-  /**
-   * Gets item at position for this adapter entity
-   *
-   * @param position position of entity
-   * @return D type of entity or null if position is invalid.
-   */
-  private final D getItemAt(int position) {
-    if (position >= 0 && position < getCount()) {
-      return itemSource.get(position);
-    }
-    return null;
   }
 
   /**

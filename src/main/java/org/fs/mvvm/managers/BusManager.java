@@ -105,8 +105,8 @@ public final class BusManager {
 
   /**
    * Send clone
-   * @param event
-   * @param <E>
+   * @param event event to send be aware event must be implementation of IEvent
+   * @param <E> type of Event
    */
   public static <E extends IEvent> void Send(E event) {
     if (!Objects.isNullOrEmpty(IMPL)) {
@@ -116,9 +116,9 @@ public final class BusManager {
 
   /**
    * Register clone
-   * @param callback
-   * @param <E>
-   * @return
+   * @param callback action to register on success event
+   * @param <E> type of event
+   * @return subscription of this callback
    */
   public static <E extends IEvent> Subscription Register(Action1<E> callback) {
     if (!Objects.isNullOrEmpty(IMPL)) {
@@ -129,9 +129,9 @@ public final class BusManager {
 
   /**
    * Register clone
-   * @param callback
-   * @param <E>
-   * @return
+   * @param callback callback that registered for 3 method, success, error and completion
+   * @param <E> type of event listened for
+   * @return subscription of this callback
    */
   public static <E extends IEvent> Subscription Register(Subscriber<E> callback) {
     if (!Objects.isNullOrEmpty(IMPL)) {
@@ -142,7 +142,7 @@ public final class BusManager {
 
   /**
    * Unregister clone
-   * @param callback
+   * @param callback callback to be unregistered
    */
   public static void Unregister(Subscriber callback) {
     if (!Objects.isNullOrEmpty(IMPL)) {

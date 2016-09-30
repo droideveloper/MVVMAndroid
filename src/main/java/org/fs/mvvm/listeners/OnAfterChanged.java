@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.data;
+package org.fs.mvvm.listeners;
 
-import java.util.Locale;
+import android.text.Editable;
 
-public interface IObjectConverter<T, R> {
+public interface OnAfterChanged {
 
-  R convert(T object, Locale locale);
+  /**
+   * Single callback for editable provided for
+   * TextView instance
+   *
+   * @param editable editable instance from watcher
+   */
+  void afterChanged(Editable editable);
 }

@@ -17,12 +17,26 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
-import android.support.v7.widget.RecyclerView;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
+import android.databinding.InverseBindingListener;
+import android.databinding.InverseBindingMethod;
+import android.databinding.InverseBindingMethods;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import org.fs.mvvm.common.AbstractRecyclerBindingAdapter;
 import org.fs.mvvm.common.AbstractRecyclerBindingHolder;
 import org.fs.mvvm.utils.Preconditions;
+import org.fs.mvvm.widget.RecyclerView;
 
+@BindingMethods({
+    @BindingMethod(type = RecyclerView.class,
+        attribute = RecyclerViewCompatBindingAdapter.ANDROID_SELECTED_POSITION,
+        method = "setSelectedPosition")
+})
+@InverseBindingMethods({
+    @InverseBindingMethod(type = RecyclerView.class,
+        attribute = RecyclerViewCompatBindingAdapter.ANDROID_SELECTED_POSITION)
+})
 public final class RecyclerViewCompatBindingAdapter {
 
   private final static String ANDROID_ITEM_SOURCE     = "android:itemSource";
@@ -30,8 +44,25 @@ public final class RecyclerViewCompatBindingAdapter {
   private final static String ANDROID_ITEM_ANIMATOR   = "android:itemAnimator";
   private final static String ANDROID_TOUCH_HELPER    = "android:touchHelper";
 
+  public final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
+
   private RecyclerViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  /**
+   * Register selected position for this viewRecycler
+   *
+   * @param viewRecycler view instance
+   * @param selectedPosition position as int
+   */
+  @BindingAdapter(
+      ANDROID_SELECTED_POSITION
+  )
+  public static void registerSelectedPosition(RecyclerView viewRecycler, int selectedPosition) {
+    if (viewRecycler.getSelectedPosition() != selectedPosition) {
+      viewRecycler.setSelectedPosition(selectedPosition);
+    }
   }
 
   /**
@@ -87,11 +118,17 @@ public final class RecyclerViewCompatBindingAdapter {
    * @param <V> V type of the ViewHolder of Adapter.
    */
   @BindingAdapter(
-    ANDROID_ITEM_SOURCE
-  )
+    value = ANDROID_ITEM_SOURCE,
+  requireAll = false)
   public static <T extends AbstractRecyclerBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>>
-    void registerAdapter(RecyclerView viewRecycler, T itemSource) {
+    void registerAdapter(RecyclerView viewRecycler, T itemSource, InverseBindingListener attrChanged) {
       Preconditions.checkNotNull(itemSource, "itemSource is null");
+      itemSource.addInverseCallback((position) -> {
+        viewRecycler.setSelectedPosition(position);
+        if (attrChanged != null) {
+          attrChanged.onChange();
+        }
+      });
       viewRecycler.setAdapter(itemSource);
   }
 }

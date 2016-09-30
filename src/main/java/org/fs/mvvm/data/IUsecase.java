@@ -13,25 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.managers;
+package org.fs.mvvm.data;
 
-import android.databinding.BaseObservable;
+public interface IUsecase<T> {
 
-public final class SelectedEvent<D extends BaseObservable> implements IEvent {
+  boolean isUnsubscribed();
 
-  private final D   selectedItem;
-  private final int selectedItemAdapterPosition;
+  void unsubscribe();
 
-  public SelectedEvent(final D selectedItem, final int selectedItemAdapterPosition) {
-    this.selectedItem = selectedItem;
-    this.selectedItemAdapterPosition = selectedItemAdapterPosition;
-  }
 
-  public final D selectedItem() {
-    return this.selectedItem;
-  }
-
-  public final int selectedItemAdapterPosition() {
-    return this.selectedItemAdapterPosition;
-  }
 }

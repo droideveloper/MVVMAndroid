@@ -16,6 +16,11 @@
 package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
+import android.databinding.InverseBindingListener;
+import android.databinding.InverseBindingMethod;
+import android.databinding.InverseBindingMethods;
 import android.databinding.adapters.ListenerUtil;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,6 +30,12 @@ import org.fs.mvvm.listeners.OnPageScrolled;
 import org.fs.mvvm.listeners.OnPageSelected;
 import org.fs.mvvm.utils.Preconditions;
 
+@BindingMethods({
+    @BindingMethod(type = ViewPager.class, attribute = ViewPagerCompatBindingAdapter.ANDROID_SELECTED_PAGE, method = "setCurrentItem")
+})
+@InverseBindingMethods({
+    @InverseBindingMethod(type = ViewPager.class, attribute = ViewPagerCompatBindingAdapter.ANDROID_SELECTED_PAGE),
+})
 public final class ViewPagerCompatBindingAdapter {
 
   private final static String ANDROID_ITEM_SOURCE = "android:itemSource";
@@ -35,8 +46,25 @@ public final class ViewPagerCompatBindingAdapter {
   private final static String ANDROID_PAGE_SELECTED = "android:onPageSelected";
   private final static String ANDROID_PAGE_SCROLL_STATE_CHANGED = "android:onPageScrollStateChanged";
 
+  public final static String ANDROID_SELECTED_PAGE = "android:selectedPage";
+
   private ViewPagerCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  /**
+   * Registers position provided for viewPager
+   *
+   * @param viewPager viewPager we register this, two-way
+   * @param position viewPager position
+   */
+  @BindingAdapter({
+      ANDROID_SELECTED_PAGE
+  })
+  public static void registerPosition(ViewPager viewPager, int position) {
+    if (viewPager.getCurrentItem() != position) {
+      viewPager.setCurrentItem(position, true);//do smooth scroll
+    }
   }
 
   /**
@@ -54,7 +82,7 @@ public final class ViewPagerCompatBindingAdapter {
       ANDROID_PAGE_SCROLL_STATE_CHANGED
   }, requireAll = false)
   public static void registerPageListener(ViewPager viewPager, OnPageScrolled pageScrolled,
-      OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged) {
+      OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged, InverseBindingListener attrChange) {
     final ViewPager.OnPageChangeListener newListener;
     if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null) {
       newListener = null;
@@ -69,6 +97,9 @@ public final class ViewPagerCompatBindingAdapter {
         @Override public void onPageSelected(int position) {
           if(pageSelected != null) {
             pageSelected.onPageSelected(position);
+          }
+          if (attrChange != null) {
+            attrChange.onChange();
           }
         }
 

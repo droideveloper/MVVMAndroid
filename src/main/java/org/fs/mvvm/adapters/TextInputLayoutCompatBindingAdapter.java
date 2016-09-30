@@ -25,11 +25,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import java.util.Locale;
 import org.fs.mvvm.R;
-import org.fs.mvvm.data.IObjectConverter;
 import org.fs.mvvm.data.IValidator;
 import org.fs.mvvm.data.Validation;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
-import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
 
@@ -37,9 +35,6 @@ public final class TextInputLayoutCompatBindingAdapter {
 
   private final static String ANDROID_VALIDATOR     = "android:validator";
   private final static String ANDROID_ERROR_STRING  = "android:errorString";
-
-  private final static String ANDROID_FROM_OBJECT = "android:fromObject";
-  private final static String ANDROID_CONVERTER   = "android:converter";
 
   private TextInputLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
@@ -86,24 +81,5 @@ public final class TextInputLayoutCompatBindingAdapter {
       }
       viewText.addTextChangedListener(newListener);
     }
-  }
-
-  /**
-   * Sets TextView fromObject with any kind of object if
-   * converter provided
-   *
-   * @param viewText textView
-   * @param converter converter for this view
-   * @param object object instance
-   * @param <T> type of object
-   */
-  @BindingAdapter({
-      ANDROID_CONVERTER,
-      ANDROID_FROM_OBJECT
-  })
-  public static <T> void registerConvertor(TextView viewText, IObjectConverter<T, String> converter, T object) {
-    Preconditions.checkNotNull(converter, "converter is null");
-    final String textStr = Invokes.invoke(o -> converter.convert(o, Locale.getDefault()), object);
-    viewText.setText(textStr);
   }
 }

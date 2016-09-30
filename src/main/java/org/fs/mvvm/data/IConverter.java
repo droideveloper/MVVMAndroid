@@ -13,25 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.managers;
+package org.fs.mvvm.data;
 
-import android.databinding.BaseObservable;
+import java.util.Locale;
 
-public final class SelectedEvent<D extends BaseObservable> implements IEvent {
+public interface IConverter<T, R> {
 
-  private final D   selectedItem;
-  private final int selectedItemAdapterPosition;
-
-  public SelectedEvent(final D selectedItem, final int selectedItemAdapterPosition) {
-    this.selectedItem = selectedItem;
-    this.selectedItemAdapterPosition = selectedItemAdapterPosition;
-  }
-
-  public final D selectedItem() {
-    return this.selectedItem;
-  }
-
-  public final int selectedItemAdapterPosition() {
-    return this.selectedItemAdapterPosition;
-  }
+  R convert(T object, Locale locale);
 }

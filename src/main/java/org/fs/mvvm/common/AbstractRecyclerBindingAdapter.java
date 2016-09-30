@@ -56,6 +56,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
   private final int                           selectionMode;
 
   private Action<List<Integer>>               selectedCallback;
+  private Action<Integer>                     inverseCallback;
 
   private Subscription eventSubs;
 
@@ -89,6 +90,10 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
    */
   public final void setSelectedCallback(Action<List<Integer>> selectedCallback) {
     this.selectedCallback = selectedCallback;
+  }
+
+  public final void addInverseCallback(Action<Integer> inverseCallback) {
+    this.inverseCallback = inverseCallback;
   }
 
   @Override public final void onViewDetachedFromWindow(V viewHolder) {
@@ -205,6 +210,13 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     //notify viewModel if we provide callback
     if (selectedCallback != null) {
       selectedCallback.execute(selection);
+    }
+    if (inverseCallback != null) {
+      inverseCallback.execute(
+          StreamSupport.stream(selection)
+              .findFirst()
+              .orElse(-1)
+      );
     }
     notifyItemChanged(position);
   }
