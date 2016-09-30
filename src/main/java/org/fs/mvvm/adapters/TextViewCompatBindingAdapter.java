@@ -30,7 +30,7 @@ import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
 
-public class TextViewCompatBinderAdapter {
+public final class TextViewCompatBindingAdapter {
 
   private final static String ANDROID_BEFORE_CHANGED = "android:beforeChanged";
   private final static String ANDROID_AFTER_CHANGED  = "android:afterChanged";
@@ -38,7 +38,7 @@ public class TextViewCompatBinderAdapter {
   private final static String ANDROID_FROM_OBJECT = "android:fromObject";
   private final static String ANDROID_CONVERTER   = "android:converter";
 
-  private TextViewCompatBinderAdapter() {
+  private TextViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
