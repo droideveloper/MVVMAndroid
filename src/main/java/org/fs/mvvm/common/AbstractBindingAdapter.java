@@ -53,6 +53,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
   private final int                     selectionMode;
 
   private Action<List<Integer>> selectedCallback;
+  private Action<Integer>       selectedPositionCallback;
 
   private Subscription eventSubs;
 
@@ -86,6 +87,14 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
    */
   public final void setSelectedCallback(Action<List<Integer>> selectedCallback) {
     this.selectedCallback = selectedCallback;
+  }
+
+  /**
+   * Selected position update reciever
+   * @param selectedPositionCallback position callback
+   */
+  public void setSelectedPositionCallback(Action<Integer> selectedPositionCallback) {
+    this.selectedPositionCallback = selectedPositionCallback;
   }
 
   /**
@@ -232,6 +241,13 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     //notify viewModel if we provide callback
     if (selectedCallback != null) {
       selectedCallback.execute(selection);
+    }
+    if (selectedPositionCallback != null) {
+      selectedPositionCallback.execute(
+          StreamSupport.stream(selection)
+            .findFirst()
+            .orElse(-1)
+      );
     }
     notifyDataSetChanged();
   }
