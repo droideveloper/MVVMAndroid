@@ -16,12 +16,8 @@
 package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
-import android.databinding.BindingMethod;
-import android.databinding.BindingMethods;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
-import android.databinding.InverseBindingMethod;
-import android.databinding.InverseBindingMethods;
 import android.databinding.adapters.ListenerUtil;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -31,12 +27,6 @@ import org.fs.mvvm.listeners.OnPageScrolled;
 import org.fs.mvvm.listeners.OnPageSelected;
 import org.fs.mvvm.utils.Preconditions;
 
-@BindingMethods({
-    @BindingMethod(type = ViewPager.class, attribute = ViewPagerCompatBindingAdapter.ANDROID_SELECTED_PAGE, method = "setCurrentItem")
-})
-@InverseBindingMethods({
-    @InverseBindingMethod(type = ViewPager.class, attribute = ViewPagerCompatBindingAdapter.ANDROID_SELECTED_PAGE),
-})
 public final class ViewPagerCompatBindingAdapter {
 
   private final static String ANDROID_ITEM_SOURCE = "android:itemSource";
@@ -47,7 +37,7 @@ public final class ViewPagerCompatBindingAdapter {
   private final static String ANDROID_PAGE_SELECTED = "android:onPageSelected";
   private final static String ANDROID_PAGE_SCROLL_STATE_CHANGED = "android:onPageScrollStateChanged";
 
-  public final static String ANDROID_SELECTED_PAGE = "android:selectedPage";
+  private final static String ANDROID_SELECTED_PAGE = "android:selectedPage";
   private final static String ANDROID_SELECTED_PAGE_ATTR_CHANGED = "android:selectedPageAttrChanged";
 
   private ViewPagerCompatBindingAdapter() {

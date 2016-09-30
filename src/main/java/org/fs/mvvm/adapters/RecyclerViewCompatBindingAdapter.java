@@ -17,27 +17,15 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
-import android.databinding.BindingMethod;
-import android.databinding.BindingMethods;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
-import android.databinding.InverseBindingMethod;
-import android.databinding.InverseBindingMethods;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import org.fs.mvvm.common.AbstractRecyclerBindingAdapter;
 import org.fs.mvvm.common.AbstractRecyclerBindingHolder;
 import org.fs.mvvm.utils.Preconditions;
 import org.fs.mvvm.widget.RecyclerView;
 
-@BindingMethods({
-    @BindingMethod(type = RecyclerView.class,
-        attribute = RecyclerViewCompatBindingAdapter.ANDROID_SELECTED_POSITION,
-        method = "setSelectedPosition")
-})
-@InverseBindingMethods({
-    @InverseBindingMethod(type = RecyclerView.class,
-        attribute = RecyclerViewCompatBindingAdapter.ANDROID_SELECTED_POSITION)
-})
+
 public final class RecyclerViewCompatBindingAdapter {
 
   private final static String ANDROID_ITEM_SOURCE     = "android:itemSource";
@@ -45,7 +33,7 @@ public final class RecyclerViewCompatBindingAdapter {
   private final static String ANDROID_ITEM_ANIMATOR   = "android:itemAnimator";
   private final static String ANDROID_TOUCH_HELPER    = "android:touchHelper";
 
-  public final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
+  private final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
   private final static String ANDROID_SELECTED_POSITION_ATTR_CHANGED = "android:selectedPositionAttrChanged";
 
   private RecyclerViewCompatBindingAdapter() {
