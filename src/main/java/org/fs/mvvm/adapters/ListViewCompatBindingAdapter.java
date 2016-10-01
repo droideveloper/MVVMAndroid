@@ -69,6 +69,12 @@ public final class ListViewCompatBindingAdapter {
     }
   }
 
+  /**
+   * getter for two way loadMore
+   *
+   * @param viewList viewList
+   * @return true or false
+   */
   @InverseBindingAdapter(
       event = ANDROID_LOAD_MORE_ATTR_CHANGED,
       attribute = ANDROID_LOAD_MORE
@@ -77,6 +83,12 @@ public final class ListViewCompatBindingAdapter {
     return viewList.isLoadMore();
   }
 
+  /**
+   * setter for two way loadMore
+   *
+   * @param viewList viewList
+   * @param isLoadMore true or false
+   */
   @BindingAdapter(
       ANDROID_LOAD_MORE
   )
@@ -86,24 +98,32 @@ public final class ListViewCompatBindingAdapter {
     }
   }
 
+  /**
+   * tracks child position and sets load more property if needed
+   *
+   * @param viewList viewList
+   * @param loadMoreAttrChanged event bubbling
+   */
   @BindingAdapter(
       ANDROID_LOAD_MORE_ATTR_CHANGED
   )
   public static void registerScrollListener(ListView viewList, InverseBindingListener loadMoreAttrChanged) {
     final AbsListView.OnScrollListener newListener = new SimpleListViewScrollListener() {
       @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if (firstVisibleItem + visibleItemCount == totalItemCount
-            && totalItemCount != 0) {
+        if (firstVisibleItem + visibleItemCount == totalItemCount && totalItemCount != 0) {
           if (!viewList.isLoadMore()) {
             viewList.setLoadMore(true);
+            if (loadMoreAttrChanged != null) {
+              loadMoreAttrChanged.onChange();
+            }
           }
         } else {
           if (viewList.isLoadMore()) {
             viewList.setLoadMore(false);
+            if (loadMoreAttrChanged != null) {
+              loadMoreAttrChanged.onChange();
+            }
           }
-        }
-        if (loadMoreAttrChanged != null) {
-          loadMoreAttrChanged.onChange();
         }
       }
     };
