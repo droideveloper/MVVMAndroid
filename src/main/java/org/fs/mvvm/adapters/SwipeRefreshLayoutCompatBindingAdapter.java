@@ -26,11 +26,10 @@ import org.fs.mvvm.utils.Preconditions;
 
 public class SwipeRefreshLayoutCompatBindingAdapter {
 
-  private final static String ANDROID_IS_REFRESHING_CALLBACK = "android:refreshCallback";
-
-  private final static String ANDROID_IS_REFRESHING = "android:isRefreshing";
-  private final static String ANDROID_CONVERTER = "android:converter";
-  private final static String ANDROID_IS_REFRESHING_ATTR_CHANGED = "android:isRefreshingAttrChanged";
+  private final static String ANDROID_IS_REFRESHING_CALLBACK      = "android:refreshCallback";
+  private final static String ANDROID_IS_REFRESHING               = "android:isRefreshing";
+  private final static String ANDROID_CONVERTER                   = "android:converter";
+  private final static String ANDROID_IS_REFRESHING_ATTR_CHANGED  = "android:isRefreshingAttrChanged";
 
   private SwipeRefreshLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
