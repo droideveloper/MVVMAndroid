@@ -16,6 +16,7 @@
 package org.fs.mvvm.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.StringRes;
 import android.view.View;
 
@@ -47,6 +48,34 @@ public interface IView {
    * @return String value of id
    */
   String getStringResource(@StringRes int stringId);
+
+  /**
+   * startActivity callback
+   *
+   * @param intent intent to execute
+   */
+  void startActivity(Intent intent);
+
+  /**
+   * startActivityForResult callback
+   *
+   * @param intent intent to execute
+   * @param requestCode requestCode an int
+   */
+  void startActivityForResult(Intent intent, int requestCode);
+
+  /**
+   * requestPermissions callback
+   *
+   * @param permissions permissions to request
+   * @param requestCode requestCode an int
+   */
+  void requestPermissions(String[] permissions, int requestCode);
+
+  /**
+   * Finish only useful for activity
+   */
+  void finish();
 
   /**
    * Checks whether view is available or not
