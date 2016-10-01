@@ -41,59 +41,20 @@ public final class ImageViewCompatBindingAdapter {
    * @param placeholder placeholder drawable shown pre-loading.
    * @param error error drawable shown if error occured.
    */
-  @BindingAdapter({
-      ANDROID_IMAGE_URL,
-      ANDROID_PLACEHOLDER_IMAGE,
-      ANDROID_ERROR_IMAGE
-  })
+  @BindingAdapter(
+      value = {
+        ANDROID_IMAGE_URL,
+        ANDROID_PLACEHOLDER_IMAGE,
+        ANDROID_ERROR_IMAGE
+      },
+      requireAll = false
+  )
   public static void registerImageLoad(ImageView viewImage, String imageUrl, Drawable placeholder, Drawable error) {
     Preconditions.checkNotNull(imageUrl, "imageUrl is null");
     DrawableRequestBuilder<String> loadRequest = Glide.with(viewImage.getContext()).load(imageUrl);
     if (placeholder != null) {
       loadRequest = loadRequest.placeholder(placeholder);
     }
-    if (error != null) {
-      loadRequest = loadRequest.error(error);
-    }
-    loadRequest.crossFade()
-        .into(viewImage);
-  }
-
-  /**
-   * Registers url of Image, Remote preferred and with placeholder Drawable
-   *
-   * @param viewImage imageView to bind remote image if exists.
-   * @param imageUrl remote image url as string.
-   * @param placeholder placeholder drawable shown pre-loading.
-   */
-  @BindingAdapter({
-      ANDROID_IMAGE_URL,
-      ANDROID_PLACEHOLDER_IMAGE
-  })
-  public static void registerImageWithPlaceholder(ImageView viewImage, String imageUrl, Drawable placeholder) {
-    Preconditions.checkNotNull(imageUrl, "imageUrl is null");
-    DrawableRequestBuilder<String> loadRequest = Glide.with(viewImage.getContext()).load(imageUrl);
-    if (placeholder != null) {
-      loadRequest = loadRequest.placeholder(placeholder);
-    }
-    loadRequest.crossFade()
-        .into(viewImage);
-  }
-
-  /**
-   * Registers url of Image, Remote preferred and with error Drawable
-   *
-   * @param viewImage imageView to bind remote image if exists.
-   * @param imageUrl remote image url as string.
-   * @param error error drawable shown if error occured.
-   */
-  @BindingAdapter({
-      ANDROID_IMAGE_URL,
-      ANDROID_ERROR_IMAGE
-  })
-  public static void registerImageWithError(ImageView viewImage, String imageUrl, Drawable error) {
-    Preconditions.checkNotNull(imageUrl, "imageUrl is null");
-    DrawableRequestBuilder<String> loadRequest = Glide.with(viewImage.getContext()).load(imageUrl);
     if (error != null) {
       loadRequest = loadRequest.error(error);
     }
