@@ -25,6 +25,8 @@ import java.io.StringWriter;
 public abstract class AbstractEntity extends BaseObservable
     implements Parcelable {
 
+  public AbstractEntity() { }
+
   /**
    * Parcel taking constructor protected use in
    * Creator

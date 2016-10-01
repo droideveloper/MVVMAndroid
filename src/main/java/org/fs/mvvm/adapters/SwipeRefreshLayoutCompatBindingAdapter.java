@@ -21,6 +21,7 @@ import android.databinding.InverseBindingListener;
 import android.support.v4.widget.SwipeRefreshLayout;
 import java.util.Locale;
 import org.fs.mvvm.data.IConverter;
+import org.fs.mvvm.listeners.OnRefreshed;
 import org.fs.mvvm.utils.Preconditions;
 
 public class SwipeRefreshLayoutCompatBindingAdapter {
@@ -60,7 +61,7 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
       attribute = ANDROID_IS_REFRESHING,
       event = ANDROID_IS_REFRESHING_ATTR_CHANGED
   )
-  public static boolean registerIsRefresing(SwipeRefreshLayout viewSwipeLayout) {
+  public static boolean registerIsRefreshing(SwipeRefreshLayout viewSwipeLayout) {
     return viewSwipeLayout.isRefreshing();
   }
 
@@ -72,24 +73,18 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
    * @param viewSwipeLayout layout instance
    * @param object object that needs conversion to boolean
    * @param converter object to boolean converter
-   * @param isRefreshingAttrChanged attr that system will tract for two-way binding
    * @param <T> type of object we can convert
    */
   @BindingAdapter(
       value = {
         ANDROID_IS_REFRESHING,
-        ANDROID_CONVERTER,
-        ANDROID_IS_REFRESHING_ATTR_CHANGED
-      },
-      requireAll = false
+        ANDROID_CONVERTER
+      }
   )
-  public static <T> void registerIsRefreshing(SwipeRefreshLayout viewSwipeLayout, T object, IConverter<T, Boolean> converter, InverseBindingListener isRefreshingAttrChanged) {
+  public static <T> void registerIsRefreshing(SwipeRefreshLayout viewSwipeLayout, T object, IConverter<T, Boolean> converter) {
     Preconditions.checkNotNull(converter, "converter is null");
     Boolean newValue = converter.convert(object, Locale.getDefault());
     viewSwipeLayout.setRefreshing(newValue);
-    if (isRefreshingAttrChanged != null) {
-      isRefreshingAttrChanged.onChange();
-    }
   }
 
   /**
@@ -97,7 +92,6 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
    *
    * @param viewSwipeLayout layout instance
    * @param callback callback
-   * @param isRefreshingAttrChanged attrChanged callback that binding will be tracking if present
    */
   @BindingAdapter(
       value = {
@@ -106,12 +100,13 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void registerRefreshCallback(SwipeRefreshLayout viewSwipeLayout, SwipeRefreshLayout.OnRefreshListener callback, InverseBindingListener isRefreshingAttrChanged) {
-    Preconditions.checkNotNull(callback, "callback is null");
+  public static void registerRefreshCallback(SwipeRefreshLayout viewSwipeLayout, OnRefreshed callback, InverseBindingListener isRefreshingAttrChanged) {
     viewSwipeLayout.setOnRefreshListener(() -> {
-      callback.onRefresh();
       if (isRefreshingAttrChanged != null) {
         isRefreshingAttrChanged.onChange();
+      }
+      if (callback != null) {
+        callback.onRefreshed();
       }
     });
   }

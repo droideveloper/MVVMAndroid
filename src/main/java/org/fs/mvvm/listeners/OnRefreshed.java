@@ -1,5 +1,5 @@
 /*
- * MVVM_Workspace Copyright (C) 2016 Fatih.
+ * MVVM Copyright (C) 2016 Fatih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,4 +16,9 @@
 package org.fs.mvvm.listeners;
 
 public interface OnRefreshed {
+
+  /**
+   * SwipeRefreshLayout callback
+   */
+  void onRefreshed();
 }
