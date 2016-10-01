@@ -24,6 +24,8 @@ public class ListView extends android.widget.ListView {
 
   private int selectedPosition;
 
+  private boolean loadMore;
+
   public ListView(Context context) {
     super(context);
   }
@@ -47,5 +49,13 @@ public class ListView extends android.widget.ListView {
 
   public int getSelectedPosition() {
     return selectedPosition;
+  }
+
+  public boolean isLoadMore() {
+    return loadMore;
+  }
+
+  public void setLoadMore(boolean loadMore) {
+    this.loadMore = loadMore;
   }
 }

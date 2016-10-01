@@ -23,6 +23,8 @@ public class RecyclerView extends android.support.v7.widget.RecyclerView {
 
   private int selectedPosition;
 
+  private boolean loadMore;
+
   public RecyclerView(Context context) {
     super(context);
   }
@@ -51,5 +53,23 @@ public class RecyclerView extends android.support.v7.widget.RecyclerView {
    */
   public int getSelectedPosition() {
     return this.selectedPosition;
+  }
+
+  /**
+   * requires if it reached end of page or not
+   *
+   * @return true or false
+   */
+  public boolean isLoadMore() {
+    return loadMore;
+  }
+
+  /**
+   * requires if sets load more
+   *
+   * @param loadMore true or false
+   */
+  public void setLoadMore(boolean loadMore) {
+    this.loadMore = loadMore;
   }
 }

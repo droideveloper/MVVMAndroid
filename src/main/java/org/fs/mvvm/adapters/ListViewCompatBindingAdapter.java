@@ -19,8 +19,10 @@ import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
+import android.widget.AbsListView;
 import org.fs.mvvm.common.AbstractBindingAdapter;
 import org.fs.mvvm.common.AbstractBindingHolder;
+import org.fs.mvvm.listeners.SimpleListViewScrollListener;
 import org.fs.mvvm.utils.Preconditions;
 import org.fs.mvvm.widget.ListView;
 
@@ -30,6 +32,9 @@ public final class ListViewCompatBindingAdapter {
 
   private final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
   private final static String ANDROID_SELECTED_POSITION_ATTR_CHANGED = "android:selectedPositionAttrChanged";
+
+  private final static String ANDROID_LOAD_MORE = "android:loadMore";
+  private final static String ANDROID_LOAD_MORE_ATTR_CHANGED = "android:loadMoreAttrChanged";
 
   private ListViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
@@ -63,6 +68,48 @@ public final class ListViewCompatBindingAdapter {
       viewList.setSelectedPosition(selectedPosition);
     }
   }
+
+  @InverseBindingAdapter(
+      event = ANDROID_LOAD_MORE_ATTR_CHANGED,
+      attribute = ANDROID_LOAD_MORE
+  )
+  public static boolean provideIsLoadMore(ListView viewList) {
+    return viewList.isLoadMore();
+  }
+
+  @BindingAdapter(
+      ANDROID_LOAD_MORE
+  )
+  public static void registerLoadMore(ListView viewList, boolean isLoadMore) {
+    if (viewList.isLoadMore() != isLoadMore) {
+      viewList.setLoadMore(isLoadMore);
+    }
+  }
+
+  @BindingAdapter(
+      ANDROID_LOAD_MORE_ATTR_CHANGED
+  )
+  public static void registerScrollListener(ListView viewList, InverseBindingListener loadMoreAttrChanged) {
+    final AbsListView.OnScrollListener newListener = new SimpleListViewScrollListener() {
+      @Override public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if (firstVisibleItem + visibleItemCount == totalItemCount
+            && totalItemCount != 0) {
+          if (!viewList.isLoadMore()) {
+            viewList.setLoadMore(true);
+          }
+        } else {
+          if (viewList.isLoadMore()) {
+            viewList.setLoadMore(false);
+          }
+        }
+        if (loadMoreAttrChanged != null) {
+          loadMoreAttrChanged.onChange();
+        }
+      }
+    };
+    viewList.setOnScrollListener(newListener);
+  }
+
 
   /**
    * Registers adapter on view and checks for position
