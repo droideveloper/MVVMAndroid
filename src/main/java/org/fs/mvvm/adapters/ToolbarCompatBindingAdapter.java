@@ -17,6 +17,7 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import org.fs.mvvm.commands.ICommand;
@@ -35,8 +36,25 @@ public class ToolbarCompatBindingAdapter {
   private final static String ANDROID_NAVIGATION_COMMAND_PARAMETER = "android:navigationCommandParameter";
   private final static String ANDROID_ON_NAVIGATED = "android:onNavigated";
 
+  private final static String ANDROID_NAVIGATION_ICON = "android:navIcon";
+
   private ToolbarCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
+  }
+
+  /**
+   * Registers drawable icon for android
+   *
+   * @param viewToolbar viewToolbar to put navigation icon on
+   * @param icon drawable icon
+   */
+  @BindingAdapter(
+      ANDROID_NAVIGATION_ICON
+  )
+  public static void registerNavigationIcon(Toolbar viewToolbar, Drawable icon) {
+    if (icon != null) {
+      viewToolbar.setNavigationIcon(icon);
+    }
   }
 
   /**
