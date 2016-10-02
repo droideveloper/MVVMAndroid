@@ -54,7 +54,7 @@ public final class ViewPagerCompatBindingAdapter {
       event = ANDROID_SELECTED_PAGE_ATTR_CHANGED,
       attribute = ANDROID_SELECTED_PAGE
   )
-  public int provideSelectedPageAttr(ViewPager viewPager) {
+  public int provideSelectedPage(ViewPager viewPager) {
     return viewPager.getCurrentItem();
   }
 
@@ -67,7 +67,7 @@ public final class ViewPagerCompatBindingAdapter {
   @BindingAdapter({
       ANDROID_SELECTED_PAGE
   })
-  public static void registerPosition(ViewPager viewPager, int position) {
+  public static void registerSelectedPage(ViewPager viewPager, int position) {
     if (viewPager.getCurrentItem() != position) {
       viewPager.setCurrentItem(position, true);//do smooth scroll
     }

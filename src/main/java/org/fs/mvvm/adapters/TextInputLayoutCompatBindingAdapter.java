@@ -28,8 +28,6 @@ import org.fs.mvvm.R;
 import org.fs.mvvm.data.IValidator;
 import org.fs.mvvm.data.Validation;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
-import org.fs.mvvm.utils.Objects;
-import org.fs.mvvm.utils.Preconditions;
 
 public final class TextInputLayoutCompatBindingAdapter {
 
@@ -53,7 +51,6 @@ public final class TextInputLayoutCompatBindingAdapter {
       ANDROID_ERROR_STRING
   })
   public static void registerValidator(TextInputLayout viewTextLayout, IValidator<String> validator, String errorString) {
-    Preconditions.checkNotNull(validator, "validator is null");
     TextView viewText = null;
     for (int i = 0, z = viewTextLayout.getChildCount(); i < z; i ++) {
       View child = viewTextLayout.getChildAt(i);
@@ -62,24 +59,40 @@ public final class TextInputLayoutCompatBindingAdapter {
         break;
       }
     }
-    if (!Objects.isNullOrEmpty(viewText)) {
-      final TextWatcher newListener = new SimpleTextWatcher() {
-        @Override public void afterTextChanged(Editable s) {
-          Validation validation = validator.validate(s.toString(), Locale.getDefault());
-          if (!validation.isSuccess()) {
-            viewTextLayout.setErrorEnabled(true);
-            viewTextLayout.setError(errorString);
-          } else {
-            viewTextLayout.setErrorEnabled(false);
-            viewTextLayout.setError(null);
-          }
+    if (viewText != null) {
+      if (validator == null && errorString == null) {
+        final TextWatcher oldListener = ListenerUtil.getListener(viewText, R.id.textLayoutWatcher);
+        if (oldListener != null) {
+          viewText.removeTextChangedListener(oldListener);
         }
-      };
-      final TextWatcher oldListener = ListenerUtil.trackListener(viewText, newListener, R.id.textWatcher);
-      if (oldListener != null) {
-        viewText.removeTextChangedListener(oldListener);
+      } else {
+        final TextWatcher newListener = new SimpleTextWatcher() {
+          //change track on edit text of that view
+          @Override public void afterTextChanged(Editable s) {
+            Validation validation = null;
+            if (validator != null) {
+              validation = validator.validate(s.toString(), Locale.getDefault());
+            }
+            if (validation != null) {
+              if (!validation.isSuccess()) {
+                viewTextLayout.setErrorEnabled(true);
+                viewTextLayout.setError(errorString);
+              } else {
+                viewTextLayout.setErrorEnabled(false);
+                viewTextLayout.setError(null);
+              }
+            }
+          }
+        };
+        //using different name because txtWatcher id might be registered on same view with different story on it
+        //for instance that we might be watching it for textChange on other property
+        //this way we do not interrupt other listeners just to be safe
+        final TextWatcher oldListener = ListenerUtil.trackListener(viewText, newListener, R.id.textLayoutWatcher);
+        if (oldListener != null) {
+          viewText.removeTextChangedListener(oldListener);
+        }
+        viewText.addTextChangedListener(newListener);
       }
-      viewText.addTextChangedListener(newListener);
     }
   }
 }

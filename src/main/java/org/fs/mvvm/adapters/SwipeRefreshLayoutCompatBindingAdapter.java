@@ -100,13 +100,17 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
       requireAll = false
   )
   public static void registerRefreshCallback(SwipeRefreshLayout viewSwipeLayout, OnRefreshed callback, InverseBindingListener isRefreshingAttrChanged) {
-    viewSwipeLayout.setOnRefreshListener(() -> {
-      if (isRefreshingAttrChanged != null) {
-        isRefreshingAttrChanged.onChange();
-      }
-      if (callback != null) {
-        callback.onRefreshed();
-      }
-    });
+    if (callback == null && isRefreshingAttrChanged == null) {
+      viewSwipeLayout.setOnRefreshListener(null);
+    } else {
+      viewSwipeLayout.setOnRefreshListener(() -> {
+        if (isRefreshingAttrChanged != null) {
+          isRefreshingAttrChanged.onChange();
+        }
+        if (callback != null) {
+          callback.onRefreshed();
+        }
+      });
+    }
   }
 }

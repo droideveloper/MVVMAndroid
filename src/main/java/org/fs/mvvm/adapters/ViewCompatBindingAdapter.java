@@ -19,8 +19,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.adapters.ListenerUtil;
 import android.view.View;
 import org.fs.mvvm.R;
-import org.fs.mvvm.commands.ParameterizedRelayCommand;
-import org.fs.mvvm.commands.RelayCommand;
+import org.fs.mvvm.commands.ICommand;
 
 public final class ViewCompatBindingAdapter {
 
@@ -32,23 +31,6 @@ public final class ViewCompatBindingAdapter {
   }
 
   /**
-   * Registers view with RelayCommand that has no parameters
-   *
-   * @param view view to register for click
-   * @param command command to execute
-   */
-  @BindingAdapter(
-      ANDROID_COMMAND
-  )
-  public static void registerCommand(View view, RelayCommand command) {
-    if (command == null) {
-      view.setOnClickListener(null);
-    } else {
-      view.setOnClickListener(v -> command.execute(null));
-    }
-  }
-
-  /**
    * Registers view with ParameterizedRelayCommand that has parameter type of T.
    *
    * @param view view to register for click
@@ -56,11 +38,14 @@ public final class ViewCompatBindingAdapter {
    * @param param command parameter
    * @param <T> type of parameter
    */
-  @BindingAdapter({
-      ANDROID_COMMAND,
-      ANDROID_COMMAND_PARAMETER
-  })
-  public static <T> void registerCommandAndParameter(View view, ParameterizedRelayCommand<T> command, T param) {
+  @BindingAdapter(
+      value = {
+        ANDROID_COMMAND,
+        ANDROID_COMMAND_PARAMETER
+      },
+      requireAll = false
+  )
+  public static <T> void registerCommandAndParameter(View view, ICommand<T> command, T param) {
     final View.OnClickListener newListener;
     if (command == null) {
       newListener = null;
@@ -70,7 +55,8 @@ public final class ViewCompatBindingAdapter {
           command.execute(param);
         }
       };
-      //register this
+      //register this in viewHolders we get listener so we can use it
+      //to pass it into here, and we can execute both commands here
       ListenerUtil.trackListener(view, newListener, R.id.onClickListener);
     }
     view.setOnClickListener(newListener);

@@ -32,7 +32,7 @@ public class ToolbarCompatBindingAdapter {
   private final static String ANDROID_SUB_TITLE_TEXT_ATTR_CHANGED = "android:subTitleTextAttrChanged";
 
   private final static String ANDROID_NAVIGATION_COMMAND = "android:navigationCommand";
-  private final static String ANDROID_NABIGATINO_COMMAND_PARAMETER = "android:navigationCommandParameter";
+  private final static String ANDROID_NAVIGATION_COMMAND_PARAMETER = "android:navigationCommandParameter";
   private final static String ANDROID_ON_NAVIGATED = "android:onNavigated";
 
   private ToolbarCompatBindingAdapter() {
@@ -114,8 +114,7 @@ public class ToolbarCompatBindingAdapter {
    */
   @BindingAdapter(
       value = {
-          ANDROID_ON_NAVIGATED,
-          ANDROID_NABIGATINO_COMMAND_PARAMETER,
+          ANDROID_ON_NAVIGATED, ANDROID_NAVIGATION_COMMAND_PARAMETER,
           ANDROID_NAVIGATION_COMMAND
       },
       requireAll = false
