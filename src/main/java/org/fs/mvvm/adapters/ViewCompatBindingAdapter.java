@@ -20,14 +20,40 @@ import android.databinding.adapters.ListenerUtil;
 import android.view.View;
 import org.fs.mvvm.R;
 import org.fs.mvvm.commands.ICommand;
+import org.fs.mvvm.data.IFindAncestor;
+import org.fs.mvvm.data.PropertyGetAndSet;
+import org.fs.mvvm.utils.Objects;
 
 public final class ViewCompatBindingAdapter {
 
   private final static String ANDROID_COMMAND = "android:command";
   private final static String ANDROID_COMMAND_PARAMETER = "android:commandParameter";
 
+  private final static String ANDROID_FIND_ANCESTOR = "android:findAncestor";
+  private final static String ANDROID_PROPERTY_GET_AND_SET = "android:propertyGetAndSet";
+
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  /**
+   * Find provided ancestorFinder and propertyGetAndSet
+   *
+   * @param view view we will invoke find ancestor on
+   * @param helper find ancestor helper
+   * @param propertyGetAndSet property retriever and setter uses reflection so avoid this usage
+   * @param <T> T type of the view (target view)
+   * @param <S> S type of the view (ancestor view)
+   */
+  @BindingAdapter({
+      ANDROID_FIND_ANCESTOR,
+      ANDROID_PROPERTY_GET_AND_SET
+  })
+  public static <T, S extends View> void registerPropertySetAndGetWithFindAncestor(View view, IFindAncestor helper, PropertyGetAndSet<S, T> propertyGetAndSet) {
+    helper.setAncestorOf(view);
+    propertyGetAndSet.setTarget(Objects.toObject(view));
+    propertyGetAndSet.setHelper(helper);
+    propertyGetAndSet.execute();
   }
 
   /**
