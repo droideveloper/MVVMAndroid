@@ -115,7 +115,7 @@ public final class PropertyGetAndSet<T, A> {
     log(Log.DEBUG, msg);
   }
 
-  protected void log(Exception exp) {
+  protected void log(Throwable exp) {
     StringWriter strWriter = new StringWriter(128);
     PrintWriter ptrWriter = new PrintWriter(strWriter);
     exp.printStackTrace(ptrWriter);

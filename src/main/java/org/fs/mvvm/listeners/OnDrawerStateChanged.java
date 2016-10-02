@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+/*
  * MVVM Copyright (C) 2016 Fatih.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,10 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- -->
-<resources>
-  <item name="onPageChangeListener" type="id" />
-  <item name="drawerListener" type="id" />
-  <item name="onClickListener" type="id" />
-  <item name="textLayoutWatcher" type="id" />
-</resources>
+ */
+package org.fs.mvvm.listeners;
+
+public interface OnDrawerStateChanged {
+
+  /**
+   * DrawerState changed tracks
+   *
+   * @param newState newState of the DrawerLayout
+   */
+  void onDrawerStateChanged(int newState);
+}
