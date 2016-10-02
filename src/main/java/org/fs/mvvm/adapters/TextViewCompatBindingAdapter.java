@@ -16,8 +16,10 @@
 package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
+import android.databinding.InverseBindingListener;
 import android.databinding.adapters.ListenerUtil;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.widget.TextView;
 import java.util.Locale;
@@ -28,15 +30,16 @@ import org.fs.mvvm.listeners.OnBeforeChanged;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
-import org.fs.mvvm.utils.Preconditions;
 
 public final class TextViewCompatBindingAdapter {
 
   private final static String ANDROID_BEFORE_CHANGED = "android:beforeChanged";
   private final static String ANDROID_AFTER_CHANGED  = "android:afterChanged";
 
-  private final static String ANDROID_FROM_OBJECT = "android:fromObject";
-  private final static String ANDROID_CONVERTER   = "android:converter";
+  private final static String ANDROID_FROM_OBJECT   = "android:fromObject";
+  private final static String ANDROID_CONVERTER     = "android:converter";
+
+  private final static String ANDROID_TEXT_ATTR_CHANGED = "android:textAttrChanged";
 
   private TextViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
@@ -49,19 +52,24 @@ public final class TextViewCompatBindingAdapter {
    * @param viewText textView
    * @param converter converter for this view
    * @param object object instance
-   * @param <T> type of object
+   * @param <T> type of object in param
+   * @param <S> type of object in result
    */
   @BindingAdapter({
       ANDROID_CONVERTER,
       ANDROID_FROM_OBJECT
   })
-  public static <T> void registerConvertor(TextView viewText, IConverter<T, String> converter, T object) {
-    Preconditions.checkNotNull(converter, "converter is null");
-    final String textStr = Invokes.invoke(o -> {
-      return converter.convert(o, Locale.getDefault());
-    }, object);
-    viewText.setText(textStr);
+  public static <T, S extends CharSequence> void registerConvertor(TextView viewText, IConverter<T, S> converter, T object) {
+    if (converter != null) {
+      final S textStr = Invokes.invoke(o -> {
+        return converter.convert(o, Locale.getDefault());
+      }, object);
+      if (!TextUtils.equals(textStr, viewText.getText())) {
+        viewText.setText(textStr);
+      }
+    }
   }
+
 
   /**
    * Registers TextView with provided listeners or listener
@@ -73,9 +81,10 @@ public final class TextViewCompatBindingAdapter {
    */
   @BindingAdapter(value = {
       ANDROID_BEFORE_CHANGED,
-      ANDROID_AFTER_CHANGED
+      ANDROID_AFTER_CHANGED,
+      ANDROID_TEXT_ATTR_CHANGED
   }, requireAll = false)
-  public static void registerTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged) {
+  public static void registerTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged, InverseBindingListener textAttrChanged) {
     final TextWatcher newListener;
     if (Objects.isNullOrEmpty(beforeChanged) && Objects.isNullOrEmpty(afterChanged)) {
       newListener = null;
@@ -84,6 +93,12 @@ public final class TextViewCompatBindingAdapter {
         @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
           if (beforeChanged != null) {
             beforeChanged.beforeChanged(s, start, count, after);
+          }
+        }
+
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+          if (textAttrChanged != null) {
+            textAttrChanged.onChange();
           }
         }
 
