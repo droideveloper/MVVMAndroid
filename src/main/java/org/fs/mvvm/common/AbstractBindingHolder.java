@@ -35,6 +35,12 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
   private D item;
   private int position;
 
+  /**
+   * Public constructor provided this viewCell
+   *
+   * @param binding viewDataBinding since type is not known but it's enough for setting it here.
+   * @param busManager busManager we require to set in this spot.
+   */
   public AbstractBindingHolder(ViewDataBinding binding, BusManager busManager) {
     Preconditions.checkNotNull(binding, "binding is null");
     this.binding = binding;
@@ -44,6 +50,14 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
     view().setOnClickListener(this);
   }
 
+  /**
+   * ViewDataBinding relay here we set
+   * properties in this spot
+   *
+   * @param id id of variable set in layout, preferred is item
+   * @param item item that we will set on variable declared
+   * @param position position for activated track
+   */
   public final void setItem(int id, D item, int position) {
     this.item = item;
     this.position = position;
@@ -51,18 +65,39 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
     this.binding.executePendingBindings();
   }
 
+  /**
+   * returns viewCell itself
+   *
+   * @return viewCell
+   */
   public final View view() {
     return view.get();
   }
 
+  /**
+   * tracks data item that is provided to viewCell
+   *
+   * @return returns data related to this view
+   */
   public final D item() {
     return this.item;
   }
 
+  /**
+   * sets if view is activated or not
+   *
+   * @param isActivated activated state
+   */
   public final void setActivated(boolean isActivated) {
     view().setActivated(isActivated);
   }
 
+  /**
+   * activated listener if selection occured first time it will selected if we do same on already selected item
+   * it will deactivate it.
+   *
+   * @param v view to activate or deactivate
+   */
   @Override public final void onClick(View v) {
     busManager.send(new SelectedEvent<>(item, position));
   }

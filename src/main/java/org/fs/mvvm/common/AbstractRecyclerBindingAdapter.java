@@ -43,7 +43,6 @@ import rx.functions.Action1;
 
 import static android.databinding.ObservableList.OnListChangedCallback;
 
-//TODO do not support multiple selection of item for now
 public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>> extends RecyclerView.Adapter<V>
   implements Action1<SelectedEvent<D>> {
 
