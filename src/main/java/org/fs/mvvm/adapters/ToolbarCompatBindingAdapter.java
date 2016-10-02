@@ -132,7 +132,8 @@ public class ToolbarCompatBindingAdapter {
    */
   @BindingAdapter(
       value = {
-          ANDROID_ON_NAVIGATED, ANDROID_NAVIGATION_COMMAND_PARAMETER,
+          ANDROID_ON_NAVIGATED,
+          ANDROID_NAVIGATION_COMMAND_PARAMETER,
           ANDROID_NAVIGATION_COMMAND
       },
       requireAll = false

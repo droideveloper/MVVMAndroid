@@ -35,14 +35,12 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
   private D item;
   private int position;
 
-  private View.OnClickListener previousListener;
-
   public AbstractBindingHolder(ViewDataBinding binding, BusManager busManager) {
     Preconditions.checkNotNull(binding, "binding is null");
     this.binding = binding;
     this.busManager = busManager;
     this.view = new WeakReference<>(binding.getRoot());
-    previousListener = ListenerUtil.getListener(view(), R.id.onClickListener);
+    ListenerUtil.trackListener(view(), this, R.id.onClickListener);
     view().setOnClickListener(this);
   }
 
@@ -67,8 +65,5 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
 
   @Override public final void onClick(View v) {
     busManager.send(new SelectedEvent<>(item, position));
-    if (previousListener != null) {
-      previousListener.onClick(v);
-    }
   }
 }

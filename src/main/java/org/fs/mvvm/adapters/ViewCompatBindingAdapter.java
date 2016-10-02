@@ -50,14 +50,15 @@ public final class ViewCompatBindingAdapter {
     if (command == null) {
       newListener = null;
     } else {
+      final View.OnClickListener oldListener = ListenerUtil.getListener(view, R.id.onClickListener);
       newListener = v -> {
         if (command.canExecute(param)) {
           command.execute(param);
         }
+        if (oldListener != null) {
+          oldListener.onClick(view);
+        }
       };
-      //register this in viewHolders we get listener so we can use it
-      //to pass it into here, and we can execute both commands here
-      ListenerUtil.trackListener(view, newListener, R.id.onClickListener);
     }
     view.setOnClickListener(newListener);
   }
