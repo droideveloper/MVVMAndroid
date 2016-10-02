@@ -71,10 +71,10 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
 
   /**
    * sets selection of view
-   * @param isSelected true or false
+   * @param isActivated true or false
    */
-  public final void setSelected(boolean isSelected) {
-    view().setSelected(isSelected);
+  public final void setActivated(boolean isActivated) {
+    view().setActivated(isActivated);
   }
 
   /**

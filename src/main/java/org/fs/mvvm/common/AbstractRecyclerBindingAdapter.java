@@ -107,7 +107,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
 
   @Override public final void onBindViewHolder(V viewHolder, int position) {
     final D item = getItemAt(position);
-    viewHolder.setSelected(isSelected(position));
+    viewHolder.setActivated(isSelected(position));
     bindDataViewHolder(item, viewHolder);
   }
 

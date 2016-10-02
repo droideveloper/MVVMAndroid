@@ -149,7 +149,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
       return getView(position, null, parent);
     }
     final D item = getItemAt(position);
-    viewHolder.setSelected(isSelected(position));
+    viewHolder.setActivated(isSelected(position));
     bindDataViewHolder(item, viewHolder, position);
     return convertView;
   }

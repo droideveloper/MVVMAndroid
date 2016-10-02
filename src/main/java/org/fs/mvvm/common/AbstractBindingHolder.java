@@ -59,8 +59,8 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
     return this.item;
   }
 
-  public final void setSelected(boolean isSelected) {
-    view().setSelected(isSelected);
+  public final void setActivated(boolean isActivated) {
+    view().setActivated(isActivated);
   }
 
   @Override public final void onClick(View v) {
