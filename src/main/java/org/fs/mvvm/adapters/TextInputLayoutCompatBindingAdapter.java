@@ -51,22 +51,13 @@ public final class TextInputLayoutCompatBindingAdapter {
       ANDROID_ERROR_STRING
   })
   public static void registerValidator(TextInputLayout viewTextLayout, IValidator<String> validator, String errorString) {
-    TextView viewText = null;
-    for (int i = 0, z = viewTextLayout.getChildCount(); i < z; i ++) {
-      View child = viewTextLayout.getChildAt(i);
-      if (child instanceof EditText) {
-        viewText = (TextView) child;
-        break;
-      }
-    }
+    TextView viewText = findChildTextView(viewTextLayout);
     if (viewText != null) {
+      final TextWatcher newListener;
       if (validator == null && errorString == null) {
-        final TextWatcher oldListener = ListenerUtil.getListener(viewText, R.id.textLayoutWatcher);
-        if (oldListener != null) {
-          viewText.removeTextChangedListener(oldListener);
-        }
+        newListener = null;
       } else {
-        final TextWatcher newListener = new SimpleTextWatcher() {
+        newListener = new SimpleTextWatcher() {
           //change track on edit text of that view
           @Override public void afterTextChanged(Editable s) {
             Validation validation = null;
@@ -84,15 +75,26 @@ public final class TextInputLayoutCompatBindingAdapter {
             }
           }
         };
-        //using different name because txtWatcher id might be registered on same view with different story on it
-        //for instance that we might be watching it for textChange on other property
-        //this way we do not interrupt other listeners just to be safe
-        final TextWatcher oldListener = ListenerUtil.trackListener(viewText, newListener, R.id.textLayoutWatcher);
-        if (oldListener != null) {
-          viewText.removeTextChangedListener(oldListener);
-        }
+      }
+      final TextWatcher oldListener = ListenerUtil.trackListener(viewText, newListener, R.id.textLayoutWatcher);
+      if (oldListener != null) {
+        viewText.removeTextChangedListener(oldListener);
+      }
+      if (newListener != null) {
         viewText.addTextChangedListener(newListener);
       }
     }
+  }
+
+  private static TextView findChildTextView(TextInputLayout viewTextInputLayout) {
+    TextView viewText = null;
+    for (int i = 0, z = viewTextInputLayout.getChildCount(); i < z; i ++) {
+      View child = viewTextInputLayout.getChildAt(i);
+      if (child instanceof EditText) {
+        viewText = (TextView) child;
+        break;
+      }
+    }
+    return viewText;
   }
 }
