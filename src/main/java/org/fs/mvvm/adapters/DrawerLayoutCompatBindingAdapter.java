@@ -22,9 +22,9 @@ import android.databinding.adapters.ListenerUtil;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import org.fs.mvvm.R;
-import org.fs.mvvm.listeners.OnDrawerOpenedOrClosed;
-import org.fs.mvvm.listeners.OnDrawerSlided;
-import org.fs.mvvm.listeners.OnDrawerStateChanged;
+import org.fs.mvvm.listeners.OnLayoutOpenedOrClosed;
+import org.fs.mvvm.listeners.OnLayoutSlided;
+import org.fs.mvvm.listeners.OnLayoutStateChanged;
 
 public class DrawerLayoutCompatBindingAdapter {
 
@@ -95,8 +95,8 @@ public class DrawerLayoutCompatBindingAdapter {
       requireAll = false
   )
   public static void registerDrawerLayoutListener(DrawerLayout viewDrawerLayout,
-      OnDrawerSlided slided, OnDrawerOpenedOrClosed openOrClose,
-      OnDrawerStateChanged stateChanged, InverseBindingListener isOpenAttrChanged) {
+      OnLayoutSlided slided, OnLayoutOpenedOrClosed openOrClose,
+      OnLayoutStateChanged stateChanged, InverseBindingListener isOpenAttrChanged) {
 
     final DrawerLayout.DrawerListener newListener;
     if (slided == null && openOrClose == null && stateChanged == null && isOpenAttrChanged == null) {
@@ -105,13 +105,13 @@ public class DrawerLayoutCompatBindingAdapter {
       newListener = new DrawerLayout.SimpleDrawerListener() {
         @Override public void onDrawerSlide(View drawerView, float slideOffset) {
           if (slided != null) {
-            slided.onDrawerSlided(drawerView, slideOffset);
+            slided.onLayoutSlided(drawerView, slideOffset);
           }
         }
 
         @Override public void onDrawerOpened(View drawerView) {
           if (openOrClose != null) {
-            openOrClose.onDrawerOpenedOrClosed(true);
+            openOrClose.onLayoutOpenedOrClosed(true);
           }
           if (isOpenAttrChanged != null) {
             isOpenAttrChanged.onChange();
@@ -120,7 +120,7 @@ public class DrawerLayoutCompatBindingAdapter {
 
         @Override public void onDrawerClosed(View drawerView) {
           if (openOrClose != null) {
-            openOrClose.onDrawerOpenedOrClosed(false);
+            openOrClose.onLayoutOpenedOrClosed(false);
           }
           if (isOpenAttrChanged != null) {
             isOpenAttrChanged.onChange();
@@ -129,7 +129,7 @@ public class DrawerLayoutCompatBindingAdapter {
 
         @Override public void onDrawerStateChanged(int newState) {
           if (stateChanged != null) {
-            stateChanged.onDrawerStateChanged(newState);
+            stateChanged.onLayoutStateChanged(newState);
           }
         }
       };

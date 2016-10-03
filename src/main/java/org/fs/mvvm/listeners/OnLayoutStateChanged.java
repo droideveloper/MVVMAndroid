@@ -15,12 +15,12 @@
  */
 package org.fs.mvvm.listeners;
 
-public interface OnDrawerOpenedOrClosed {
+public interface OnLayoutStateChanged {
 
   /**
-   * Tracks only onDrawerOpen and onDrawerClose on DrawerLayout
+   * DrawerState changed tracks
    *
-   * @param isOpen true if open false otherwise
+   * @param newState newState of the DrawerLayout
    */
-  void onDrawerOpenedOrClosed(boolean isOpen);
+  void onLayoutStateChanged(int newState);
 }

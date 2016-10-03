@@ -15,15 +15,12 @@
  */
 package org.fs.mvvm.listeners;
 
-import android.view.View;
-
-public interface OnDrawerSlided {
+public interface OnLayoutOpenedOrClosed {
 
   /**
-   * Tracks only onDrawerSlide on the DrawerLayout
+   * notifies onDrawerOpen and onDrawerClose on DrawerLayout or SlidingPaneLayout
    *
-   * @param viewDrawer viewDrawer
-   * @param slideOffset slideOffset in float
+   * @param isOpen true if open false otherwise
    */
-  void onDrawerSlided(View viewDrawer, float slideOffset);
+  void onLayoutOpenedOrClosed(boolean isOpen);
 }

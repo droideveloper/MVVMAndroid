@@ -15,12 +15,15 @@
  */
 package org.fs.mvvm.listeners;
 
-public interface OnDrawerStateChanged {
+import android.view.View;
+
+public interface OnLayoutSlided {
 
   /**
-   * DrawerState changed tracks
+   * notifies user on slide of DrawerLayout or SlidingPaneLayout
    *
-   * @param newState newState of the DrawerLayout
+   * @param viewLayout viewLayout
+   * @param slideOffset slideOffset in float
    */
-  void onDrawerStateChanged(int newState);
+  void onLayoutSlided(View viewLayout, float slideOffset);
 }
