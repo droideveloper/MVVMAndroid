@@ -24,9 +24,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.fs.mvvm.utils.Preconditions;
 
-//TODO create instance of this class via Dagger2 for better understanding and
-//TODO if you want to use how awesome it is then go ahead execute it
-//TODO when you done this that way you will be understand it through the scope of dependency injection
 public abstract class AbstractViewModel<V extends IView> extends BaseObservable {
 
   protected final V view;

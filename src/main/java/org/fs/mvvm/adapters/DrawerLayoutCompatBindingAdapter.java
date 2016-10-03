@@ -19,6 +19,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
 import android.databinding.adapters.ListenerUtil;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import org.fs.mvvm.R;
@@ -32,8 +33,6 @@ public class DrawerLayoutCompatBindingAdapter {
   private final static String ANDROID_ON_OPEN_OR_CLOSE  = "android:onOpenOrClose";
   private final static String ANDROID_ON_STATE_CHANGE   = "android:onStateChange";
 
-
-  private final static String ANDROID_LAYOUT_GRAVITY = "android:layout_gravity";
   private final static String ANDROID_IS_OPEN = "android:isOpen";
   private final static String ANDROID_IS_OPEN_ATTR_CHANGED = "android:isOpenAttrChanged";
 
@@ -46,17 +45,15 @@ public class DrawerLayoutCompatBindingAdapter {
    *
    * @param viewDrawerLayout DrawerLayout instance
    * @param isOpen true or false depending on desired state
-   * @param gravity graivty of viewDrawerLayout
    */
   @BindingAdapter({
-      ANDROID_IS_OPEN,
-      ANDROID_LAYOUT_GRAVITY
+      ANDROID_IS_OPEN
   })
-  public static void setDrawerIsOpen(DrawerLayout viewDrawerLayout, boolean isOpen, int gravity) {
-    if (viewDrawerLayout.isDrawerOpen(gravity) && isOpen) {
-      viewDrawerLayout.closeDrawer(gravity);
-    } else if (!viewDrawerLayout.isDrawerOpen(gravity) && !isOpen) {
-      viewDrawerLayout.openDrawer(gravity);
+  public static void setDrawerIsOpen(DrawerLayout viewDrawerLayout, boolean isOpen) {
+    if (isDrawerOpen(viewDrawerLayout) && isOpen) {
+      closeDrawer(viewDrawerLayout);
+    } else if (!isDrawerOpen(viewDrawerLayout) && !isOpen) {
+      openDrawer(viewDrawerLayout);
     }
   }
 
@@ -64,15 +61,14 @@ public class DrawerLayoutCompatBindingAdapter {
    * Getter of value for isOpen
    *
    * @param viewDrawerLayout DrawerLayout instance
-   * @param gravity gravity of drawerLayout
    * @return true or false depending on open or close
    */
   @InverseBindingAdapter(
       event = ANDROID_IS_OPEN_ATTR_CHANGED,
       attribute = ANDROID_IS_OPEN
   )
-  public static boolean provideDrawerIsOpen(DrawerLayout viewDrawerLayout, int gravity) {
-    return viewDrawerLayout.isDrawerOpen(gravity);
+  public static boolean provideDrawerIsOpen(DrawerLayout viewDrawerLayout) {
+    return isDrawerOpen(viewDrawerLayout);
   }
 
   /**
@@ -142,5 +138,19 @@ public class DrawerLayoutCompatBindingAdapter {
     if (newListener != null) {
       viewDrawerLayout.addDrawerListener(newListener);
     }
+  }
+
+  private static boolean isDrawerOpen(DrawerLayout viewDrawerLayout) {
+    return viewDrawerLayout.isDrawerOpen(GravityCompat.START) || viewDrawerLayout.isDrawerOpen(GravityCompat.END);
+  }
+
+  private static void closeDrawer(DrawerLayout viewDrawerLayout) {
+    viewDrawerLayout.closeDrawer(GravityCompat.START);
+    viewDrawerLayout.closeDrawer(GravityCompat.END);
+  }
+
+  private static void openDrawer(DrawerLayout viewDrawerLayout) {
+    viewDrawerLayout.openDrawer(GravityCompat.START);
+    viewDrawerLayout.openDrawer(GravityCompat.END);
   }
 }
