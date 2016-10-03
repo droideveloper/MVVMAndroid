@@ -23,7 +23,7 @@ import android.widget.AbsListView;
 import org.fs.mvvm.common.AbstractBindingAdapter;
 import org.fs.mvvm.common.AbstractBindingHolder;
 import org.fs.mvvm.listeners.SimpleListViewScrollListener;
-import org.fs.mvvm.utils.Preconditions;
+import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.widget.ListView;
 
 public final class ListViewCompatBindingAdapter {
@@ -149,13 +149,15 @@ public final class ListViewCompatBindingAdapter {
   )
   public static <T extends AbstractBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractBindingHolder<D>>
     void registerItemSource(ListView viewList, T adapter, InverseBindingListener selectedPositionAttrChanged) {
-    Preconditions.checkNotNull(adapter, "itemSource is null");
-    adapter.setSelectedPositionCallback(position -> {
-      viewList.setSelectedPosition(position);
-      if (selectedPositionAttrChanged != null) {
-        selectedPositionAttrChanged.onChange();
-      }
-    });
-    viewList.setAdapter(adapter);
+    //if our adapter not null we can use it
+    if (!Objects.isNullOrEmpty(adapter)) {
+      adapter.setSelectedPositionCallback(position -> {
+        viewList.setSelectedPosition(position);
+        if (selectedPositionAttrChanged != null) {
+          selectedPositionAttrChanged.onChange();
+        }
+      });
+      viewList.setAdapter(adapter);
+    }
   }
 }

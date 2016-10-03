@@ -20,13 +20,13 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
-import org.fs.mvvm.utils.Preconditions;
+import org.fs.mvvm.utils.Objects;
 
 public final class ImageViewCompatBindingAdapter {
 
   private final static String ANDROID_IMAGE_URL = "android:imageUrl";
   private final static String ANDROID_ERROR_IMAGE = "android:errorImage";
-  private final static String ANDROID_PLACEHOLDER_IMAGE = "android:placeholderImage";
+  private final static String ANDROID_PLACEHOLDER_IMAGE = "android:placeHolderImage";
 
 
   private ImageViewCompatBindingAdapter() {
@@ -50,15 +50,16 @@ public final class ImageViewCompatBindingAdapter {
       requireAll = false
   )
   public static void registerImageLoad(ImageView viewImage, String imageUrl, Drawable placeholder, Drawable error) {
-    Preconditions.checkNotNull(imageUrl, "imageUrl is null");
-    DrawableRequestBuilder<String> loadRequest = Glide.with(viewImage.getContext()).load(imageUrl);
-    if (placeholder != null) {
-      loadRequest = loadRequest.placeholder(placeholder);
+    //instead of throwing error we just ignore binding if there is no url present
+    if (!Objects.isNullOrEmpty(imageUrl)) {
+      DrawableRequestBuilder<String> loadRequest = Glide.with(viewImage.getContext()).load(imageUrl);
+      if (placeholder != null) {
+        loadRequest = loadRequest.placeholder(placeholder);
+      }
+      if (error != null) {
+        loadRequest = loadRequest.error(error);
+      }
+      loadRequest.crossFade().into(viewImage);
     }
-    if (error != null) {
-      loadRequest = loadRequest.error(error);
-    }
-    loadRequest.crossFade()
-        .into(viewImage);
   }
 }

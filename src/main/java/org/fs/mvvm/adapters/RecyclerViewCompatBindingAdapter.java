@@ -22,7 +22,6 @@ import android.databinding.InverseBindingListener;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import org.fs.mvvm.common.AbstractRecyclerBindingAdapter;
 import org.fs.mvvm.common.AbstractRecyclerBindingHolder;
-import org.fs.mvvm.utils.Preconditions;
 import org.fs.mvvm.widget.RecyclerView;
 
 
@@ -79,8 +78,9 @@ public final class RecyclerViewCompatBindingAdapter {
       ANDROID_TOUCH_HELPER
   )
   public static void registerTouchHelper(RecyclerView viewRecycler, ItemTouchHelper touchHelper) {
-    Preconditions.checkNotNull(touchHelper, "touchHelper is null");
-    touchHelper.attachToRecyclerView(viewRecycler);
+    if (touchHelper != null) {
+      touchHelper.attachToRecyclerView(viewRecycler);
+    }
   }
 
   /**
@@ -93,8 +93,9 @@ public final class RecyclerViewCompatBindingAdapter {
       ANDROID_ITEM_ANIMATOR
   )
   public static void registerItemAnimator(RecyclerView viewRecycler, RecyclerView.ItemAnimator itemAnimator) {
-    Preconditions.checkNotNull(itemAnimator, "itemAnimator is null");
-    viewRecycler.setItemAnimator(itemAnimator);
+    if (itemAnimator != null) {
+      viewRecycler.setItemAnimator(itemAnimator);
+    }
   }
 
   /**
@@ -107,9 +108,10 @@ public final class RecyclerViewCompatBindingAdapter {
       ANDROID_LAYOUT_MANAGER
   )
   public static void registerLayoutManager(RecyclerView viewRecycler, RecyclerView.LayoutManager layoutManager) {
-    Preconditions.checkNotNull(layoutManager, "layoutManager is null");
-    viewRecycler.setLayoutManager(layoutManager);
-    viewRecycler.setHasFixedSize(true);
+    if (layoutManager != null) {
+      viewRecycler.setLayoutManager(layoutManager);
+      viewRecycler.setHasFixedSize(true);
+    }
   }
 
   /**
@@ -130,13 +132,15 @@ public final class RecyclerViewCompatBindingAdapter {
   )
   public static <T extends AbstractRecyclerBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>>
     void registerAdapter(RecyclerView viewRecycler, T itemSource, InverseBindingListener selectedPositionAttrChanged) {
-      Preconditions.checkNotNull(itemSource, "itemSource is null");
-      itemSource.addInverseCallback((position) -> {
-        viewRecycler.setSelectedPosition(position);
-        if (selectedPositionAttrChanged != null) {
-          selectedPositionAttrChanged.onChange();
-        }
-      });
-      viewRecycler.setAdapter(itemSource);
+    //do not throw error if adapter is null, just ignore
+      if (itemSource != null) {
+        itemSource.addInverseCallback((position) -> {
+          viewRecycler.setSelectedPosition(position);
+          if (selectedPositionAttrChanged != null) {
+            selectedPositionAttrChanged.onChange();
+          }
+        });
+        viewRecycler.setAdapter(itemSource);
+      }
   }
 }

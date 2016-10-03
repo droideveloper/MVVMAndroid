@@ -25,7 +25,6 @@ import org.fs.mvvm.R;
 import org.fs.mvvm.listeners.OnPageScrollStateChanged;
 import org.fs.mvvm.listeners.OnPageScrolled;
 import org.fs.mvvm.listeners.OnPageSelected;
-import org.fs.mvvm.utils.Preconditions;
 
 public final class ViewPagerCompatBindingAdapter {
 
@@ -94,7 +93,7 @@ public final class ViewPagerCompatBindingAdapter {
   public static void registerPageListener(ViewPager viewPager, OnPageScrolled pageScrolled,
       OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged, InverseBindingListener selectedPageAttrChanged) {
     final ViewPager.OnPageChangeListener newListener;
-    if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null) {
+    if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null && selectedPageAttrChanged == null) {
       newListener = null;
     } else {
       newListener = new ViewPager.OnPageChangeListener() {
@@ -157,7 +156,8 @@ public final class ViewPagerCompatBindingAdapter {
       ANDROID_ITEM_SOURCE
   )
   public static void registerPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
-    Preconditions.checkNotNull(adapter, "adapter is null");
-    viewPager.setAdapter(adapter);
+    if (adapter != null) {
+      viewPager.setAdapter(adapter);
+    }
   }
 }

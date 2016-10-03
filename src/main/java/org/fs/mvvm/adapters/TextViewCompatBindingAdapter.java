@@ -86,7 +86,7 @@ public final class TextViewCompatBindingAdapter {
   }, requireAll = false)
   public static void registerTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged, InverseBindingListener textAttrChanged) {
     final TextWatcher newListener;
-    if (Objects.isNullOrEmpty(beforeChanged) && Objects.isNullOrEmpty(afterChanged)) {
+    if (Objects.isNullOrEmpty(beforeChanged) && Objects.isNullOrEmpty(afterChanged) && Objects.isNullOrEmpty(textAttrChanged)) {
       newListener = null;
     } else {
       newListener = new SimpleTextWatcher() {
