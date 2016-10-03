@@ -43,6 +43,13 @@ public abstract class AbstractDialogFragment <V extends AbstractViewModel<?>>
   }
 
   /**
+   * default implementation of dialogFragment
+   */
+  public void finish() {
+    throw new IllegalArgumentException("you can not finish, dialogFragment with finish, try use dismiss.");
+  }
+
+  /**
    * Log string message with Debug level.
    *
    * @param msg a string for log.

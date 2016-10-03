@@ -35,6 +35,13 @@ public abstract class AbstractFragment<V extends AbstractViewModel<?>>
   }
 
   /**
+   * default implementation of finish
+   */
+  public void finish() {
+    throw new IllegalArgumentException("you can not exit fragment with finish");
+  }
+
+  /**
    * Log string message with Debug level.
    *
    * @param msg a string for log.
