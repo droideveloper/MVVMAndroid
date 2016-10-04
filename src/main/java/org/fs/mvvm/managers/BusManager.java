@@ -144,7 +144,7 @@ public final class BusManager {
    * Unregister clone
    * @param callback callback to be unregistered
    */
-  public static void Unregister(Subscriber callback) {
+  public static void Unregister(Subscription callback) {
     if (!Objects.isNullOrEmpty(IMPL)) {
       IMPL.unregister(callback);
     }
