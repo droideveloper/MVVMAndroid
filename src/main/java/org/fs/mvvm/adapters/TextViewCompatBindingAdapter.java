@@ -27,6 +27,7 @@ import org.fs.mvvm.R;
 import org.fs.mvvm.data.IConverter;
 import org.fs.mvvm.listeners.OnAfterChanged;
 import org.fs.mvvm.listeners.OnBeforeChanged;
+import org.fs.mvvm.listeners.OnImeOptions;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
@@ -35,6 +36,7 @@ public final class TextViewCompatBindingAdapter {
 
   private final static String ANDROID_BEFORE_CHANGED = "android:beforeChanged";
   private final static String ANDROID_AFTER_CHANGED  = "android:afterChanged";
+  private final static String ANDROID_IME_OPTIONS    = "android:onImeOptions";
 
   private final static String ANDROID_FROM_OBJECT   = "android:fromObject";
   private final static String ANDROID_CONVERTER     = "android:converter";
@@ -44,6 +46,24 @@ public final class TextViewCompatBindingAdapter {
   private TextViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
+
+  /**
+   * Registers listener for softKeyboard ime options received for viewText
+   *
+   * @param viewText TextView instance to listen ime options
+   * @param imeOptions listener to tack only action id
+   */
+  @BindingAdapter(
+      ANDROID_IME_OPTIONS
+  )
+  public static void registerImeOptionsLitener(TextView viewText, OnImeOptions imeOptions) {
+    if (imeOptions == null) {
+      viewText.setOnEditorActionListener(null);
+    } else {
+      viewText.setOnEditorActionListener((v, id, e) -> imeOptions.onEditorAction(id));
+    }
+  }
+
 
   /**
    * Sets TextView fromObject with any kind of object if
@@ -59,7 +79,7 @@ public final class TextViewCompatBindingAdapter {
       ANDROID_CONVERTER,
       ANDROID_FROM_OBJECT
   })
-  public static <T, S extends CharSequence> void registerConvertor(TextView viewText, IConverter<T, S> converter, T object) {
+  public static <T, S extends CharSequence> void registerConverter(TextView viewText, IConverter<T, S> converter, T object) {
     if (converter != null) {
       final S textStr = Invokes.invoke(o -> {
         return converter.convert(o, Locale.getDefault());
