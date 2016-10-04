@@ -19,10 +19,15 @@ import android.databinding.BaseObservable;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import java.util.Collection;
+import java8.util.Objects;
+import org.fs.mvvm.R;
 import org.fs.mvvm.common.AbstractRecyclerBindingAdapter;
 import org.fs.mvvm.common.AbstractRecyclerBindingHolder;
-import org.fs.mvvm.widget.RecyclerView;
+import org.fs.mvvm.data.PropertyInfo;
+import org.fs.mvvm.utils.Properties;
 
 
 public final class RecyclerViewCompatBindingAdapter {
@@ -35,8 +40,138 @@ public final class RecyclerViewCompatBindingAdapter {
   private final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
   private final static String ANDROID_SELECTED_POSITION_ATTR_CHANGED = "android:selectedPositionAttrChanged";
 
+  private final static String ANDROID_SELECTED_ITEM = "android:selectedItem";
+  private final static String ANDROID_SELECTED_ITEM_ATTR_CHANGED = "android:selectedItem";
+
+  private final static String ANDROID_SELECTED_POSITIONS = "android:selectedPositions";
+  private final static String ANDROID_SELECTED_POSITIONS_ATTR_CHANGED = "android:selectedPositionsAttrChanged";
+
+  private final static String ANDROID_SELECTED_ITEMS = "android:selectedItems";
+  private final static String ANDROID_SELECTED_ITEMS_ATTR_CHANGED = "android:selectedItems";
+
   private RecyclerViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  /**
+   * Getter of SelectedPositions on viewRecycler
+   *
+   * @param viewRecycler viewRecycler instance
+   * @return null or Collection of integer
+   */
+  @InverseBindingAdapter(
+      event = ANDROID_SELECTED_POSITIONS_ATTR_CHANGED,
+      attribute = ANDROID_SELECTED_POSITIONS
+  )
+  public static Collection<Integer> provideSelectedPositions(RecyclerView viewRecycler) {
+    PropertyInfo<Collection<Integer>> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedPositions);
+    if (propertyInfo != null) {
+      return propertyInfo.getPropertyValue();
+    }
+    return null;
+  }
+
+  /**
+   * Setter of SelectedPositions on viewRecycler
+   *
+   * @param viewRecycler viewRecycler instance
+   * @param positions selected positions
+   */
+  @BindingAdapter(
+      ANDROID_SELECTED_POSITIONS
+  )
+  public static void setSelectedPositions(RecyclerView viewRecycler, Collection<Integer> positions) {
+    PropertyInfo<Collection<Integer>> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedPositions);
+    if (propertyInfo != null) {
+      if (!Objects.equals(positions, propertyInfo.getPropertyValue())) {
+        propertyInfo = new PropertyInfo<>(positions);
+      }
+    } else {
+      propertyInfo = new PropertyInfo<>(positions);
+    }
+    Properties.setPropertyInfo(viewRecycler, propertyInfo, R.id.viewRecycler_selectedPositions);
+  }
+
+  /**
+   * Getter of SelectedItems on viewRecycler
+   *
+   * @param viewRecycler viewRecycler instance
+   * @param <D> type of item
+   * @return null or Collection of items
+   */
+  @InverseBindingAdapter(
+      event = ANDROID_SELECTED_ITEMS_ATTR_CHANGED,
+      attribute = ANDROID_SELECTED_ITEMS
+  )
+  public static <D> Collection<D> provideSelectedItems(RecyclerView viewRecycler) {
+    PropertyInfo<Collection<D>> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedItems);
+    if (propertyInfo != null) {
+      return propertyInfo.getPropertyValue();
+    }
+    return null;
+  }
+
+  /**
+   * Setter of SelectedItems on viewRecycler
+   *
+   * @param viewRecycler viewRecycler instance
+   * @param items selected items
+   * @param <D> type of item
+   */
+  @BindingAdapter(
+      ANDROID_SELECTED_ITEMS
+  )
+  public static <D> void setSelectedItems(RecyclerView viewRecycler, Collection<D> items) {
+    PropertyInfo<Collection<D>> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedItems);
+    if (propertyInfo != null) {
+      if (!Objects.equals(items, propertyInfo.getPropertyValue())) {
+        propertyInfo = new PropertyInfo<>(items);
+      }
+    } else {
+      propertyInfo = new PropertyInfo<>(items);
+    }
+    Properties.setPropertyInfo(viewRecycler, propertyInfo, R.id.viewRecycler_selectedItems);
+  }
+
+  /**
+   * Getter of SelectedItem on viewRecycler
+   *
+   * @param viewRecycler viewRecycler instance
+   * @param <D> type of item
+   * @return null or item
+   */
+  @InverseBindingAdapter(
+      event =  ANDROID_SELECTED_ITEM_ATTR_CHANGED,
+      attribute = ANDROID_SELECTED_ITEM
+  )
+  public static <D> D provideSelectedItem(RecyclerView viewRecycler) {
+    PropertyInfo<D> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedItem);
+    if (propertyInfo != null) {
+      return propertyInfo.getPropertyValue();
+    }
+    return null;
+  }
+
+  /**
+   * Setter of SelectedItem on viewRecycler
+   *
+   * @param viewRecycler viewRecycler instance
+   * @param item selected item
+   * @param <D> type of item
+   */
+  @BindingAdapter(
+      ANDROID_SELECTED_ITEM
+  )
+  public static <D> void setSelectedItem(RecyclerView viewRecycler, D item) {
+    PropertyInfo<D> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedItem);
+    if (propertyInfo != null) {
+      if (!Objects.equals(item, propertyInfo.getPropertyValue())) {
+        propertyInfo = new PropertyInfo<>(item);
+      }
+    } else {
+      propertyInfo = new PropertyInfo<>(item);
+    }
+    Properties.setPropertyInfo(viewRecycler, propertyInfo, R.id.viewRecycler_selectedItem);
   }
 
   /**
@@ -50,7 +185,11 @@ public final class RecyclerViewCompatBindingAdapter {
       attribute = ANDROID_SELECTED_POSITION
   )
   public static int provideSelectedPosition(RecyclerView viewRecycler) {
-    return viewRecycler.getSelectedPosition();
+    PropertyInfo<Integer> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedPosition);
+    if (propertyInfo != null) {
+      return propertyInfo.getPropertyValue();
+    }
+    return -1;
   }
 
   /**
@@ -62,10 +201,16 @@ public final class RecyclerViewCompatBindingAdapter {
   @BindingAdapter(
       ANDROID_SELECTED_POSITION
   )
-  public static void registerSelectedPosition(RecyclerView viewRecycler, int selectedPosition) {
-    if (viewRecycler.getSelectedPosition() != selectedPosition) {
-      viewRecycler.setSelectedPosition(selectedPosition);
+  public static void setSelectedPosition(RecyclerView viewRecycler, int selectedPosition) {
+    PropertyInfo<Integer> propertyInfo = Properties.getPropertyInfo(viewRecycler, R.id.viewRecycler_selectedPosition);
+    if (propertyInfo != null) {
+      if (propertyInfo.getPropertyValue() != selectedPosition) {
+        propertyInfo = new PropertyInfo<>(selectedPosition);
+      }
+    } else {
+      propertyInfo = new PropertyInfo<>(selectedPosition);
     }
+    Properties.setPropertyInfo(viewRecycler, propertyInfo, R.id.viewRecycler_selectedPosition);
   }
 
   /**
@@ -126,21 +271,50 @@ public final class RecyclerViewCompatBindingAdapter {
   @BindingAdapter(
     value = {
         ANDROID_ITEM_SOURCE,
-        ANDROID_SELECTED_POSITION_ATTR_CHANGED
+        ANDROID_SELECTED_POSITION_ATTR_CHANGED,
+        ANDROID_SELECTED_ITEM_ATTR_CHANGED,
+        ANDROID_SELECTED_POSITIONS_ATTR_CHANGED,
+        ANDROID_SELECTED_ITEMS_ATTR_CHANGED
     },
     requireAll = false
   )
   public static <T extends AbstractRecyclerBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>>
-    void registerAdapter(RecyclerView viewRecycler, T itemSource, InverseBindingListener selectedPositionAttrChanged) {
+    void registerAdapter(RecyclerView viewRecycler, T itemSource,
+      InverseBindingListener selectedPositionAttrChanged, InverseBindingListener selectedItemAttrChanged,
+      InverseBindingListener selectedPositionsAttrChanged, InverseBindingListener selectedItemsAttrChanged) {
     //do not throw error if adapter is null, just ignore
       if (itemSource != null) {
-        itemSource.addInverseCallback((position) -> {
-          viewRecycler.setSelectedPosition(position);
-          if (selectedPositionAttrChanged != null) {
-            selectedPositionAttrChanged.onChange();
-          }
-        });
+        //singleMode
+        if (itemSource.isSingleMode()) {
+          itemSource.setSingleItemCallback((item) -> {
+            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(item), R.id.viewRecycler_selectedItem);
+            if (selectedItemAttrChanged != null) {
+              selectedItemAttrChanged.onChange();
+            }
+          });
+          itemSource.setSinglePositionCallback((position) -> {
+            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(position), R.id.viewRecycler_selectedPosition);
+            if (selectedPositionAttrChanged != null) {
+              selectedPositionAttrChanged.onChange();
+            }
+          });
+        } else {//multiMode
+          itemSource.setMultiItemCallback((items) -> {
+            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(items), R.id.viewRecycler_selectedItems);
+            if (selectedItemsAttrChanged != null) {
+              selectedItemsAttrChanged.onChange();
+            }
+          });
+          itemSource.setMultiPositionCallback((positions) -> {
+            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(positions), R.id.viewRecycler_selectedPositions);
+            if (selectedPositionsAttrChanged != null) {
+              selectedPositionsAttrChanged.onChange();
+            }
+          });
+        }
         viewRecycler.setAdapter(itemSource);
+      } else {
+        viewRecycler.setAdapter(null);
       }
   }
 }

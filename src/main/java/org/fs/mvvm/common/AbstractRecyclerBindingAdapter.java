@@ -34,7 +34,6 @@ import java.util.List;
 import java8.util.stream.Collectors;
 import java8.util.stream.IntStreams;
 import java8.util.stream.StreamSupport;
-import org.fs.mvvm.commands.Action;
 import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEvent;
 import org.fs.mvvm.utils.Preconditions;
@@ -55,8 +54,11 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
   private final List<Integer>                 selection;
   private final int                           selectionMode;
 
-  private Action<List<Integer>>               selectedCallback;
-  private Action<Integer>                     inverseCallback;
+  private Action1<Integer>                    singlePositionCallback;
+  private Action1<List<Integer>>              multiPositionCallback;
+
+  private Action1<D>                          singleItemCallback;
+  private Action1<List<D>>                    multiItemCallback;
 
   private Subscription eventSubs;
 
@@ -83,17 +85,21 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     busManager.unregister(eventSubs);
     eventSubs = null;
   }
-
-  /**
-   * Callback to receive result of selection as integers
-   * @param selectedCallback selected callbacks
-   */
-  public final void setSelectedCallback(Action<List<Integer>> selectedCallback) {
-    this.selectedCallback = selectedCallback;
+  //singleMode selectedPosition
+  public final void setSinglePositionCallback(Action1<Integer> singlePositionCallback) {
+    this.singlePositionCallback = singlePositionCallback;
   }
-
-  public final void addInverseCallback(Action<Integer> inverseCallback) {
-    this.inverseCallback = inverseCallback;
+  //singleMode selectedItem
+  public final void setSingleItemCallback(Action1<D> singleItemCallback) {
+    this.singleItemCallback = singleItemCallback;
+  }
+  //multiMode selectedPositions
+  public final void setMultiPositionCallback(Action1<List<Integer>> multiPositionCallback) {
+    this.multiPositionCallback = multiPositionCallback;
+  }
+  //multiMode selectedItems
+  public final void setMultiItemCallback(Action1<List<D>> multiItemCallback) {
+    this.multiItemCallback = multiItemCallback;
   }
 
   @Override public final void onViewDetachedFromWindow(V viewHolder) {
@@ -208,14 +214,33 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
       selection.remove(innerPosition);
     }
     //notify viewModel if we provide callback
-    if (selectedCallback != null) {
-      selectedCallback.execute(selection);
+    if (multiPositionCallback != null) {
+      multiPositionCallback.call(selection);
     }
-    if (inverseCallback != null) {
-      inverseCallback.execute(
+    //notification
+    if (multiItemCallback != null) {
+      multiItemCallback.call(
+          StreamSupport.stream(selection)
+            .map(itemSource::get)
+            .collect(Collectors.toList())
+      );
+    }
+    //notification
+    if (singlePositionCallback != null) {
+      singlePositionCallback.call(
           StreamSupport.stream(selection)
               .findFirst()
               .orElse(-1)
+      );
+    }
+    //notification
+    if (singleItemCallback != null) {
+      singleItemCallback.call(
+          StreamSupport.stream(selection)
+            .filter(x -> x >= 0)
+            .map(itemSource::get)
+            .findFirst()
+            .orElse(null)
       );
     }
     notifyItemChanged(position);
@@ -225,7 +250,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
    * Returns if selection is singleMode or not
    * @return true or false
    */
-  private boolean isSingleMode() {
+  public final boolean isSingleMode() {
     return selectionMode == SINGLE_SELECTION_MODE;
   }
 
