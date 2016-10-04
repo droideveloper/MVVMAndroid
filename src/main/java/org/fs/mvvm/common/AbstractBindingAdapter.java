@@ -31,8 +31,8 @@ import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
-import org.fs.mvvm.commands.Action;
 import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEvent;
 import org.fs.mvvm.utils.Objects;
@@ -52,8 +52,11 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
   private final List<Integer>           selection;
   private final int                     selectionMode;
 
-  private Action<List<Integer>> selectedCallback;
-  private Action<Integer>       selectedPositionCallback;
+  private Action1<Integer>                    singlePositionCallback;
+  private Action1<List<Integer>>              multiPositionCallback;
+
+  private Action1<D>                          singleItemCallback;
+  private Action1<List<D>>                    multiItemCallback;
 
   private Subscription eventSubs;
 
@@ -79,22 +82,21 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     this.itemSource.addOnListChangedCallback(itemSourceObserver);
   }
 
-  /**
-   * if we want to need get data back with
-   * proper layouting we need to call it properly
-   *
-   * @param selectedCallback callback
-   */
-  public final void setSelectedCallback(Action<List<Integer>> selectedCallback) {
-    this.selectedCallback = selectedCallback;
+  //singleMode selectedPosition
+  public final void setSinglePositionCallback(Action1<Integer> singlePositionCallback) {
+    this.singlePositionCallback = singlePositionCallback;
   }
-
-  /**
-   * Selected position update reciever
-   * @param selectedPositionCallback position callback
-   */
-  public void setSelectedPositionCallback(Action<Integer> selectedPositionCallback) {
-    this.selectedPositionCallback = selectedPositionCallback;
+  //singleMode selectedItem
+  public final void setSingleItemCallback(Action1<D> singleItemCallback) {
+    this.singleItemCallback = singleItemCallback;
+  }
+  //multiMode selectedPositions
+  public final void setMultiPositionCallback(Action1<List<Integer>> multiPositionCallback) {
+    this.multiPositionCallback = multiPositionCallback;
+  }
+  //multiMode selectedItems
+  public final void setMultiItemCallback(Action1<List<D>> multiItemCallback) {
+    this.multiItemCallback = multiItemCallback;
   }
 
   /**
@@ -239,14 +241,33 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
       selection.remove(innerPosition);
     }
     //notify viewModel if we provide callback
-    if (selectedCallback != null) {
-      selectedCallback.execute(selection);
+    if (multiPositionCallback != null) {
+      multiPositionCallback.call(selection);
     }
-    if (selectedPositionCallback != null) {
-      selectedPositionCallback.execute(
+    //notification
+    if (multiItemCallback != null) {
+      multiItemCallback.call(
           StreamSupport.stream(selection)
-            .findFirst()
-            .orElse(-1)
+              .map(itemSource::get)
+              .collect(Collectors.toList())
+      );
+    }
+    //notification
+    if (singlePositionCallback != null) {
+      singlePositionCallback.call(
+          StreamSupport.stream(selection)
+              .findFirst()
+              .orElse(-1)
+      );
+    }
+    //notification
+    if (singleItemCallback != null) {
+      singleItemCallback.call(
+          StreamSupport.stream(selection)
+              .filter(x -> x >= 0)
+              .map(itemSource::get)
+              .findFirst()
+              .orElse(null)
       );
     }
     notifyDataSetChanged();
@@ -256,7 +277,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
    * Returns if selection is singleMode or not
    * @return true or false
    */
-  private boolean isSingleMode() {
+  public final boolean isSingleMode() {
     return selectionMode == SINGLE_SELECTION_MODE;
   }
 

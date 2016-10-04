@@ -22,4 +22,11 @@
   <item name="viewRecycler_selectedItem" type="id" />
   <item name="viewRecycler_selectedPositions" type="id" />
   <item name="viewRecycler_selectedItems" type="id" />
+
+  <!-- ListView properties -->
+  <item name="viewList_selectedPosition" type="id" />
+  <item name="viewList_selectedItem" type="id" />
+  <item name="viewList_selectedPositions" type="id" />
+  <item name="viewList_selectedItems" type="id" />
+  <item name="viewList_isLoadMore" type="id" />
 </resources>
