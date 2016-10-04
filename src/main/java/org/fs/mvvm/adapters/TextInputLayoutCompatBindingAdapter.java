@@ -16,6 +16,8 @@
 package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
 import android.databinding.adapters.ListenerUtil;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -29,6 +31,9 @@ import org.fs.mvvm.data.IValidator;
 import org.fs.mvvm.data.Validation;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 
+@BindingMethods(
+    @BindingMethod(type = TextView.class, attribute = "android:isSelected", method = "setSelected")
+)
 public final class TextInputLayoutCompatBindingAdapter {
 
   private final static String ANDROID_VALIDATOR     = "android:validator";
