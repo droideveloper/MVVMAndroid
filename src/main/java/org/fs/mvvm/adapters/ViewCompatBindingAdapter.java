@@ -17,17 +17,36 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
 import android.databinding.adapters.ListenerUtil;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import org.fs.mvvm.R;
 import org.fs.mvvm.commands.ICommand;
+import org.fs.mvvm.commands.RelayCommand;
 
 public final class ViewCompatBindingAdapter {
 
   private final static String BIND_COMMAND            = "bindings:command";
   private final static String BIND_COMMAND_PARAMETER  = "bindings:commandParameter";
 
+  private final static String BIND_NOTIFY_TEXT        = "bindings:notifyText";
+  private final static String BIND_ACTION_TEXT        = "bindings:actionText";
+  private final static String BIND_RELAY_COMMAND      = "bindings:relayCommand";
+
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  @BindingAdapter({ BIND_NOTIFY_TEXT })
+  public static <S extends CharSequence> void viewRegisterSnackbar(View view, S notifyText) {
+    Snackbar.make(view, notifyText, Snackbar.LENGTH_LONG)
+        .show();
+  }
+
+  @BindingAdapter({ BIND_NOTIFY_TEXT, BIND_ACTION_TEXT, BIND_RELAY_COMMAND })
+  public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, RelayCommand command) {
+    final Snackbar snackbar = Snackbar.make(view, notifyText, Snackbar.LENGTH_LONG);
+    snackbar.setAction(actionText, v -> command.execute(null));
+    snackbar.show();
   }
 
   @BindingAdapter(
