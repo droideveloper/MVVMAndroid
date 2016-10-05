@@ -38,13 +38,13 @@ public final class ListViewCompatBindingAdapter {
   private final static String ANDROID_SELECTED_POSITION_ATTR_CHANGED = "android:selectedPositionAttrChanged";
 
   private final static String ANDROID_SELECTED_ITEM = "android:selectedItem";
-  private final static String ANDROID_SELECTED_ITEM_ATTR_CHANGED = "android:selectedItem";
+  private final static String ANDROID_SELECTED_ITEM_ATTR_CHANGED = "android:selectedItemAttrChanged";
 
   private final static String ANDROID_SELECTED_POSITIONS = "android:selectedPositions";
   private final static String ANDROID_SELECTED_POSITIONS_ATTR_CHANGED = "android:selectedPositionsAttrChanged";
 
   private final static String ANDROID_SELECTED_ITEMS = "android:selectedItems";
-  private final static String ANDROID_SELECTED_ITEMS_ATTR_CHANGED = "android:selectedItems";
+  private final static String ANDROID_SELECTED_ITEMS_ATTR_CHANGED = "android:selectedItemsAttrChanged";
 
   private final static String ANDROID_LOAD_MORE = "android:loadMore";
   private final static String ANDROID_LOAD_MORE_ATTR_CHANGED = "android:loadMoreAttrChanged";

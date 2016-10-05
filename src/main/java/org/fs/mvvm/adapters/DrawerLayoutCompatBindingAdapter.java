@@ -29,27 +29,19 @@ import org.fs.mvvm.listeners.OnLayoutStateChanged;
 
 public class DrawerLayoutCompatBindingAdapter {
 
-  private final static String ANDROID_ON_SLIDED         = "android:onSlided";
-  private final static String ANDROID_ON_OPEN_OR_CLOSE  = "android:onOpenOrClose";
-  private final static String ANDROID_ON_STATE_CHANGE   = "android:onStateChange";
+  private final static String BIND_ON_SLIDED         = "bindings:onSlided";
+  private final static String BIND_ON_OPEN_OR_CLOSE  = "bindings:onOpenOrClose";
+  private final static String BIND_ON_STATE_CHANGE   = "bindings:onStateChange";
 
-  private final static String ANDROID_IS_OPEN = "android:isOpen";
-  private final static String ANDROID_IS_OPEN_ATTR_CHANGED = "android:isOpenAttrChanged";
+  private final static String BIND_IS_OPEN              = "bindings:isOpen";
+  private final static String BIND_IS_OPEN_ATTR_CHANGED = "bindings:isOpenAttrChanged";
 
   private DrawerLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Setter of value for isOpen
-   *
-   * @param viewDrawerLayout DrawerLayout instance
-   * @param isOpen true or false depending on desired state
-   */
-  @BindingAdapter({
-      ANDROID_IS_OPEN
-  })
-  public static void setDrawerIsOpen(DrawerLayout viewDrawerLayout, boolean isOpen) {
+  @BindingAdapter({ BIND_IS_OPEN })
+  public static void viewDrawerLayoutRegisterIsOpen(DrawerLayout viewDrawerLayout, boolean isOpen) {
     if (isDrawerOpen(viewDrawerLayout) && isOpen) {
       closeDrawer(viewDrawerLayout);
     } else if (!isDrawerOpen(viewDrawerLayout) && !isOpen) {
@@ -57,40 +49,22 @@ public class DrawerLayoutCompatBindingAdapter {
     }
   }
 
-  /**
-   * Getter of value for isOpen
-   *
-   * @param viewDrawerLayout DrawerLayout instance
-   * @return true or false depending on open or close
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_IS_OPEN_ATTR_CHANGED,
-      attribute = ANDROID_IS_OPEN
-  )
-  public static boolean provideDrawerIsOpen(DrawerLayout viewDrawerLayout) {
+  @InverseBindingAdapter(attribute = BIND_IS_OPEN,
+      event = BIND_IS_OPEN_ATTR_CHANGED)
+  public static boolean viewDrawerLayoutRetreiveIsOpen(DrawerLayout viewDrawerLayout) {
     return isDrawerOpen(viewDrawerLayout);
   }
 
-  /**
-   * Drawer layout listener split into 3 slided, openOrClose and stateChanged also
-   * tracking view openOrClose for two-way binding
-   *
-   * @param viewDrawerLayout DrawerLayout instance
-   * @param slided slided callback
-   * @param openOrClose openOrClose callback
-   * @param stateChanged stateChanged callback
-   * @param isOpenAttrChanged attr changed two-way callback
-   */
   @BindingAdapter(
       value = {
-          ANDROID_ON_SLIDED,
-          ANDROID_ON_OPEN_OR_CLOSE,
-          ANDROID_ON_STATE_CHANGE,
-          ANDROID_IS_OPEN_ATTR_CHANGED
+          BIND_ON_SLIDED,
+          BIND_ON_OPEN_OR_CLOSE,
+          BIND_ON_STATE_CHANGE,
+          BIND_IS_OPEN_ATTR_CHANGED
       },
       requireAll = false
   )
-  public static void registerDrawerLayoutListener(DrawerLayout viewDrawerLayout,
+  public static void viewDrawerLayoutRegisterListeners(DrawerLayout viewDrawerLayout,
       OnLayoutSlided slided, OnLayoutOpenedOrClosed openOrClose,
       OnLayoutStateChanged stateChanged, InverseBindingListener isOpenAttrChanged) {
 

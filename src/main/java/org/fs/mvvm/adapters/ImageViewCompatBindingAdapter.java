@@ -24,32 +24,23 @@ import org.fs.mvvm.utils.Objects;
 
 public final class ImageViewCompatBindingAdapter {
 
-  private final static String ANDROID_IMAGE_URL = "android:imageUrl";
-  private final static String ANDROID_ERROR_IMAGE = "android:errorImage";
-  private final static String ANDROID_PLACEHOLDER_IMAGE = "android:placeHolderImage";
-
+  private final static String BIND_IMAGE_URL          = "bindings:imageUrl";
+  private final static String BIND_ERROR_IMAGE        = "bindings:errorImage";
+  private final static String BIND_PLACEHOLDER_IMAGE  = "bindings:placeHolderImage";
 
   private ImageViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
-  /**
-   * Registers url of Image, Remote preferred and with placeholder Drawable and error Drawable
-   *
-   * @param viewImage imageView to bind remote image if exists.
-   * @param imageUrl remote image url as string.
-   * @param placeholder placeholder drawable shown pre-loading.
-   * @param error error drawable shown if error occured.
-   */
   @BindingAdapter(
       value = {
-        ANDROID_IMAGE_URL,
-        ANDROID_PLACEHOLDER_IMAGE,
-        ANDROID_ERROR_IMAGE
+        BIND_IMAGE_URL,
+        BIND_PLACEHOLDER_IMAGE,
+        BIND_ERROR_IMAGE
       },
       requireAll = false
   )
-  public static void registerImageLoad(ImageView viewImage, String imageUrl, Drawable placeholder, Drawable error) {
+  public static void viewImageRegisterImageUrl(ImageView viewImage, String imageUrl, Drawable placeholder, Drawable error) {
     //instead of throwing error we just ignore binding if there is no url present
     if (!Objects.isNullOrEmpty(imageUrl)) {
       DrawableRequestBuilder<String> loadRequest = Glide.with(viewImage.getContext()).load(imageUrl);

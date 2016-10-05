@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+/*
  * MVVM Copyright (C) 2016 Fatih.
- *
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,11 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- -->
-<resources>
-  <item name="onPageChangeListener" type="id" />
-  <item name="recyclerScrollListener" type="id" />
-  <item name="drawerListener" type="id" />
-  <item name="onClickListener" type="id" />
-  <item name="textLayoutWatcher" type="id" />
-</resources>
+ */
+package org.fs.mvvm.listeners;
+
+import android.support.v7.widget.RecyclerView;
+
+public class SimpleRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
+
+  @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    super.onScrolled(recyclerView, dx, dy);
+  }
+
+  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+    super.onScrollStateChanged(recyclerView, newState);
+  }
+}
