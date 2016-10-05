@@ -25,6 +25,7 @@ import java8.util.Objects;
 import org.fs.mvvm.R;
 import org.fs.mvvm.common.AbstractBindingAdapter;
 import org.fs.mvvm.common.AbstractBindingHolder;
+import org.fs.mvvm.common.AbstractEntity;
 import org.fs.mvvm.data.PropertyInfo;
 import org.fs.mvvm.listeners.SimpleListViewScrollListener;
 import org.fs.mvvm.utils.Properties;
@@ -32,55 +33,39 @@ import android.widget.ListView;
 
 public final class ListViewCompatBindingAdapter {
 
-  private final static String ANDROID_ITEM_SOURCE = "android:itemSource";
+  private final static String BIND_ITEM_SOURCE = "bindings:itemSource";
 
-  private final static String ANDROID_SELECTED_POSITION = "android:selectedPosition";
-  private final static String ANDROID_SELECTED_POSITION_ATTR_CHANGED = "android:selectedPositionAttrChanged";
+  private final static String BIND_POSITION              = "bindings:position";
+  private final static String BIND_POSITION_ATTR_CHANGED = "bindings:positionAttrChanged";
 
-  private final static String ANDROID_SELECTED_ITEM = "android:selectedItem";
-  private final static String ANDROID_SELECTED_ITEM_ATTR_CHANGED = "android:selectedItemAttrChanged";
+  private final static String BIND_ITEM              = "bindings:item";
+  private final static String BIND_ITEM_ATTR_CHANGED = "bindings:itemAttrChanged";
 
-  private final static String ANDROID_SELECTED_POSITIONS = "android:selectedPositions";
-  private final static String ANDROID_SELECTED_POSITIONS_ATTR_CHANGED = "android:selectedPositionsAttrChanged";
+  private final static String BIND_POSITIONS               = "bindings:positions";
+  private final static String BIND_POSITIONS_ATTR_CHANGED  = "bindings:positionsAttrChanged";
 
-  private final static String ANDROID_SELECTED_ITEMS = "android:selectedItems";
-  private final static String ANDROID_SELECTED_ITEMS_ATTR_CHANGED = "android:selectedItemsAttrChanged";
+  private final static String BIND_ITEMS               = "bindings:items";
+  private final static String BIND_ITEMS_ATTR_CHANGED  = "bindings:itemsAttrChanged";
 
-  private final static String ANDROID_LOAD_MORE = "android:loadMore";
-  private final static String ANDROID_LOAD_MORE_ATTR_CHANGED = "android:loadMoreAttrChanged";
+  private final static String BIND_IS_LOADING                = "bindings:isLoading";
+  private final static String BIND_IS_LOADING_ATTR_CHANGED   = "bindings:isLoadingAttrChanged";
 
   private ListViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Getter of SelectedPositions on viewList
-   *
-   * @param viewList viewList instance
-   * @return null or Collection of integer
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_SELECTED_POSITIONS_ATTR_CHANGED,
-      attribute = ANDROID_SELECTED_POSITIONS
-  )
-  public static Collection<Integer> provideSelectedPositions(ListView viewList) {
+  @InverseBindingAdapter(attribute = BIND_POSITIONS,
+      event = BIND_POSITIONS_ATTR_CHANGED)
+  public static Collection<Integer> viewListRetreivePositions(ListView viewList) {
     PropertyInfo<Collection<Integer>> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedPositions);
     if (propertyInfo != null) {
       return propertyInfo.getPropertyValue();
     }
     return null;
   }
-
-  /**
-   * Setter of SelectedPositions on viewList
-   *
-   * @param viewList viewList instance
-   * @param positions selected positions
-   */
-  @BindingAdapter(
-      ANDROID_SELECTED_POSITIONS
-  )
-  public static void setSelectedPositions(ListView viewList, Collection<Integer> positions) {
+  
+  @BindingAdapter({ BIND_POSITIONS })
+  public static void viewListRegisterPositions(ListView viewList, Collection<Integer> positions) {
     PropertyInfo<Collection<Integer>> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedPositions);
     if (propertyInfo != null) {
       if (!Objects.equals(positions, propertyInfo.getPropertyValue())) {
@@ -99,29 +84,18 @@ public final class ListViewCompatBindingAdapter {
    * @param <D> type of item
    * @return null or Collection of items
    */
-  @InverseBindingAdapter(
-      event = ANDROID_SELECTED_ITEMS_ATTR_CHANGED,
-      attribute = ANDROID_SELECTED_ITEMS
-  )
-  public static <D> Collection<D> provideSelectedItems(ListView viewList) {
+  @InverseBindingAdapter(attribute = BIND_ITEMS,
+      event = BIND_ITEMS_ATTR_CHANGED)
+  public static <D extends AbstractEntity> Collection<D> viewListRegisterItems(ListView viewList) {
     PropertyInfo<Collection<D>> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedItems);
     if (propertyInfo != null) {
       return propertyInfo.getPropertyValue();
     }
     return null;
   }
-
-  /**
-   * Setter of SelectedItems on viewList
-   *
-   * @param viewList viewList instance
-   * @param items selected items
-   * @param <D> type of item
-   */
-  @BindingAdapter(
-      ANDROID_SELECTED_ITEMS
-  )
-  public static <D> void setSelectedItems(ListView viewList, Collection<D> items) {
+  
+  @BindingAdapter({ BIND_ITEMS })
+  public static <D extends AbstractEntity> void viewListRetreiveItems(ListView viewList, Collection<D> items) {
     PropertyInfo<Collection<D>> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedItems);
     if (propertyInfo != null) {
       if (!Objects.equals(items, propertyInfo.getPropertyValue())) {
@@ -133,36 +107,18 @@ public final class ListViewCompatBindingAdapter {
     Properties.setPropertyInfo(viewList, propertyInfo, R.id.viewList_selectedItems);
   }
 
-  /**
-   * Getter of SelectedItem on viewList
-   *
-   * @param viewList viewList instance
-   * @param <D> type of item
-   * @return null or item
-   */
-  @InverseBindingAdapter(
-      event =  ANDROID_SELECTED_ITEM_ATTR_CHANGED,
-      attribute = ANDROID_SELECTED_ITEM
-  )
-  public static <D> D provideSelectedItem(ListView viewList) {
+  @InverseBindingAdapter(attribute = BIND_ITEM,
+      event =  BIND_ITEM_ATTR_CHANGED)
+  public static <D extends AbstractEntity> D viewListRetreiveItem(ListView viewList) {
     PropertyInfo<D> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedItem);
     if (propertyInfo != null) {
       return propertyInfo.getPropertyValue();
     }
     return null;
   }
-
-  /**
-   * Setter of SelectedItem on viewList
-   *
-   * @param viewList viewList instance
-   * @param item selected item
-   * @param <D> type of item
-   */
-  @BindingAdapter(
-      ANDROID_SELECTED_ITEM
-  )
-  public static <D> void setSelectedItem(ListView viewList, D item) {
+  
+  @BindingAdapter({ BIND_ITEM })
+  public static <D extends AbstractEntity> void viewListRegisterItem(ListView viewList, D item) {
     PropertyInfo<D> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedItem);
     if (propertyInfo != null) {
       if (!Objects.equals(item, propertyInfo.getPropertyValue())) {
@@ -174,17 +130,9 @@ public final class ListViewCompatBindingAdapter {
     Properties.setPropertyInfo(viewList, propertyInfo, R.id.viewList_selectedItem);
   }
 
-  /**
-   * Gets value from here
-   *
-   * @param viewList selection change
-   * @return int position
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_SELECTED_POSITION_ATTR_CHANGED,
-      attribute = ANDROID_SELECTED_POSITION
-  )
-  public static int provideSelectedPosition(ListView viewList) {
+  @InverseBindingAdapter(attribute = BIND_POSITION,
+      event = BIND_POSITION_ATTR_CHANGED)
+  public static int viewListRetreivePosition(ListView viewList) {
     PropertyInfo<Integer> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedPosition);
     if (propertyInfo != null) {
       return propertyInfo.getPropertyValue();
@@ -192,16 +140,8 @@ public final class ListViewCompatBindingAdapter {
     return -1;
   }
 
-  /**
-   * Register selected position for this viewList
-   *
-   * @param viewList view instance
-   * @param selectedPosition position as int
-   */
-  @BindingAdapter(
-      ANDROID_SELECTED_POSITION
-  )
-  public static void setSelectedPosition(ListView viewList, int selectedPosition) {
+  @BindingAdapter({ BIND_POSITION })
+  public static void viewListRegisterPosition(ListView viewList, int selectedPosition) {
     PropertyInfo<Integer> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_selectedPosition);
     if (propertyInfo != null) {
       if (propertyInfo.getPropertyValue() != selectedPosition) {
@@ -212,18 +152,10 @@ public final class ListViewCompatBindingAdapter {
     }
     Properties.setPropertyInfo(viewList, propertyInfo, R.id.viewList_selectedPosition);
   }
-
-  /**
-   * getter for two way loadMore
-   *
-   * @param viewList viewList
-   * @return true or false
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_LOAD_MORE_ATTR_CHANGED,
-      attribute = ANDROID_LOAD_MORE
-  )
-  public static boolean provideIsLoadMore(ListView viewList) {
+  
+  @InverseBindingAdapter(attribute = BIND_IS_LOADING,
+      event = BIND_IS_LOADING_ATTR_CHANGED)
+  public static boolean viewListRetreiveIsLoading(ListView viewList) {
     PropertyInfo<Boolean> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_isLoadMore);
     if (propertyInfo != null) {
       return propertyInfo.getPropertyValue();
@@ -231,16 +163,8 @@ public final class ListViewCompatBindingAdapter {
     return false;
   }
 
-  /**
-   * setter for two way loadMore
-   *
-   * @param viewList viewList
-   * @param isLoadMore true or false
-   */
-  @BindingAdapter(
-      ANDROID_LOAD_MORE
-  )
-  public static void registerLoadMore(ListView viewList, boolean isLoadMore) {
+  @BindingAdapter({ BIND_IS_LOADING })
+  public static void viewListRegisterIsLoading(ListView viewList, boolean isLoadMore) {
     PropertyInfo<Boolean> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_isLoadMore);
     if (propertyInfo != null) {
       if (propertyInfo.getPropertyValue() != isLoadMore) {
@@ -252,16 +176,8 @@ public final class ListViewCompatBindingAdapter {
     Properties.setPropertyInfo(viewList, propertyInfo, R.id.viewList_isLoadMore);
   }
 
-  /**
-   * tracks child position and sets load more property if needed
-   *
-   * @param viewList viewList
-   * @param loadMoreAttrChanged event bubbling
-   */
-  @BindingAdapter(
-      ANDROID_LOAD_MORE_ATTR_CHANGED
-  )
-  public static void registerScrollListener(ListView viewList, InverseBindingListener loadMoreAttrChanged) {
+  @BindingAdapter({ BIND_IS_LOADING_ATTR_CHANGED })
+  public static void registerScrollListener(ListView viewList, InverseBindingListener isLoadingAttrChanged) {
     PropertyInfo<Boolean> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_isLoadMore);
     if (propertyInfo != null) {
       final AbsListView.OnScrollListener newListener = new SimpleListViewScrollListener() {
@@ -269,15 +185,15 @@ public final class ListViewCompatBindingAdapter {
           if (first + visible == total && total != 0) {
             if (!propertyInfo.getPropertyValue()) {
               Properties.setPropertyInfo(viewList, new PropertyInfo<>(true), R.id.viewList_isLoadMore);
-              if (loadMoreAttrChanged != null) {
-                loadMoreAttrChanged.onChange();
+              if (isLoadingAttrChanged != null) {
+                isLoadingAttrChanged.onChange();
               }
             }
           } else {
             if (propertyInfo.getPropertyValue()) {
               Properties.setPropertyInfo(viewList, new PropertyInfo<>(false), R.id.viewList_isLoadMore);
-              if (loadMoreAttrChanged != null) {
-                loadMoreAttrChanged.onChange();
+              if (isLoadingAttrChanged != null) {
+                isLoadingAttrChanged.onChange();
               }
             }
           }
@@ -287,28 +203,18 @@ public final class ListViewCompatBindingAdapter {
     }
   }
 
-
-  /**
-   * Registers adapter on view and checks for position
-   *
-   * @param viewList viewList to set adapter and track selection changes
-   * @param itemSource itemSource instance
-   * @param <T> type of adapter
-   * @param <D> type of entity
-   * @param <V> type of viewHolder
-   */
   @BindingAdapter(
       value = {
-          ANDROID_ITEM_SOURCE,
-          ANDROID_SELECTED_POSITION_ATTR_CHANGED,
-          ANDROID_SELECTED_ITEM_ATTR_CHANGED,
-          ANDROID_SELECTED_POSITIONS_ATTR_CHANGED,
-          ANDROID_SELECTED_ITEMS_ATTR_CHANGED
+          BIND_ITEM_SOURCE,
+          BIND_POSITION_ATTR_CHANGED,
+          BIND_ITEM_ATTR_CHANGED,
+          BIND_POSITIONS_ATTR_CHANGED,
+          BIND_ITEMS_ATTR_CHANGED
       },
       requireAll = false
   )
   public static <T extends AbstractBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractBindingHolder<D>>
-    void registerItemSource(ListView viewList, T itemSource,
+    void viewListRegisterAdapter(ListView viewList, T itemSource,
       InverseBindingListener selectedPositionAttrChanged, InverseBindingListener selectedItemAttrChanged,
       InverseBindingListener selectedPositionsAttrChanged, InverseBindingListener selectedItemsAttrChanged) {
     //if our adapter not null we can use it

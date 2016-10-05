@@ -25,26 +25,18 @@ import org.fs.mvvm.listeners.OnLayoutSlided;
 
 public class SlidingPaneLayoutCompatBindingAdapter {
 
-  private final static String ANDROID_ON_SLIDED         = "android:onSlided";
-  private final static String ANDROID_ON_OPEN_OR_CLOSE  = "android:onOpenOrClose";
+  private final static String BIND_ON_SLIDED         = "bindings:onSlided";
+  private final static String BIND_ON_OPEN_OR_CLOSE  = "bindings:onOpenOrClose";
 
-  private final static String ANDROID_IS_OPEN = "android:isOpen";
-  private final static String ANDROID_IS_OPEN_ATTR_CHANGED = "android:isOpenAttrChanged";
+  private final static String BIND_IS_OPEN              = "bindings:isOpen";
+  private final static String BIND_IS_OPEN_ATTR_CHANGED = "bindings:isOpenAttrChanged";
 
   private SlidingPaneLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Sets if viewSlidingPageLayout is open or close
-   *
-   * @param viewSlidingPaneLayout SlidingPaneLayout instance
-   * @param isOpen true or false
-   */
-  @BindingAdapter(
-      ANDROID_IS_OPEN
-  )
-  public static void setOpenOrClose(SlidingPaneLayout viewSlidingPaneLayout, boolean isOpen) {
+  @BindingAdapter({ BIND_IS_OPEN })
+  public static void viewSlidingPaneLayoutRegisterIsOpen(SlidingPaneLayout viewSlidingPaneLayout, boolean isOpen) {
     if (viewSlidingPaneLayout.isOpen() != isOpen) {
       if (isOpen) {
         viewSlidingPaneLayout.closePane();
@@ -54,37 +46,21 @@ public class SlidingPaneLayoutCompatBindingAdapter {
     }
   }
 
-  /**
-   * Gets if viewSlidingPageLayout is open or not
-   *
-   * @param viewSlidingPaneLayout SlidingPaneLayout instance
-   * @return true or false
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_IS_OPEN_ATTR_CHANGED,
-      attribute = ANDROID_IS_OPEN
-  )
-  public static boolean provideIsOpen(SlidingPaneLayout viewSlidingPaneLayout) {
+  @InverseBindingAdapter(attribute = BIND_IS_OPEN,
+      event = BIND_IS_OPEN_ATTR_CHANGED)
+  public static boolean viewSlidingPaneLayoutRetreiveIsOpen(SlidingPaneLayout viewSlidingPaneLayout) {
     return viewSlidingPaneLayout.isOpen();
   }
 
-  /**
-   * Registers listeners for slide, openOrClose and attrChange states
-   *
-   * @param viewSlidingPaneLayout SlidingPaneLayout instance
-   * @param slided slided listener
-   * @param openOrClose openOrClose listener
-   * @param isOpenAttrChanged attrChanged listener
-   */
   @BindingAdapter(
       value = {
-          ANDROID_ON_SLIDED,
-          ANDROID_ON_OPEN_OR_CLOSE,
-          ANDROID_IS_OPEN_ATTR_CHANGED
+          BIND_ON_SLIDED,
+          BIND_ON_OPEN_OR_CLOSE,
+          BIND_IS_OPEN_ATTR_CHANGED
       },
       requireAll = false
   )
-  public static void registerSlidingPaneLayoutListener(SlidingPaneLayout viewSlidingPaneLayout, OnLayoutSlided slided,
+  public static void viewSlidingPaneLayoutRegisterListeners(SlidingPaneLayout viewSlidingPaneLayout, OnLayoutSlided slided,
       OnLayoutOpenedOrClosed openOrClose, InverseBindingListener isOpenAttrChanged) {
     if (slided == null && openOrClose == null && isOpenAttrChanged == null) {
       viewSlidingPaneLayout.setPanelSlideListener(null);

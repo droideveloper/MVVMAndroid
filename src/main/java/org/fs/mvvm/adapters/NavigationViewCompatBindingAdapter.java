@@ -18,7 +18,6 @@ package org.fs.mvvm.adapters;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
-import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.view.MenuItem;
 import java8.util.stream.IntStreams;
@@ -26,27 +25,19 @@ import org.fs.mvvm.listeners.OnNavigationSelected;
 
 public class NavigationViewCompatBindingAdapter {
 
-  private final static int NO_ID = -1;
+  private final static int    NO_ID = -1;
+  private final static String BIND_ON_NAVIGATION_SELECTED = "bindings:onNavigationSelected";
 
-  private final static String ANDROID_ON_NAVIGATION_SELECTED = "android:onNavigationSelected";
-
-  private final static String ANDROID_SELECTED_ITEM = "android:selectedItem";
+  private final static String BIND_MENU_ITEM              = "bindings:menuItem";
+  private final static String BIND_MENU_ITEM_ATTR_CHANGED = "bindings:menuItemAttrChanged";
 
   private NavigationViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Gets selected id of viewNavigation
-   *
-   * @param viewNavigation viewNavigation instance
-   * @return id of selection else -1
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_ON_NAVIGATION_SELECTED,
-      attribute = ANDROID_SELECTED_ITEM
-  )
-  @IdRes public int provideSelectedItem(NavigationView viewNavigation) {
+  @InverseBindingAdapter(attribute = BIND_MENU_ITEM,
+      event = BIND_MENU_ITEM_ATTR_CHANGED)
+  public int viewNavigationRetreiveMenuItem(NavigationView viewNavigation) {
     final int size = viewNavigation.getMenu().size();
     return IntStreams.range(0, size)
         .mapToObj(viewNavigation.getMenu()::getItem)
@@ -56,34 +47,21 @@ public class NavigationViewCompatBindingAdapter {
         .orElse(NO_ID);
   }
 
-  /**
-   * Sets selected item id on viewNavigation menu
-   *
-   * @param viewNavigation viewNavigation instance
-   * @param selectedId selected id of menu
-   */
-  @BindingAdapter(
-      ANDROID_SELECTED_ITEM
-  )
-  public void setSelectedItem(NavigationView viewNavigation, @IdRes int selectedId) {
+  @BindingAdapter({ BIND_MENU_ITEM })
+  public void viewNavigationRegisterMenuItem(NavigationView viewNavigation, int selectedId) {
     viewNavigation.setCheckedItem(selectedId);
   }
 
-  /**
-   * Registers OnNavigationSelected listener on NavigationView
-   *
-   * @param viewNavigation viewNavigation instance
-   * @param selectedListener listener to track changes on view
-   * @param selectedItemAttrChanged attr notifier for two-way bindings
-   */
   @BindingAdapter(
       value = {
-          ANDROID_SELECTED_ITEM,
-          ANDROID_ON_NAVIGATION_SELECTED
+          BIND_MENU_ITEM,
+          BIND_ON_NAVIGATION_SELECTED,
+          BIND_MENU_ITEM_ATTR_CHANGED
       },
       requireAll = false
   )
-  public static void registerNavigationSelectedListener(NavigationView viewNavigation, OnNavigationSelected selectedListener, InverseBindingListener selectedItemAttrChanged) {
+  public static void viewNavigationRegisterSelectionListener(NavigationView viewNavigation,
+      OnNavigationSelected selectedListener, InverseBindingListener selectedItemAttrChanged) {
     if (selectedListener == null && selectedItemAttrChanged == null) {
       viewNavigation.setNavigationItemSelectedListener(null);
     } else {

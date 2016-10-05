@@ -237,7 +237,7 @@ public final class RecyclerViewCompatBindingAdapter {
     requireAll = false
   )
   public static <T extends AbstractRecyclerBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>>
-    void registerViewRecyclerAdapter(RecyclerView viewRecycler, T itemSource,
+    void viewRecyclerRegisterAdapter(RecyclerView viewRecycler, T itemSource,
       InverseBindingListener positionAttrChanged, InverseBindingListener itemAttrChanged,
       InverseBindingListener positionsAttrChanged, InverseBindingListener itemsAttrChanged) {
     //do not throw error if adapter is null, just ignore
