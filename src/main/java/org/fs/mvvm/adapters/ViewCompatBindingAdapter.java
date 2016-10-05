@@ -45,7 +45,10 @@ public final class ViewCompatBindingAdapter {
   @BindingAdapter({ BIND_NOTIFY_TEXT, BIND_ACTION_TEXT, BIND_RELAY_COMMAND })
   public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, RelayCommand command) {
     final Snackbar snackbar = Snackbar.make(view, notifyText, Snackbar.LENGTH_LONG);
-    snackbar.setAction(actionText, v -> command.execute(null));
+    snackbar.setAction(actionText, v -> {
+      command.execute(null);
+      snackbar.dismiss();
+    });
     snackbar.show();
   }
 
