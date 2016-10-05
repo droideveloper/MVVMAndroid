@@ -27,59 +27,38 @@ import org.fs.mvvm.R;
 import org.fs.mvvm.data.IConverter;
 import org.fs.mvvm.listeners.OnAfterChanged;
 import org.fs.mvvm.listeners.OnBeforeChanged;
-import org.fs.mvvm.listeners.OnImeOptions;
+import org.fs.mvvm.listeners.OnSoftKeyboardAction;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
 
 public final class TextViewCompatBindingAdapter {
 
-  private final static String ANDROID_BEFORE_CHANGED = "android:beforeChanged";
-  private final static String ANDROID_AFTER_CHANGED  = "android:afterChanged";
-  private final static String ANDROID_IME_OPTIONS    = "android:onImeOptions";
+  private final static String BIND_BEFORE_CHANGED = "bindings:beforeChanged";
+  private final static String BIND_AFTER_CHANGED  = "bindings:afterChanged";
 
-  private final static String ANDROID_FROM_OBJECT   = "android:fromObject";
-  private final static String ANDROID_CONVERTER     = "android:converter";
+  private final static String BIND_ON_SOFT_KEYBOARD_ACTION  = "bindings:onSoftKeyboardAction";
 
-  private final static String ANDROID_TEXT_ATTR_CHANGED = "android:textAttrChanged";
+  private final static String BIND_FROM_OBJECT   = "bindings:fromObject";
+  private final static String BIND_CONVERTER     = "bindings:converter";
+
+  private final static String BIND_TEXT_ATTR_CHANGED = "bindings:textAttrChanged";
 
   private TextViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Registers listener for softKeyboard ime options received for viewText
-   *
-   * @param viewText TextView instance to listen ime options
-   * @param imeOptions listener to tack only action id
-   */
-  @BindingAdapter(
-      ANDROID_IME_OPTIONS
-  )
-  public static void registerImeOptionsLitener(TextView viewText, OnImeOptions imeOptions) {
-    if (imeOptions == null) {
+  @BindingAdapter({ BIND_ON_SOFT_KEYBOARD_ACTION })
+  public static void viewTextViewRegisterOnSoftKeyboardActionListener(TextView viewText, OnSoftKeyboardAction onSoftKeyboard) {
+    if (onSoftKeyboard == null) {
       viewText.setOnEditorActionListener(null);
     } else {
-      viewText.setOnEditorActionListener((v, id, e) -> imeOptions.onEditorAction(id));
+      viewText.setOnEditorActionListener((v, id, e) -> onSoftKeyboard.onEditorAction(id));
     }
   }
 
-
-  /**
-   * Sets TextView fromObject with any kind of object if
-   * converter provided
-   *
-   * @param viewText textView
-   * @param converter converter for this view
-   * @param object object instance
-   * @param <T> type of object in param
-   * @param <S> type of object in result
-   */
-  @BindingAdapter({
-      ANDROID_CONVERTER,
-      ANDROID_FROM_OBJECT
-  })
-  public static <T, S extends CharSequence> void registerConverter(TextView viewText, IConverter<T, S> converter, T object) {
+  @BindingAdapter({ BIND_CONVERTER, BIND_FROM_OBJECT })
+  public static <T, S extends CharSequence> void viewTextRegiterObject(TextView viewText, IConverter<T, S> converter, T object) {
     if (converter != null) {
       final S textStr = Invokes.invoke(o -> {
         return converter.convert(o, Locale.getDefault());
@@ -90,21 +69,12 @@ public final class TextViewCompatBindingAdapter {
     }
   }
 
-
-  /**
-   * Registers TextView with provided listeners or listener
-   * can be done by combinations
-   *
-   * @param viewText textView instance for watch on change
-   * @param beforeChanged before listener
-   * @param afterChanged after listener
-   */
   @BindingAdapter(value = {
-      ANDROID_BEFORE_CHANGED,
-      ANDROID_AFTER_CHANGED,
-      ANDROID_TEXT_ATTR_CHANGED
+      BIND_BEFORE_CHANGED,
+      BIND_AFTER_CHANGED,
+      BIND_TEXT_ATTR_CHANGED
   }, requireAll = false)
-  public static void registerTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged, InverseBindingListener textAttrChanged) {
+  public static void viewTextRegisterTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged, InverseBindingListener textAttrChanged) {
     final TextWatcher newListener;
     if (Objects.isNullOrEmpty(beforeChanged) && Objects.isNullOrEmpty(afterChanged) && Objects.isNullOrEmpty(textAttrChanged)) {
       newListener = null;

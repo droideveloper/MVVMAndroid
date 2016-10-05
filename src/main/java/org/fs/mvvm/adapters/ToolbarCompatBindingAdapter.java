@@ -26,119 +26,64 @@ import org.fs.mvvm.utils.Objects;
 
 public class ToolbarCompatBindingAdapter {
 
-  private final static String ANDROID_TITLE_TEXT = "android:titleText";
-  private final static String ANDROID_TITLE_TEXT_ATTR_CHANGED = "android:titleTextAttrChanged";
+  private final static String BIND_TITLE_TEXT = "bindings:titleText";
+  private final static String BIND_TITLE_TEXT_ATTR_CHANGED = "bindings:titleTextAttrChanged";
 
-  private final static String ANDROID_SUB_TITLE_TEXT = "android:subTitleText";
-  private final static String ANDROID_SUB_TITLE_TEXT_ATTR_CHANGED = "android:subTitleTextAttrChanged";
+  private final static String BIND_SUB_TITLE_TEXT = "bindings:subTitleText";
+  private final static String BIND_SUB_TITLE_TEXT_ATTR_CHANGED = "bindings:subTitleTextAttrChanged";
 
-  private final static String ANDROID_NAVIGATION_COMMAND = "android:navigationCommand";
-  private final static String ANDROID_NAVIGATION_COMMAND_PARAMETER = "android:navigationCommandParameter";
-  private final static String ANDROID_ON_NAVIGATED = "android:onNavigated";
+  private final static String BIND_NAVIGATION_COMMAND = "bindings:navigationCommand";
+  private final static String BIND_NAVIGATION_COMMAND_PARAMETER = "bindings:navigationCommandParameter";
+  private final static String BIND_ON_NAVIGATED = "bindings:onNavigated";
 
-  private final static String ANDROID_NAVIGATION_ICON = "android:navIcon";
+  private final static String BIND_NAVIGATION_ICON_COMPAT = "bindings:navigationIconCompat";
 
   private ToolbarCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Registers drawable icon for android
-   *
-   * @param viewToolbar viewToolbar to put navigation icon on
-   * @param icon drawable icon
-   */
-  @BindingAdapter(
-      ANDROID_NAVIGATION_ICON
-  )
-  public static void registerNavigationIcon(Toolbar viewToolbar, Drawable icon) {
+  @BindingAdapter({ BIND_NAVIGATION_ICON_COMPAT })
+  public static void viewToolbarRegisterNavigationIcon(Toolbar viewToolbar, Drawable icon) {
     if (icon != null) {
       viewToolbar.setNavigationIcon(icon);
     }
   }
 
-  /**
-   * Setter of title on ToolbarView
-   *
-   * @param viewToolbar viewToolbar instance
-   * @param titleText title
-   * @param <T> type of title or null
-   */
-  @BindingAdapter(
-      ANDROID_TITLE_TEXT
-  )
-  public static <T extends CharSequence> void setTitleText(Toolbar viewToolbar, T titleText) {
+  @BindingAdapter({ BIND_TITLE_TEXT })
+  public static <T extends CharSequence> void viewToolbarRegisterTitle(Toolbar viewToolbar, T titleText) {
     if (!TextUtils.equals(viewToolbar.getTitle(), titleText)) {
       viewToolbar.setTitle(titleText);
     }
   }
 
-  /**
-   * Two-way of title on ToolbarView
-   *
-   * @param viewToolbar viewToolbar instance
-   * @param <T> type of title
-   * @return T type of title or null
-   */
-  @InverseBindingAdapter(
-      attribute = ANDROID_TITLE_TEXT,
-      event = ANDROID_TITLE_TEXT_ATTR_CHANGED
-  )
-  public static <T extends CharSequence> T provideTitleText(Toolbar viewToolbar) {
+  @InverseBindingAdapter(attribute = BIND_TITLE_TEXT,
+      event = BIND_TITLE_TEXT_ATTR_CHANGED)
+  public static <T extends CharSequence> T viewToolbarRetreiveTitle(Toolbar viewToolbar) {
     return Objects.toObject(viewToolbar.getTitle());
   }
 
-  /**
-   * Setter of subTitle on ToolbarView
-   *
-   * @param viewToolbar viewToolbar instance
-   * @param subTitleText subTitle
-   * @param <T> type of subTitle or null
-   */
-  @BindingAdapter(
-      ANDROID_SUB_TITLE_TEXT
-  )
-  public static <T extends CharSequence> void setSubTitleText(Toolbar viewToolbar, T subTitleText) {
+  @BindingAdapter({ BIND_SUB_TITLE_TEXT })
+  public static <T extends CharSequence> void viewToolbarRegisterSubTitle(Toolbar viewToolbar, T subTitleText) {
     if (!TextUtils.equals(viewToolbar.getSubtitle(), subTitleText)) {
       viewToolbar.setSubtitle(subTitleText);
     }
   }
 
-  /**
-   * Two-way of subTitle on ToolbarView
-   *
-   * @param viewToolbar viewToolbar instance
-   * @param <T> type of subTitle
-   * @return T type of subTitle or null
-   */
-  @InverseBindingAdapter(
-      attribute = ANDROID_SUB_TITLE_TEXT,
-      event = ANDROID_SUB_TITLE_TEXT_ATTR_CHANGED
-  )
-  public static <T extends CharSequence> T provideSubTitleText(Toolbar viewToolbar) {
+  @InverseBindingAdapter(event = BIND_SUB_TITLE_TEXT_ATTR_CHANGED,
+      attribute = BIND_SUB_TITLE_TEXT)
+  public static <T extends CharSequence> T viewToolbarRetreiveSubTitle(Toolbar viewToolbar) {
     return Objects.toObject(viewToolbar.getSubtitle());
   }
 
-  /**
-   * Registers command or listener or both or none
-   * if both registered callback executed first then
-   * command follows.
-   *
-   * @param viewToolbar viewToolbar instance
-   * @param callback callback that will receive its click
-   * @param param command parameter to pass on command
-   * @param command command to execute if desired matches
-   * @param <T> Type of commandParameter
-   */
   @BindingAdapter(
       value = {
-          ANDROID_ON_NAVIGATED,
-          ANDROID_NAVIGATION_COMMAND_PARAMETER,
-          ANDROID_NAVIGATION_COMMAND
+          BIND_ON_NAVIGATED,
+          BIND_NAVIGATION_COMMAND_PARAMETER,
+          BIND_NAVIGATION_COMMAND
       },
       requireAll = false
   )
-  public static <T> void registerNavigationListener(Toolbar viewToolbar, OnNavigated callback, T param, ICommand<T> command) {
+  public static <T> void viewToolbarRegisterNavigationListener(Toolbar viewToolbar, OnNavigated callback, T param, ICommand<T> command) {
     if (callback == null && param == null && command == null) {
       viewToolbar.setNavigationOnClickListener(null);
     } else {

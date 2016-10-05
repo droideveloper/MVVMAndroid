@@ -15,10 +15,10 @@
  */
 package org.fs.mvvm.listeners;
 
-public interface OnImeOptions {
+public interface OnSoftKeyboardAction {
 
   /**
-   * provide action ime options for edittext or textview
+   * provide action ime options for viewEditText or viewText
    *
    * @param actionId action id that will be received
    * @return should consume action or not

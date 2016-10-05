@@ -31,26 +31,15 @@ import org.fs.mvvm.listeners.SimpleTextWatcher;
 
 public final class TextInputLayoutCompatBindingAdapter {
 
-  private final static String ANDROID_VALIDATOR     = "android:validator";
-  private final static String ANDROID_ERROR_STRING  = "android:errorString";
+  private final static String BIND_VALIDATOR     = "bindings:validator";
+  private final static String BIND_ERROR_STRING  = "bindings:errorString";
 
   private TextInputLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
-  /**
-   * Registers validator on TextInputLayout with given String validator
-   * if it is not valid we provide errorString to be shown
-   *
-   * @param viewTextLayout viewTextLayout we look through
-   * @param validator validator that shows us how we do it
-   * @param errorString error String
-   */
-  @BindingAdapter({
-      ANDROID_VALIDATOR,
-      ANDROID_ERROR_STRING
-  })
-  public static void registerValidator(TextInputLayout viewTextLayout, IValidator<String> validator, String errorString) {
+  @BindingAdapter({ BIND_VALIDATOR, BIND_ERROR_STRING })
+  public static void viewTextInputLayoutRegisterValidator(TextInputLayout viewTextLayout, IValidator<String> validator, String errorString) {
     TextView viewText = findChildTextView(viewTextLayout);
     if (viewText != null) {
       final TextWatcher newListener;

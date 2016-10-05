@@ -20,58 +20,31 @@ import android.databinding.adapters.ListenerUtil;
 import android.view.View;
 import org.fs.mvvm.R;
 import org.fs.mvvm.commands.ICommand;
-import org.fs.mvvm.data.IFindAncestor;
-import org.fs.mvvm.data.PropertyGetAndSet;
-import org.fs.mvvm.utils.Objects;
 
 public final class ViewCompatBindingAdapter {
 
-  private final static String ANDROID_COMMAND = "android:command";
-  private final static String ANDROID_COMMAND_PARAMETER = "android:commandParameter";
+  private final static String BIND_COMMAND = "bindings:command";
+  private final static String BIND_COMMAND_PARAMETER = "bindings:commandParameter";
 
-  private final static String ANDROID_FIND_ANCESTOR = "android:findAncestor";
-  private final static String ANDROID_PROPERTY_GET_AND_SET = "android:propertyGetAndSet";
+  private final static String BIND_FIND_ANCESTOR = "bindings:findAncestor";
+  private final static String BIND_PROPERTY_GET_AND_SET = "bindings:propertyGetAndSet";
 
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
   /**
-   * Find provided ancestorFinder and propertyGetAndSet
-   *
-   * @param view view we will invoke find ancestor on
-   * @param helper find ancestor helper
-   * @param propertyGetAndSet property retriever and setter uses reflection so avoid this usage
-   * @param <T> T type of the view (target view)
-   * @param <S> S type of the view (ancestor view)
+   * TODO registerPropertyInfo with IFindAncestor
    */
-  @BindingAdapter({
-      ANDROID_FIND_ANCESTOR,
-      ANDROID_PROPERTY_GET_AND_SET
-  })
-  public static <T, S extends View> void registerPropertySetAndGetWithFindAncestor(View view, IFindAncestor helper, PropertyGetAndSet<S, T> propertyGetAndSet) {
-    helper.setAncestorOf(view);
-    propertyGetAndSet.setTarget(Objects.toObject(view));
-    propertyGetAndSet.setHelper(helper);
-    propertyGetAndSet.execute();
-  }
 
-  /**
-   * Registers view with ParameterizedRelayCommand that has parameter type of T.
-   *
-   * @param view view to register for click
-   * @param command command to execute
-   * @param param command parameter
-   * @param <T> type of parameter
-   */
   @BindingAdapter(
       value = {
-        ANDROID_COMMAND,
-        ANDROID_COMMAND_PARAMETER
+        BIND_COMMAND,
+        BIND_COMMAND_PARAMETER
       },
       requireAll = false
   )
-  public static <T> void registerCommandAndParameter(View view, ICommand<T> command, T param) {
+  public static <T> void viewRegisterCommandWithOrWithoutParameter(View view, ICommand<T> command, T param) {
     final View.OnClickListener newListener;
     if (command == null) {
       newListener = null;

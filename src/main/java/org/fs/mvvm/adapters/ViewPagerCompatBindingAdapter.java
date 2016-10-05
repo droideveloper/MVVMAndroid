@@ -28,69 +28,44 @@ import org.fs.mvvm.listeners.OnPageSelected;
 
 public final class ViewPagerCompatBindingAdapter {
 
-  private final static String ANDROID_ITEM_SOURCE = "android:itemSource";
+  private final static String BIND_ITEM_SOURCE    = "bindings:itemSource";
+  private final static String BIND_PAGE_ANIMATOR  = "bindings:pageAnimator";
 
-  private final static String ANDROID_PAGE_ANIMATOR = "android:pageAnimator";
+  private final static String BIND_PAGE_SCROLLED              = "bindings:onPageScrolled";
+  private final static String BIND_PAGE_SELECTED              = "bindings:onPageSelected";
+  private final static String BIND_PAGE_SCROLL_STATE_CHANGED  = "bindings:onPageScrollStateChanged";
 
-  private final static String ANDROID_PAGE_SCROLLED = "android:onPageScrolled";
-  private final static String ANDROID_PAGE_SELECTED = "android:onPageSelected";
-  private final static String ANDROID_PAGE_SCROLL_STATE_CHANGED = "android:onPageScrollStateChanged";
-
-  private final static String ANDROID_SELECTED_PAGE = "android:selectedPage";
-  private final static String ANDROID_SELECTED_PAGE_ATTR_CHANGED = "android:selectedPageAttrChanged";
+  private final static String BIND_SELECTED_PAGE              = "bindings:selectedPage";
+  private final static String BIND_SELECTED_PAGE_ATTR_CHANGED = "bindings:selectedPageAttrChanged";
 
   private ViewPagerCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
-  /**
-   * Two-way binding for selectedPage
-   *
-   * @param viewPager viewPager
-   * @return currentPage
-   */
-  @InverseBindingAdapter(
-      event = ANDROID_SELECTED_PAGE_ATTR_CHANGED,
-      attribute = ANDROID_SELECTED_PAGE
+  @InverseBindingAdapter(attribute = BIND_SELECTED_PAGE,
+      event = BIND_SELECTED_PAGE_ATTR_CHANGED
   )
-  public int provideSelectedPage(ViewPager viewPager) {
+  public int viewPagerRetreiveSelectedPage(ViewPager viewPager) {
     return viewPager.getCurrentItem();
   }
 
-  /**
-   * Registers position provided for viewPager
-   *
-   * @param viewPager viewPager we register this, two-way
-   * @param position viewPager position
-   */
-  @BindingAdapter({
-      ANDROID_SELECTED_PAGE
-  })
-  public static void registerSelectedPage(ViewPager viewPager, int position) {
+   @BindingAdapter({ BIND_SELECTED_PAGE })
+  public static void viewPagerRegisterSelectedPage(ViewPager viewPager, int position) {
     if (viewPager.getCurrentItem() != position) {
       viewPager.setCurrentItem(position, true);//do smooth scroll
     }
   }
 
-  /**
-   * Registers OnPageScrolled, OnPageSelected or OnPageScrollStateChanged on ViewPager
-   * by single or multiple with any combination defined by user needs.
-   *
-   * @param viewPager viewPager to bind listeners.
-   * @param pageScrolled pageScrolled listener to bind viewPager.
-   * @param pageSelected pageSelected listener to bind viewPager.
-   * @param pageScrollStateChanged pageScrollStateChanged listener to bind viewPager
-   */
   @BindingAdapter(
       value = {
-        ANDROID_PAGE_SCROLLED,
-        ANDROID_PAGE_SELECTED,
-        ANDROID_PAGE_SCROLL_STATE_CHANGED,
-        ANDROID_SELECTED_PAGE_ATTR_CHANGED
+        BIND_PAGE_SCROLLED,
+        BIND_PAGE_SELECTED,
+        BIND_PAGE_SCROLL_STATE_CHANGED,
+        BIND_SELECTED_PAGE_ATTR_CHANGED
       },
       requireAll = false
   )
-  public static void registerPageListener(ViewPager viewPager, OnPageScrolled pageScrolled,
+  public static void viewPagerRegisterListeners(ViewPager viewPager, OnPageScrolled pageScrolled,
       OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged, InverseBindingListener selectedPageAttrChanged) {
     final ViewPager.OnPageChangeListener newListener;
     if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null && selectedPageAttrChanged == null) {
@@ -129,16 +104,9 @@ public final class ViewPagerCompatBindingAdapter {
     }
   }
 
-  /**
-   * Registers an ViewPager.PageTransformer on ViewPager
-   *
-   * @param viewPager viewPager to bind pagerAnimation
-   * @param pageAnimator pagerAnimation to bind viewPager
-   */
-  @BindingAdapter(
-      ANDROID_PAGE_ANIMATOR
-  )
-  public static void registerPageAnimator(ViewPager viewPager, ViewPager.PageTransformer pageAnimator) {
+
+  @BindingAdapter({ BIND_PAGE_ANIMATOR })
+  public static void viewPageerRegisterPageAnimator(ViewPager viewPager, ViewPager.PageTransformer pageAnimator) {
     if (pageAnimator == null) {
       viewPager.setPageTransformer(false, null);
     } else {
@@ -146,18 +114,12 @@ public final class ViewPagerCompatBindingAdapter {
     }
   }
 
-  /**
-   * Registers an PagerAdapter instance with ViewPager
-   *
-   * @param viewPager viewPager to bind adapter
-   * @param adapter adapter to bind viewPager
-   */
-  @BindingAdapter(
-      ANDROID_ITEM_SOURCE
-  )
-  public static void registerPagerAdapter(ViewPager viewPager, PagerAdapter adapter) {
-    if (adapter != null) {
-      viewPager.setAdapter(adapter);
+  @BindingAdapter({ BIND_ITEM_SOURCE })
+  public static void viewPagerRegisterItemSource(ViewPager viewPager, PagerAdapter itemSource) {
+    if (itemSource != null) {
+      viewPager.setAdapter(itemSource);
+    } else {
+      viewPager.setAdapter(null);
     }
   }
 }

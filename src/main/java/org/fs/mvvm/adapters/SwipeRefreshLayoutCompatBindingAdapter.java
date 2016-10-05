@@ -26,80 +26,48 @@ import org.fs.mvvm.utils.Preconditions;
 
 public class SwipeRefreshLayoutCompatBindingAdapter {
 
-  private final static String ANDROID_IS_REFRESHING_CALLBACK      = "android:refreshCallback";
-  private final static String ANDROID_IS_REFRESHING               = "android:isRefreshing";
-  private final static String ANDROID_CONVERTER                   = "android:converter";
-  private final static String ANDROID_IS_REFRESHING_ATTR_CHANGED  = "android:isRefreshingAttrChanged";
+  private final static String BIND_IS_REFRESHING_CALLBACK      = "bindings:refreshCallback";
+  private final static String BIND_IS_REFRESHING               = "bindings:isRefreshing";
+  private final static String BIND_CONVERTER                   = "bindings:converter";
+  private final static String BIND_IS_REFRESHING_ATTR_CHANGED  = "bindings:isRefreshingAttrChanged";
 
   private SwipeRefreshLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
-  /**
-   * Sets boolean value on viewSwipeLayout
-   *
-   * @param viewSwipeLayout layout instance
-   * @param isRefreshing true or false
-   */
-  @BindingAdapter(
-      ANDROID_IS_REFRESHING
-  )
-  public static void registerIsRefreshing(SwipeRefreshLayout viewSwipeLayout, boolean isRefreshing) {
+  @BindingAdapter({ BIND_IS_REFRESHING })
+  public static void viewSwipeRefreshLayoutRegisterIsRefreshing(SwipeRefreshLayout viewSwipeLayout, boolean isRefreshing) {
     if (viewSwipeLayout.isRefreshing() != isRefreshing) {
       viewSwipeLayout.setRefreshing(isRefreshing);
     }
   }
 
-  /**
-   * Gets boolean value of viewSwipeLayout
-   *
-   * @param viewSwipeLayout layout instance
-   * @return true or false
-   */
-  @InverseBindingAdapter(
-      attribute = ANDROID_IS_REFRESHING,
-      event = ANDROID_IS_REFRESHING_ATTR_CHANGED
-  )
-  public static boolean registerIsRefreshing(SwipeRefreshLayout viewSwipeLayout) {
+  @InverseBindingAdapter(attribute = BIND_IS_REFRESHING,
+      event = BIND_IS_REFRESHING_ATTR_CHANGED)
+  public static boolean viewSwipeRefreshLayoutRetreiveIsRefreshing(SwipeRefreshLayout viewSwipeLayout) {
     return viewSwipeLayout.isRefreshing();
   }
 
-  /**
-   * Sets any object to isRefreshing property and it will
-   * require converter instance if there is not any
-   * then error occur
-   *
-   * @param viewSwipeLayout layout instance
-   * @param object object that needs conversion to boolean
-   * @param converter object to boolean converter
-   * @param <T> type of object we can convert
-   */
   @BindingAdapter(
       value = {
-        ANDROID_IS_REFRESHING,
-        ANDROID_CONVERTER
+        BIND_IS_REFRESHING,
+        BIND_CONVERTER
       }
   )
-  public static <T> void registerIsRefreshing(SwipeRefreshLayout viewSwipeLayout, T object, IConverter<T, Boolean> converter) {
+  public static <T> void viewSwipeRefreshLayoutRegisterObject(SwipeRefreshLayout viewSwipeLayout, T object, IConverter<T, Boolean> converter) {
     Preconditions.checkNotNull(converter, "converter is null");
     Boolean newValue = converter.convert(object, Locale.getDefault());
     viewSwipeLayout.setRefreshing(newValue);
   }
 
-  /**
-   * Binds on refreshing on layout with listener
-   *
-   * @param viewSwipeLayout layout instance
-   * @param callback callback
-   */
   @BindingAdapter(
       value = {
-          ANDROID_IS_REFRESHING_CALLBACK,
-          ANDROID_IS_REFRESHING_ATTR_CHANGED
+          BIND_IS_REFRESHING_CALLBACK,
+          BIND_IS_REFRESHING_ATTR_CHANGED
       },
       requireAll = false
   )
-  public static void registerRefreshCallback(SwipeRefreshLayout viewSwipeLayout, OnRefreshed callback, InverseBindingListener isRefreshingAttrChanged) {
+  public static void viewSwipeRefreshLayoutRegisterCallback(SwipeRefreshLayout viewSwipeLayout, OnRefreshed callback, InverseBindingListener isRefreshingAttrChanged) {
     if (callback == null && isRefreshingAttrChanged == null) {
       viewSwipeLayout.setOnRefreshListener(null);
     } else {
