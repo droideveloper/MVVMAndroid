@@ -54,7 +54,6 @@ public class NavigationViewCompatBindingAdapter {
 
   @BindingAdapter(
       value = {
-          BIND_MENU_ITEM,
           BIND_ON_NAVIGATION_SELECTED,
           BIND_MENU_ITEM_ATTR_CHANGED
       },
