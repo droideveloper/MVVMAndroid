@@ -23,19 +23,12 @@ import org.fs.mvvm.commands.ICommand;
 
 public final class ViewCompatBindingAdapter {
 
-  private final static String BIND_COMMAND = "bindings:command";
-  private final static String BIND_COMMAND_PARAMETER = "bindings:commandParameter";
-
-  private final static String BIND_FIND_ANCESTOR = "bindings:findAncestor";
-  private final static String BIND_PROPERTY_GET_AND_SET = "bindings:propertyGetAndSet";
+  private final static String BIND_COMMAND            = "bindings:command";
+  private final static String BIND_COMMAND_PARAMETER  = "bindings:commandParameter";
 
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
-
-  /**
-   * TODO registerPropertyInfo with IFindAncestor
-   */
 
   @BindingAdapter(
       value = {

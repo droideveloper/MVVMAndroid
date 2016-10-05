@@ -30,4 +30,7 @@
   <item name="viewList_selectedPositions" type="id" />
   <item name="viewList_selectedItems" type="id" />
   <item name="viewList_isLoadMore" type="id" />
+
+  <!-- ancestorPropertyStorage -->
+  <item name="view_ancestorPropertyInfo" type="id" />
 </resources>

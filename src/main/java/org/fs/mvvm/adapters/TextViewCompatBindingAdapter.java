@@ -69,11 +69,14 @@ public final class TextViewCompatBindingAdapter {
     }
   }
 
-  @BindingAdapter(value = {
-      BIND_BEFORE_CHANGED,
-      BIND_AFTER_CHANGED,
-      BIND_TEXT_ATTR_CHANGED
-  }, requireAll = false)
+  @BindingAdapter(
+      value = {
+        BIND_BEFORE_CHANGED,
+        BIND_AFTER_CHANGED,
+        BIND_TEXT_ATTR_CHANGED
+      },
+      requireAll = false
+  )
   public static void viewTextRegisterTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged, InverseBindingListener textAttrChanged) {
     final TextWatcher newListener;
     if (Objects.isNullOrEmpty(beforeChanged) && Objects.isNullOrEmpty(afterChanged) && Objects.isNullOrEmpty(textAttrChanged)) {
