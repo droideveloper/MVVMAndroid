@@ -58,7 +58,7 @@ public final class TextViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_CONVERTER, BIND_FROM_OBJECT })
-  public static <T, S extends CharSequence> void viewTextRegiterObject(TextView viewText, IConverter<T, S> converter, T object) {
+  public static <T, S extends CharSequence> void viewTextRegisterObject(TextView viewText, IConverter<T, S> converter, T object) {
     if (converter != null) {
       final S textStr = Invokes.invoke(o -> {
         return converter.convert(o, Locale.getDefault());

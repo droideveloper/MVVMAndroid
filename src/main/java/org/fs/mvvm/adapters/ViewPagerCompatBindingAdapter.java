@@ -21,10 +21,17 @@ import android.databinding.InverseBindingListener;
 import android.databinding.adapters.ListenerUtil;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
+import java.util.Locale;
 import org.fs.mvvm.R;
+import org.fs.mvvm.common.AbstractEntity;
+import org.fs.mvvm.common.AbstractPagerBindingAdapter;
+import org.fs.mvvm.common.AbstractPagerStateBindingAdapter;
+import org.fs.mvvm.data.PropertyInfo;
 import org.fs.mvvm.listeners.OnPageScrollStateChanged;
 import org.fs.mvvm.listeners.OnPageScrolled;
 import org.fs.mvvm.listeners.OnPageSelected;
+import org.fs.mvvm.utils.Properties;
 
 public final class ViewPagerCompatBindingAdapter {
 
@@ -37,6 +44,9 @@ public final class ViewPagerCompatBindingAdapter {
 
   private final static String BIND_SELECTED_PAGE              = "bindings:selectedPage";
   private final static String BIND_SELECTED_PAGE_ATTR_CHANGED = "bindings:selectedPageAttrChanged";
+
+  private final static String BIND_SELECTED_ITEM              = "bindings:item";
+  private final static String BIND_SELECTED_ITEM_ATTR_CHANGED = "bindings:itemAttrChanged";
 
   private ViewPagerCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
@@ -56,19 +66,43 @@ public final class ViewPagerCompatBindingAdapter {
     }
   }
 
+  @InverseBindingAdapter(attribute = BIND_SELECTED_ITEM,
+      event = BIND_SELECTED_ITEM_ATTR_CHANGED
+  )
+  public static <D extends AbstractEntity> D viewPagerRetreiveItem(ViewPager viewPager) {
+    PropertyInfo<D> propertyInfo = Properties.getPropertyInfo(viewPager, R.id.viewPager_selectedItem);
+    return propertyInfo != null ? propertyInfo.getPropertyValue() : null;
+  }
+
+  @BindingAdapter({ BIND_SELECTED_ITEM })
+  public static <D extends AbstractEntity> void viewPagerRegisterItem(ViewPager viewPager, D item) {
+    PropertyInfo<D> propertyInfo = Properties.getPropertyInfo(viewPager, R.id.viewPager_selectedItem);
+    if (propertyInfo != null) {
+      if (propertyInfo.getPropertyValue() != item) {
+        propertyInfo = new PropertyInfo<>(item);
+      }
+    } else {
+      propertyInfo = new PropertyInfo<>(item);
+    }
+    Properties.setPropertyInfo(viewPager, propertyInfo, R.id.viewPager_selectedItem);
+  }
+
   @BindingAdapter(
       value = {
         BIND_PAGE_SCROLLED,
         BIND_PAGE_SELECTED,
         BIND_PAGE_SCROLL_STATE_CHANGED,
-        BIND_SELECTED_PAGE_ATTR_CHANGED
+        BIND_SELECTED_PAGE_ATTR_CHANGED,
+        BIND_SELECTED_ITEM_ATTR_CHANGED
       },
       requireAll = false
   )
   public static void viewPagerRegisterListeners(ViewPager viewPager, OnPageScrolled pageScrolled,
-      OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged, InverseBindingListener selectedPageAttrChanged) {
+      OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged,
+      InverseBindingListener selectedPageAttrChanged, InverseBindingListener itemAttrChanged) {
     final ViewPager.OnPageChangeListener newListener;
-    if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null && selectedPageAttrChanged == null) {
+    if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null
+        && selectedPageAttrChanged == null && itemAttrChanged == null) {
       newListener = null;
     } else {
       newListener = new ViewPager.OnPageChangeListener() {
@@ -84,6 +118,27 @@ public final class ViewPagerCompatBindingAdapter {
           }
           if (selectedPageAttrChanged != null) {
             selectedPageAttrChanged.onChange();
+          }
+          //notify item selection change if our adapters are in spot
+          final PagerAdapter pagerAdapter = viewPager.getAdapter();
+          if (pagerAdapter instanceof AbstractPagerBindingAdapter<?>) {
+            AbstractPagerBindingAdapter<?> typedAdapter = (AbstractPagerBindingAdapter<?>) pagerAdapter;
+            Properties.setPropertyInfo(viewPager, new PropertyInfo<>(typedAdapter.getItemAt(position)), R.id.viewPager_selectedItem);
+            if (itemAttrChanged != null) {
+              itemAttrChanged.onChange();
+            }
+          } else if (pagerAdapter instanceof AbstractPagerStateBindingAdapter<?>) {
+            AbstractPagerStateBindingAdapter<?> typedAdapter = (AbstractPagerStateBindingAdapter<?>) pagerAdapter;
+            Properties.setPropertyInfo(viewPager, new PropertyInfo<>(typedAdapter.getItemAt(position)), R.id.viewPager_selectedItem);
+            if (itemAttrChanged != null) {
+              itemAttrChanged.onChange();
+            }
+          } else {
+            Log.e(ViewPagerCompatBindingAdapter.class.getSimpleName(),
+                String.format(Locale.ENGLISH,
+                    "if you want to register selectedItem with your viewModel you should extend one of the pagerAdapterAbstractions\n%s\nor\n%s.",
+                    AbstractPagerBindingAdapter.class.getName(), AbstractPagerStateBindingAdapter.class.getName())
+            );
           }
         }
 
@@ -106,7 +161,7 @@ public final class ViewPagerCompatBindingAdapter {
 
 
   @BindingAdapter({ BIND_PAGE_ANIMATOR })
-  public static void viewPageerRegisterPageAnimator(ViewPager viewPager, ViewPager.PageTransformer pageAnimator) {
+  public static void viewPagerRegisterPageAnimator(ViewPager viewPager, ViewPager.PageTransformer pageAnimator) {
     if (pageAnimator == null) {
       viewPager.setPageTransformer(false, null);
     } else {

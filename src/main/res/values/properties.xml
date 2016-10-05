@@ -31,6 +31,6 @@
   <item name="viewList_selectedItems" type="id" />
   <item name="viewList_isLoadMore" type="id" />
 
-  <!-- ancestorPropertyStorage -->
-  <item name="view_ancestorPropertyInfo" type="id" />
+  <!-- ViewPager properties -->
+  <item name="viewPager_selectedItem" type="id" />
 </resources>
