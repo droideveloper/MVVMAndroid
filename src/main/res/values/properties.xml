@@ -34,6 +34,5 @@
   <!-- ViewPager properties -->
   <item name="viewPager_selectedItem" type="id" />
 
-  <!-- FrameLayout -->
-  <item name="viewFragment_ContainerLayout" type="id" />
+
 </resources>
