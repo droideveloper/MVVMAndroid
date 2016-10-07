@@ -15,11 +15,12 @@
  */
 package org.fs.mvvm.common;
 
+import android.app.Application;
 import android.util.Log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public abstract class AbstractApplication {
+public abstract class AbstractApplication extends Application{
 
   private static boolean debug;
 
