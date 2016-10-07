@@ -17,6 +17,9 @@ package org.fs.mvvm.data;
 
 public final class Validation {
 
+  public final static Validation VALID    = new Validation(true);
+  public final static Validation INVALID  = new Validation(false);
+
   private final boolean isSuccess;
 
   public Validation(boolean isSuccess) {
