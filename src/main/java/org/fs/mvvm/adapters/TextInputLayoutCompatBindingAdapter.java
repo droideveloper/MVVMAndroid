@@ -21,6 +21,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.util.Locale;
@@ -76,13 +77,15 @@ public final class TextInputLayoutCompatBindingAdapter {
     }
   }
 
-  private static TextView findChildTextView(TextInputLayout viewTextInputLayout) {
+  private static TextView findChildTextView(ViewGroup viewTextInputLayout) {
     TextView viewText = null;
     for (int i = 0, z = viewTextInputLayout.getChildCount(); i < z; i ++) {
       View child = viewTextInputLayout.getChildAt(i);
       if (child instanceof EditText) {
         viewText = (TextView) child;
         break;
+      } else if (child instanceof ViewGroup) {
+        return findChildTextView((ViewGroup) child);
       }
     }
     return viewText;
