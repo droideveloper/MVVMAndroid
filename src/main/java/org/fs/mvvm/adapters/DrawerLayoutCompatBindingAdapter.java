@@ -22,6 +22,7 @@ import android.databinding.adapters.ListenerUtil;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
+import org.fs.mvvm.BuildConfig;
 import org.fs.mvvm.R;
 import org.fs.mvvm.listeners.OnLayoutOpenedOrClosed;
 import org.fs.mvvm.listeners.OnLayoutSlided;
@@ -119,12 +120,37 @@ public class DrawerLayoutCompatBindingAdapter {
   }
 
   private static void closeDrawer(DrawerLayout viewDrawerLayout) {
-    viewDrawerLayout.closeDrawer(GravityCompat.START);
-    viewDrawerLayout.closeDrawer(GravityCompat.END);
+    //have to do it because they do not provide gravity that is gay
+    try {
+      viewDrawerLayout.closeDrawer(GravityCompat.START);
+    } catch (IllegalArgumentException ignored) {
+      if (BuildConfig.DEBUG) {
+        ignored.printStackTrace();
+      }
+    }
+    try {
+      viewDrawerLayout.closeDrawer(GravityCompat.END);
+    } catch (IllegalArgumentException ignored) {
+      if (BuildConfig.DEBUG) {
+        ignored.printStackTrace();
+      }
+    }
   }
 
   private static void openDrawer(DrawerLayout viewDrawerLayout) {
-    viewDrawerLayout.openDrawer(GravityCompat.START);
-    viewDrawerLayout.openDrawer(GravityCompat.END);
+    try {
+      viewDrawerLayout.openDrawer(GravityCompat.START);
+    } catch (IllegalArgumentException ignored) {
+      if (BuildConfig.DEBUG) {
+        ignored.printStackTrace();
+      }
+    }
+    try {
+      viewDrawerLayout.openDrawer(GravityCompat.END);
+    } catch (IllegalArgumentException ignored) {
+      if (BuildConfig.DEBUG) {
+        ignored.printStackTrace();
+      }
+    }
   }
 }
