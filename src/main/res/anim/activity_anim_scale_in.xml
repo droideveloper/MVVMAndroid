@@ -18,10 +18,10 @@
  -->
 <scale
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromXScale="85%d"
-    android:fromYScale="85%d"
-    android:toXScale="100%d"
-    android:toYScale="100%d"
-    android:pivotX="50%d"
-    android:pivotY="50%d" />
+    android:fromXScale="85%"
+    android:fromYScale="85%"
+    android:toXScale="100%"
+    android:toYScale="100%"
+    android:pivotX="50%"
+    android:pivotY="50%" />
 <!-- scales view out from 85% of view center as half and reach 100% of view with center as half -->

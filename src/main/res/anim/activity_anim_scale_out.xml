@@ -18,9 +18,9 @@
  -->
 <scale
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromXScale="100%d"
-    android:fromYScale="100%d"
-    android:toXScale="85%d"
-    android:toYScale="85%d"
-    android:pivotX="50%d"
-    android:pivotY="50%d" />
+    android:fromXScale="100%"
+    android:fromYScale="100%"
+    android:toXScale="85%"
+    android:toYScale="85%"
+    android:pivotX="50%"
+    android:pivotY="50%" />
