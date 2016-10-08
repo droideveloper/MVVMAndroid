@@ -42,9 +42,9 @@ public class DrawerLayoutCompatBindingAdapter {
 
   @BindingAdapter({ BIND_IS_OPEN })
   public static void viewDrawerLayoutRegisterIsOpen(DrawerLayout viewDrawerLayout, boolean isOpen) {
-    if (isDrawerOpen(viewDrawerLayout) && isOpen) {
+    if (isDrawerOpen(viewDrawerLayout) && !isOpen) {
       closeDrawer(viewDrawerLayout);
-    } else if (!isDrawerOpen(viewDrawerLayout) && !isOpen) {
+    } else if (!isDrawerOpen(viewDrawerLayout) && isOpen) {
       openDrawer(viewDrawerLayout);
     }
   }
