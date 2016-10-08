@@ -16,11 +16,16 @@
  * limitations under the License.
  */
  -->
-<scale
+<set
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fromXScale="100%"
-    android:fromYScale="100%"
-    android:toXScale="85%"
-    android:toYScale="85%"
-    android:pivotX="50%"
-    android:pivotY="50%" />
+    android:duration="@android:integer/config_shortAnimTime">
+
+  <scale
+      android:fromXScale="100%"
+      android:fromYScale="100%"
+      android:toXScale="85%"
+      android:toYScale="85%"
+      android:pivotX="50%"
+      android:pivotY="50%" />
+
+</set>
