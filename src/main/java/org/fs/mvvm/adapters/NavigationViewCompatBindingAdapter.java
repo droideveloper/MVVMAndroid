@@ -37,7 +37,7 @@ public class NavigationViewCompatBindingAdapter {
 
   @InverseBindingAdapter(attribute = BIND_MENU_ITEM,
       event = BIND_MENU_ITEM_ATTR_CHANGED)
-  public int viewNavigationRetreiveMenuItem(NavigationView viewNavigation) {
+  public static int viewNavigationRetreiveMenuItem(NavigationView viewNavigation) {
     final int size = viewNavigation.getMenu().size();
     return IntStreams.range(0, size)
         .mapToObj(viewNavigation.getMenu()::getItem)
@@ -48,7 +48,7 @@ public class NavigationViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_MENU_ITEM })
-  public void viewNavigationRegisterMenuItem(NavigationView viewNavigation, int selectedId) {
+  public static void viewNavigationRegisterMenuItem(NavigationView viewNavigation, int selectedId) {
     if (selectedId > 0) {
       viewNavigation.setCheckedItem(selectedId);
     }
