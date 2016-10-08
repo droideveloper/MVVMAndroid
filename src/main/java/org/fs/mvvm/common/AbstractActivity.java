@@ -15,14 +15,38 @@
  */
 package org.fs.mvvm.common;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import org.fs.mvvm.R;
 import org.fs.mvvm.data.AbstractViewModel;
 
 public abstract class AbstractActivity<V extends AbstractViewModel<?>> extends
     AppCompatActivity {
+
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    overridePendingTransition(R.anim.activity_anim_translate_right_in, R.anim.activity_anim_scale_out);
+  }
+
+  @Override public void finish() {
+    super.finish();
+    overridePendingTransition(R.anim.activity_anim_scale_in, R.anim.acitivty_anim_translate_right_out);
+  }
+
+  @Override public void startActivity(Intent intent) {
+    super.startActivity(intent);
+    overridePendingTransition(R.anim.activity_anim_scale_in, R.anim.acitivty_anim_translate_right_out);
+  }
+
+  @Override public void startActivityForResult(Intent intent, int requestCode) {
+    super.startActivityForResult(intent, requestCode);
+    overridePendingTransition(R.anim.activity_anim_scale_in, R.anim.acitivty_anim_translate_right_out);
+  }
 
   /**
    * Log string message with Debug level.
