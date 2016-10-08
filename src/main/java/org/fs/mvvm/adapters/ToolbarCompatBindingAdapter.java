@@ -17,14 +17,22 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
+import android.databinding.InverseBindingListener;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.widget.TextView;
 import org.fs.mvvm.commands.ICommand;
 import org.fs.mvvm.listeners.OnNavigated;
+import org.fs.mvvm.listeners.SimpleTextWatcher;
+import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
 
 public class ToolbarCompatBindingAdapter {
+
+  private final static String FIELD_TITLE_TEXTVIEW      = "mTitleTextView";
+  private final static String FIELD_SUB_TITLE_TEXTVIEW  = "mSubtitleTextView";
 
   private final static String BIND_TITLE_TEXT = "bindings:titleText";
   private final static String BIND_TITLE_TEXT_ATTR_CHANGED = "bindings:titleTextAttrChanged";
@@ -69,8 +77,8 @@ public class ToolbarCompatBindingAdapter {
     }
   }
 
-  @InverseBindingAdapter(event = BIND_SUB_TITLE_TEXT_ATTR_CHANGED,
-      attribute = BIND_SUB_TITLE_TEXT)
+  @InverseBindingAdapter(attribute = BIND_SUB_TITLE_TEXT,
+      event = BIND_SUB_TITLE_TEXT_ATTR_CHANGED)
   public static <T extends CharSequence> T viewToolbarRetreiveSubTitle(Toolbar viewToolbar) {
     return Objects.toObject(viewToolbar.getSubtitle());
   }
@@ -79,11 +87,14 @@ public class ToolbarCompatBindingAdapter {
       value = {
           BIND_ON_NAVIGATED,
           BIND_NAVIGATION_COMMAND_PARAMETER,
-          BIND_NAVIGATION_COMMAND
+          BIND_NAVIGATION_COMMAND,
+          BIND_SUB_TITLE_TEXT_ATTR_CHANGED,
+          BIND_TITLE_TEXT_ATTR_CHANGED
       },
       requireAll = false
   )
-  public static <T> void viewToolbarRegisterNavigationListener(Toolbar viewToolbar, OnNavigated callback, T param, ICommand<T> command) {
+  public static <T> void viewToolbarRegisterNavigationListener(Toolbar viewToolbar, OnNavigated callback, T param, ICommand<T> command,
+      InverseBindingListener subTitleAttrChanged, InverseBindingListener titleAttrChanged) {
     if (callback == null && param == null && command == null) {
       viewToolbar.setNavigationOnClickListener(null);
     } else {
@@ -97,6 +108,28 @@ public class ToolbarCompatBindingAdapter {
           }
         }
       });
+    }
+    if (subTitleAttrChanged != null || titleAttrChanged != null) {
+      if (subTitleAttrChanged != null) {
+        TextView subTitleTextView = Invokes.getFieldValue(Invokes.findFieldByName(FIELD_SUB_TITLE_TEXTVIEW, Toolbar.class), viewToolbar);
+        if (subTitleTextView != null) {
+          subTitleTextView.addTextChangedListener(new SimpleTextWatcher() {
+            @Override public void afterTextChanged(Editable s) {
+              subTitleAttrChanged.onChange();
+            }
+          });
+        }
+      }
+      if (titleAttrChanged != null) {
+        TextView titleTextView = Invokes.getFieldValue(Invokes.findFieldByName(FIELD_TITLE_TEXTVIEW, Toolbar.class), viewToolbar);
+        if (titleTextView != null) {
+          titleTextView.addTextChangedListener(new SimpleTextWatcher() {
+            @Override public void afterTextChanged(Editable s) {
+              titleAttrChanged.onChange();
+            }
+          });
+        }
+      }
     }
   }
 }

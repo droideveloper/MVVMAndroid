@@ -49,7 +49,9 @@ public class NavigationViewCompatBindingAdapter {
 
   @BindingAdapter({ BIND_MENU_ITEM })
   public void viewNavigationRegisterMenuItem(NavigationView viewNavigation, int selectedId) {
-    viewNavigation.setCheckedItem(selectedId);
+    if (selectedId > 0) {
+      viewNavigation.setCheckedItem(selectedId);
+    }
   }
 
   @BindingAdapter(
@@ -60,13 +62,13 @@ public class NavigationViewCompatBindingAdapter {
       requireAll = false
   )
   public static void viewNavigationRegisterSelectionListener(NavigationView viewNavigation,
-      OnNavigationSelected selectedListener, InverseBindingListener selectedItemAttrChanged) {
-    if (selectedListener == null && selectedItemAttrChanged == null) {
+      OnNavigationSelected selectedListener, InverseBindingListener menuItemAttrChanged) {
+    if (selectedListener == null && menuItemAttrChanged == null) {
       viewNavigation.setNavigationItemSelectedListener(null);
     } else {
       viewNavigation.setNavigationItemSelectedListener(item -> {
-        if (selectedItemAttrChanged != null) {
-          selectedItemAttrChanged.onChange();
+        if (menuItemAttrChanged != null) {
+          menuItemAttrChanged.onChange();
         }
         if (selectedListener != null) {
           return selectedListener.onNavigationSelected(item);

@@ -15,7 +15,9 @@
  */
 package org.fs.mvvm.utils;
 
+import java.lang.reflect.Field;
 import java8.util.function.Function;
+import org.fs.mvvm.BuildConfig;
 import org.fs.mvvm.commands.Action;
 
 public final class Invokes {
@@ -49,4 +51,43 @@ public final class Invokes {
     Preconditions.checkNotNull(func, "func is null");
     return func.apply(object);
   }
-}
+
+  public static <T> T getFieldValue(Field field, Object instance) {
+    Preconditions.checkNotNull(instance, "instance is null");
+    Preconditions.checkNotNull(field, "field is null");
+    try {
+      field.setAccessible(true);
+      return Objects.toObject(field.get(instance));
+    } catch (IllegalAccessException ignored) {
+      if(BuildConfig.DEBUG) {
+        ignored.printStackTrace();
+      }
+      return null;
+    }
+  }
+
+  public static Field findFieldByName(String fieldName, Class<?> clazz) {
+    Preconditions.checkNotNull(clazz, "class is null");
+    Preconditions.checkNotNull(fieldName, "fieldName is null");
+    try {
+      Field field = findPublicFieldByName(fieldName, clazz);
+      if (field == null) {
+        return findPrivateFieldByName(fieldName, clazz);
+      }
+      return field;
+    } catch (NoSuchFieldException ignored) {
+      if (BuildConfig.DEBUG) {
+        ignored.printStackTrace();
+      }
+      return null;
+    }
+  }
+
+  public static Field findPrivateFieldByName(String fieldName, Class<?> clazz) throws NoSuchFieldException {
+    return clazz.getDeclaredField(fieldName);
+  }
+
+  public static Field findPublicFieldByName(String fieldName, Class<?> clazz) throws NoSuchFieldException {
+    return clazz.getField(fieldName);
+  }
+ }
