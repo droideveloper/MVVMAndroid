@@ -34,5 +34,6 @@
   <!-- ViewPager properties -->
   <item name="viewPager_selectedItem" type="id" />
 
-
+  <!-- AppBarLayout properties -->
+  <item name="viewAppBarLayout_offset" type="id" />
 </resources>

@@ -20,6 +20,7 @@
   <item name="drawerListener" type="id" />
   <item name="onClickListener" type="id" />
   <item name="textLayoutWatcher" type="id" />
+  <item name="offsetChangeListener" type="id" />
   <!-- FrameLayout -->
   <item name="viewFragment_ContainerLayout" type="id" />
 </resources>
