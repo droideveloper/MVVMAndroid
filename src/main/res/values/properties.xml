@@ -36,4 +36,7 @@
 
   <!-- AppBarLayout properties -->
   <item name="viewAppBarLayout_offset" type="id" />
+
+  <!-- WebView properties -->
+  <item name="viewWeb_loadedUrl" type="id" />
 </resources>
