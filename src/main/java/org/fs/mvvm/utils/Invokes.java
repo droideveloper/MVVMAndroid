@@ -83,11 +83,11 @@ public final class Invokes {
     }
   }
 
-  public static Field findPrivateFieldByName(String fieldName, Class<?> clazz) throws NoSuchFieldException {
+  static Field findPrivateFieldByName(String fieldName, Class<?> clazz) throws NoSuchFieldException {
     return clazz.getDeclaredField(fieldName);
   }
 
-  public static Field findPublicFieldByName(String fieldName, Class<?> clazz) throws NoSuchFieldException {
+  static Field findPublicFieldByName(String fieldName, Class<?> clazz) throws NoSuchFieldException {
     return clazz.getField(fieldName);
   }
  }
