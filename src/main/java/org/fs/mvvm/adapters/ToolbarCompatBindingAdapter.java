@@ -46,6 +46,9 @@ public class ToolbarCompatBindingAdapter {
 
   private final static String BIND_NAVIGATION_ICON_COMPAT = "bindings:navigationIconCompat";
 
+  private final static String BIND_MENU = "bindings:toolbarMenu";
+  private final static String BIND_MENU_CALLBACK = "bindings:toolbarMenuCallback";
+
   private ToolbarCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
@@ -81,6 +84,14 @@ public class ToolbarCompatBindingAdapter {
       event = BIND_SUB_TITLE_TEXT_ATTR_CHANGED)
   public static <T extends CharSequence> T viewToolbarRetreiveSubTitle(Toolbar viewToolbar) {
     return Objects.toObject(viewToolbar.getSubtitle());
+  }
+
+  @BindingAdapter({ BIND_MENU, BIND_MENU_CALLBACK })
+  public static void viewToolbarRegisterMenuAndMenuCallback(Toolbar viewToolbar, int menu, Toolbar.OnMenuItemClickListener callback) {
+    if (menu >= 0 && callback != null) {
+      viewToolbar.setOnMenuItemClickListener(callback);
+      viewToolbar.inflateMenu(menu);
+    }
   }
 
   @BindingAdapter(
