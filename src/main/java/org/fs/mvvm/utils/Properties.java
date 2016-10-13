@@ -20,7 +20,6 @@ import android.view.View;
 import java.util.WeakHashMap;
 import org.fs.mvvm.data.PropertyInfo;
 
-import static android.os.Build.VERSION;
 import static android.os.Build.VERSION_CODES;
 
 public class Properties {
@@ -36,25 +35,17 @@ public class Properties {
    * @return propertyInfo previously changed or stored
    */
   public static <T> PropertyInfo<T> getPropertyInfo(View view, int propertyId) {
-    if (requireSupportCompat()) {
+    if (AppCompat.isBuildSDKAvailable(VERSION_CODES.ICE_CREAM_SANDWICH)) {
+      Object propertyInfo = view.getTag(propertyId);
+      return propertyInfo != null ? Objects.toObject(propertyInfo) : null;
+    } else {
       synchronized (sProperties) {
         WeakHashMap<View, PropertyInfo<?>> properties = sProperties.get(propertyId);
         if (properties == null) {
           return null;
         }
         final PropertyInfo<?> propertyInfo = properties.get(view);
-        if (propertyInfo == null) {
-          return null;
-        } else {
-          return Objects.toObject(propertyInfo);
-        }
-      }
-    } else {
-      Object propertyInfo = view.getTag(propertyId);
-      if (propertyInfo != null) {
-        return Objects.toObject(propertyInfo);
-      } else {
-        return null;
+        return propertyInfo != null ? Objects.toObject(propertyInfo) : null;
       }
     }
   }
@@ -68,7 +59,9 @@ public class Properties {
    * @param <T> type of property value
    */
   public static <T> void setPropertyInfo(View view, PropertyInfo<T> propertyInfo, int propertyId) {
-    if (requireSupportCompat()) {
+    if (AppCompat.isBuildSDKAvailable(VERSION_CODES.ICE_CREAM_SANDWICH)) {
+      view.setTag(propertyId, propertyInfo);
+    } else {
       synchronized (sProperties) {
         WeakHashMap<View, PropertyInfo<?>> properties = sProperties.get(propertyId);
         if (properties == null) {
@@ -79,16 +72,6 @@ public class Properties {
           properties.put(view, propertyInfo);
         }
       }
-    } else {
-      view.setTag(propertyId, propertyInfo);
     }
-  }
-
-  /**
-   * Checks compatibility mode
-   * @return true if compat usage else api calls
-   */
-  private static boolean requireSupportCompat() {
-    return VERSION.SDK_INT < VERSION_CODES.ICE_CREAM_SANDWICH;
   }
 }

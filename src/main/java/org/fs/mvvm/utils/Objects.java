@@ -16,7 +16,13 @@
 package org.fs.mvvm.utils;
 
 import android.text.TextUtils;
+import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java8.util.function.Predicate;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 public final class Objects {
 
@@ -28,7 +34,7 @@ public final class Objects {
   }
 
   /**
-   * Checks if object null or empty if object instance is Collection or String
+   * Checks if object null or empty if object instance is Collection, String or File
    *
    * @param object object instance to check
    * @param <T> T type of the object
@@ -43,6 +49,10 @@ public final class Objects {
     if (object instanceof Collection<?>) {
       Collection<?> collection = (Collection<?>) object;
       return collection.isEmpty();
+    }
+    if (object instanceof File) {
+      File file = (File) object;
+      return file.exists();
     }
     return false;
   }
@@ -63,5 +73,23 @@ public final class Objects {
     } catch (ClassCastException ignored) {
       return null;
     }
+  }
+
+  public static <T> Collection<T> sort(Collection<T> collection, Comparator<T> filter) {
+    if (!isNullOrEmpty(collection))  {
+      StreamSupport.stream(collection)
+          .sorted(filter)
+          .collect(Collectors.toList());
+    }
+    return Collections.emptyList();
+  }
+
+  public static <T> Collection<T> filter(Collection<T> collection, Predicate<T> condition) {
+    if (!isNullOrEmpty(collection)) {
+      StreamSupport.stream(collection)
+          .filter(condition)
+          .collect(Collectors.toList());
+    }
+    return Collections.emptyList();
   }
 }
