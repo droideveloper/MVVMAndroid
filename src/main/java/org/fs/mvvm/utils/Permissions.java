@@ -44,12 +44,10 @@ public final class Permissions {
             .setCancelable(true)
             .setTitle(title)
             .setMessage(message)
-            .setNegativeButton(android.R.string.cancel, (d, which) -> {
-              Log.i(Permissions.class.getSimpleName(), "user canceled permission " + permission);
-            })
-            .setPositiveButton(android.R.string.ok, (d, which) -> {
-              ActivityCompat.requestPermissions((Activity) context, new String[] { permission }, requestCode);
-            })
+            .setNegativeButton(android.R.string.cancel, (d, which) ->
+              Log.i(Permissions.class.getSimpleName(), "user canceled permission " + permission))
+            .setPositiveButton(android.R.string.ok, (d, which) ->
+              ActivityCompat.requestPermissions((Activity) context, new String[] { permission }, requestCode))
             .create();
         dialog.show();
       } else {
