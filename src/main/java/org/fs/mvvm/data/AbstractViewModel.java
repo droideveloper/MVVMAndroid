@@ -71,7 +71,7 @@ public abstract class AbstractViewModel<V extends IView> extends BaseObservable 
   /**
    * View's backPressed lifecycle
    */
-  public void onBackPressed() { }
+  public void onBackPressed() {}
 
   /**
    * View's restoreState lifecycle
