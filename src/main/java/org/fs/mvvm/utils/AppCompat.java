@@ -23,6 +23,11 @@ public final class AppCompat {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
+  /**
+   * Checks if current sdk int is gte or not
+   * @param sdkRequired sdk int
+   * @return true or false
+   */
   public static boolean isBuildSDKAvailable(int sdkRequired) {
     return Build.VERSION.SDK_INT >= sdkRequired;
   }

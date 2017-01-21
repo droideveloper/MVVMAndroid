@@ -22,10 +22,18 @@ public final class Validation {
 
   private final boolean isSuccess;
 
+  /**
+   * Constructor
+   * @param isSuccess valid or not simple
+   */
   public Validation(boolean isSuccess) {
     this.isSuccess = isSuccess;
   }
 
+  /**
+   * is valid or not
+   * @return true or false flag
+   */
   public boolean isSuccess() {
     return this.isSuccess;
   }

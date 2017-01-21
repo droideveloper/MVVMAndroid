@@ -29,14 +29,36 @@ public final class Permissions {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
+  /**
+   * if permission granted previously or not checks that.
+   * @param context context to check permission on
+   * @param permission permission to check if there is any.
+   * @return true or false
+   */
   public static boolean checkSelfPermission(Context context, String permission) {
     return ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_DENIED;
   }
 
+  /**
+   * Request Permission from use on given parameters if there is needed uses to show user custom text
+   * @param context context
+   * @param permission permission to ask
+   * @param requestCode request code of permission
+   * @param titleRes res id of title string
+   * @param messageRes res id of message string
+   */
   public static void requestPermission(Context context, String permission, int requestCode, int titleRes, int messageRes) {
     requestPermission(context, permission, requestCode, context.getString(titleRes), context.getString(messageRes));
   }
 
+  /**
+   * Request Permission from use on given parameters if there is needed uses to show user custom text
+   * @param context Context
+   * @param permission permission to ask
+   * @param requestCode requestCode of permission
+   * @param title title of permission
+   * @param message message of permission
+   */
   public static void requestPermission(Context context, String permission, int requestCode,  CharSequence title, CharSequence message) {
     if (!checkSelfPermission(context, permission)) {
       if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
@@ -56,6 +78,13 @@ public final class Permissions {
     }
   }
 
+  /**
+   * Checks the permission result is ok or not
+   * @param requestCode requestCode of permission
+   * @param result result of the permission of user response
+   * @param requestPermissionCode requestPermissionCode
+   * @return true or false
+   */
   public static boolean permissionResult(int requestCode, int[] result, int requestPermissionCode) {
     if (requestCode == requestPermissionCode) {
       return result != null && result.length > 0 && result[0] == PackageManager.PERMISSION_GRANTED;

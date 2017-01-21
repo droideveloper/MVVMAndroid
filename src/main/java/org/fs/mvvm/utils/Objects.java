@@ -75,6 +75,13 @@ public final class Objects {
     }
   }
 
+  /**
+   * Sort given collection depending on filter method
+   * @param collection Collection to sort
+   * @param filter filter for sort operation
+   * @param <T> Type of Element
+   * @return sorted Collection or empty if Collection is empty
+   */
   public static <T> Collection<T> sort(Collection<T> collection, Comparator<T> filter) {
     if (!isNullOrEmpty(collection))  {
       StreamSupport.stream(collection)
@@ -84,6 +91,13 @@ public final class Objects {
     return Collections.emptyList();
   }
 
+  /**
+   * Filters collection item on condition
+   * @param collection Collection to filter
+   * @param condition condition to apply
+   * @param <T> Type of Element
+   * @return filtered Collection or empty if Collection is empty
+   */
   public static <T> Collection<T> filter(Collection<T> collection, Predicate<T> condition) {
     if (!isNullOrEmpty(collection)) {
       StreamSupport.stream(collection)

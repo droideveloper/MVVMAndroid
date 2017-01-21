@@ -40,16 +40,16 @@ public final class RecyclerViewCompatBindingAdapter {
   private final static String BIND_TOUCH_HELPER       = "bindings:touchHelper";
 
   //bind itemPosition two-way
-  private final static String BIND_ITEM_POSITION              = "bindings:itemPosition";
-  private final static String BIND_ITEM_POSITION_ATTR_CHANGED = "bindings:itemPositionAttrChanged";
+  private final static String BIND_ITEM_POSITION              = "bindings:position";
+  private final static String BIND_ITEM_POSITION_ATTR_CHANGED = "bindings:positionAttrChanged";
 
   //bind item two-way
   private final static String BIND_ITEM               = "bindings:item";
   private final static String BIND_ITEM_ATTR_CHANGED  = "bindings:itemAttrChanged";
 
   //bind item-positions two-way
-  private final static String BIND_ITEM_POSITIONS               = "bindings:itemPositions";
-  private final static String BIND_ITEM_POSITIONS_ATTR_CHANGED  = "bindings:itemPositionsAttrChanged";
+  private final static String BIND_ITEM_POSITIONS               = "bindings:positions";
+  private final static String BIND_ITEM_POSITIONS_ATTR_CHANGED  = "bindings:positionsAttrChanged";
 
   //bind items two-way
   private final static String BIND_ITEMS              = "bindings:items";

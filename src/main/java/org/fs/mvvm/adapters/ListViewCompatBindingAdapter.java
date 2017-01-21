@@ -77,13 +77,6 @@ public final class ListViewCompatBindingAdapter {
     Properties.setPropertyInfo(viewList, propertyInfo, R.id.viewList_selectedPositions);
   }
 
-  /**
-   * Getter of SelectedItems on viewList
-   *
-   * @param viewList viewList instance
-   * @param <D> type of item
-   * @return null or Collection of items
-   */
   @InverseBindingAdapter(attribute = BIND_ITEMS,
       event = BIND_ITEMS_ATTR_CHANGED)
   public static <D extends AbstractEntity> Collection<D> viewListRegisterItems(ListView viewList) {
