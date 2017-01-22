@@ -81,7 +81,7 @@ in view.xml
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        bindings:onSlided="@={viewModel.layoutSlidedCallback}">
+        bindings:onSlided="@{viewModel.layoutSlidedCallback}">
     
     </android.support.v4.widget.DrawerLayout>  
       
@@ -130,7 +130,7 @@ in view.xml
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        bindings:onOpenOrClose="@={viewModel.layoutOpenedOrClosedCallback}">
+        bindings:onOpenOrClose="@{viewModel.layoutOpenedOrClosedCallback}">
     
     </android.support.v4.widget.DrawerLayout>  
       
@@ -178,7 +178,7 @@ in view.xml
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        bindings:onStateChange="@={viewModel.layoutStateChangedCallback}">
+        bindings:onStateChange="@{viewModel.layoutStateChangedCallback}">
     
     </android.support.v4.widget.DrawerLayout>  
       
