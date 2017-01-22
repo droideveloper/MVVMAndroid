@@ -3,11 +3,11 @@
 You can use this binding class on instances of `android.view.View`.
 
 1. Commands
-  a. Parameterized Commands
-  b. Non-Parameterized Commands
+..1. [Parameterized Commands](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#parameterized-commands)
+..2. [Non-Parameterized Commands](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#non-parameterized-commands)
 2. Notify
-  a. With-Action
-  b. Without-Action
+..1. [With-Action](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#with-action)
+..2. [Without-Action](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#without-action)
 
 
 ### Commands ###
