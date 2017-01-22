@@ -22,18 +22,18 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-    <data>
-      <variable name="viewModel" 
-                type="org.fs.view.ViewModel" />
-    </data>
-      
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bindings:isOpen="@={viewModel.isOpen}">
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
     
-    </android.support.v4.widget.DrawerLayout>  
+  <android.support.v4.widget.DrawerLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      bindings:isOpen="@={viewModel.isOpen}">
+  
+  </android.support.v4.widget.DrawerLayout>  
       
 </layout>        
 ```
@@ -72,18 +72,18 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-    <data>
-      <variable name="viewModel" 
-                type="org.fs.view.ViewModel" />
-    </data>
-      
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bindings:onSlided="@{viewModel.layoutSlidedCallback}">
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
     
-    </android.support.v4.widget.DrawerLayout>  
+  <android.support.v4.widget.DrawerLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      bindings:onSlided="@{viewModel.layoutSlidedCallback}">
+  
+  </android.support.v4.widget.DrawerLayout>  
       
 </layout>        
 ```
@@ -121,18 +121,18 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-    <data>
-      <variable name="viewModel" 
-                type="org.fs.view.ViewModel" />
-    </data>
-      
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bindings:onOpenOrClose="@{viewModel.layoutOpenedOrClosedCallback}">
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
     
-    </android.support.v4.widget.DrawerLayout>  
+  <android.support.v4.widget.DrawerLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      bindings:onOpenOrClose="@{viewModel.layoutOpenedOrClosedCallback}">
+  
+  </android.support.v4.widget.DrawerLayout>  
       
 </layout>        
 ```
@@ -169,18 +169,18 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-    <data>
-      <variable name="viewModel" 
-                type="org.fs.view.ViewModel" />
-    </data>
-      
-    <android.support.v4.widget.DrawerLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bindings:onStateChange="@{viewModel.layoutStateChangedCallback}">
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
     
-    </android.support.v4.widget.DrawerLayout>  
+  <android.support.v4.widget.DrawerLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      bindings:onStateChange="@{viewModel.layoutStateChangedCallback}">
+  
+  </android.support.v4.widget.DrawerLayout>  
       
 </layout>        
 ```

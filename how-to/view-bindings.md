@@ -22,25 +22,25 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-      <data>
-        <variable name="viewModel" 
-                  type="org.fs.view.ViewModel" />
-      </data>
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+  
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/app_name"
+      style="@style/Widget.AppCompat.Button.Borderless.Colored" 
+      bindings:command="@{viewModel.textCommand}" 
+      bindings:commandParameter="@{viewModel.textParameter}"/>
       
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-      
-        <Button
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/app_name"
-          style="@style/Widget.AppCompat.Button.Borderless.Colored" 
-          bindings:command="@{viewModel.textCommand}" 
-          bindings:commandParameter="@{viewModel.textParameter}"/>
-          
-      </LinearLayout>
+  </LinearLayout>
       
 </layout>        
 ```
@@ -76,24 +76,24 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-      <data>
-        <variable name="viewModel" 
-                  type="org.fs.view.ViewModel" />
-      </data>
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+  
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/app_name"
+      style="@style/Widget.AppCompat.Button.Borderless.Colored" 
+      bindings:command="@{viewModel.callbackCommand}" />
       
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-      
-        <Button
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/app_name"
-          style="@style/Widget.AppCompat.Button.Borderless.Colored" 
-          bindings:command="@{viewModel.callbackCommand}" />
-          
-      </LinearLayout>
+  </LinearLayout>
       
 </layout>        
 ```
@@ -127,19 +127,19 @@ in view.xml
 ```xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
-      
-      <data>
-        <variable name="viewModel" 
-                  type="org.fs.view.ViewModel" />
-      </data>
-      
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" 
-        bindings:notifyText="@{viewModel.textNotification}"
-        bindings:actionText="@{@string/actionOk}"
-        bindings:relayCommand="@{viewModel.callbackCommand}" />
+     
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    bindings:notifyText="@{viewModel.textNotification}"
+    bindings:actionText="@{@string/actionOk}"
+    bindings:relayCommand="@{viewModel.callbackCommand}" />
       
 </layout>        
 ```
@@ -179,16 +179,16 @@ in view.xml
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:bindings="http://schemas.android.com/apk/res-auto">
       
-      <data>
-        <variable name="viewModel" 
-                  type="org.fs.view.ViewModel" />
-      </data>
-      
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" 
-        bindings:notifyText="@{viewModel.textNotification}" />
+  <data>
+    <variable name="viewModel" 
+              type="org.fs.view.ViewModel" />
+  </data>
+  
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    bindings:notifyText="@{viewModel.textNotification}" />
       
 </layout>        
 ```
