@@ -23,4 +23,6 @@
   <item name="offsetChangeListener" type="id" />
   <!-- FrameLayout -->
   <item name="viewFragment_ContainerLayout" type="id" />
+
+  <item name="autoReverse" type="bool">true</item>
 </resources>
