@@ -2,7 +2,7 @@
 
 You can use this binding class on instances of `android.support.v7.widget.Toolbar`.
 
-### TitleText ###
+#### TitleText ####
 
 in view.xml
 
@@ -52,7 +52,7 @@ public class ViewModel extends AbstractViewModel<ActivityView> {
 }
 ```
 
-### SubTitleText ###
+#### SubTitleText ####
 
 in view.xml
 
@@ -102,7 +102,7 @@ public class ViewModel extends AbstractViewModel<ActivityView> {
 }
 ```
 
-### Navigation ###
+#### Navigation ####
 
 in view.xml
 
@@ -168,7 +168,7 @@ public class ViewModel extends AbstractViewModel<ActivityView> {
 }
 ```
 
-### Menu ###
+#### Menu ####
 
 in view.xml
 
