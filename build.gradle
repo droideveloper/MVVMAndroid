@@ -46,7 +46,7 @@ dependencies {
   compile 'com.android.support:support-v4:25.1.1'
   compile 'com.android.support:design:25.1.1'
 
-  testCompile 'junit:junit:4.12'
+  compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
 
   compile 'net.sourceforge.streamsupport:streamsupport:1.5.1'
   compile 'io.reactivex:rxandroid:1.2.1'
