@@ -1,6 +1,6 @@
 /*
- * MVVM Copyright (C) 2016 Fatih.
- *
+ * MVVM Copyright (C) 2017 Fatih.
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,13 +18,13 @@ package org.fs.mvvm.adapters;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
 import java8.util.stream.IntStreams;
 import org.fs.mvvm.listeners.OnNavigationSelected;
 
-public class NavigationViewCompatBindingAdapter {
+public class BottomNavigationViewCompatBindingAdapter {
 
   private final static int    NO_ID = -1;
   private final static String BIND_ON_NAVIGATION_SELECTED = "bindings:onNavigationSelected";
@@ -32,15 +32,14 @@ public class NavigationViewCompatBindingAdapter {
   private final static String BIND_MENU_ITEM              = "bindings:menuItem";
   private final static String BIND_MENU_ITEM_ATTR_CHANGED = "bindings:menuItemAttrChanged";
 
-  private NavigationViewCompatBindingAdapter() {
+  private BottomNavigationViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
   }
 
   @InverseBindingAdapter(attribute = BIND_MENU_ITEM,
       event = BIND_MENU_ITEM_ATTR_CHANGED)
-  public static int viewNavigationRetreiveMenuItem(NavigationView viewNavigation) {
-    final Menu menu = viewNavigation.getMenu();
-    final int size = menu != null ? menu.size() : 0;
+  public static int viewNavigationRetreiveMenuItem(BottomNavigationView viewNavigation) {
+    final int size = viewNavigation.getMenu().size();
     return IntStreams.range(0, size)
         .mapToObj(viewNavigation.getMenu()::getItem)
         .filter(MenuItem::isChecked)
@@ -50,9 +49,15 @@ public class NavigationViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_MENU_ITEM })
-  public static void viewNavigationRegisterMenuItem(NavigationView viewNavigation, int selectedId) {
+  public static void viewNavigationRegisterMenuItem(BottomNavigationView viewNavigation, int selectedId) {
     if (selectedId > 0) {
-      viewNavigation.setCheckedItem(selectedId);
+      final Menu menu = viewNavigation.getMenu();
+      for (int index = 0, z = menu.size(); index < z; index++) {
+        final MenuItem item = menu.getItem(index);
+        if (item != null) {
+          item.setChecked(selectedId == item.getItemId());
+        }
+      }
     }
   }
 
@@ -63,12 +68,12 @@ public class NavigationViewCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewNavigationRegisterSelectionListener(NavigationView viewNavigation,
+  public static void viewNavigationRegisterSelectionListener(BottomNavigationView viewNavigation,
       OnNavigationSelected selectedListener, InverseBindingListener menuItemAttrChanged) {
     if (selectedListener == null && menuItemAttrChanged == null) {
-      viewNavigation.setNavigationItemSelectedListener(null);
+      viewNavigation.setOnNavigationItemSelectedListener(null);
     } else {
-      viewNavigation.setNavigationItemSelectedListener(item -> {
+      viewNavigation.setOnNavigationItemSelectedListener(item -> {
         if (menuItemAttrChanged != null) {
           menuItemAttrChanged.onChange();
         }
@@ -79,4 +84,5 @@ public class NavigationViewCompatBindingAdapter {
       });
     }
   }
+
 }
