@@ -45,4 +45,12 @@ public final class Tuple<T> {
     }
     return null;
   }
+
+  /**
+   * Gets size of args
+   * @return 0 if null or empty else it will return count
+   */
+  public final int size() {
+    return Objects.isNullOrEmpty(args) ? 0 : args.size();
+  }
 }
