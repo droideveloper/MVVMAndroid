@@ -39,6 +39,8 @@ public final class TextViewCompatBindingAdapter {
 
   private final static String BIND_ON_SOFT_KEYBOARD_ACTION  = "bindings:onSoftKeyboardAction";
 
+  private final static String BIND_IME_OPTIONS   = "bindings:imeOptions";
+
   private final static String BIND_FROM_OBJECT   = "bindings:fromObject";
   private final static String BIND_CONVERTER     = "bindings:converter";
 
@@ -46,6 +48,11 @@ public final class TextViewCompatBindingAdapter {
 
   private TextViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
+  }
+
+  @BindingAdapter({ BIND_IME_OPTIONS })
+  public static void viewTextViewRegisterImeOptions(TextView viewText, int imeOptions) {
+    viewText.setImeOptions(imeOptions);
   }
 
   @BindingAdapter({ BIND_ON_SOFT_KEYBOARD_ACTION })

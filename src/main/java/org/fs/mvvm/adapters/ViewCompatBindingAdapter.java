@@ -15,16 +15,30 @@
  */
 package org.fs.mvvm.adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.databinding.BindingAdapter;
 import android.databinding.adapters.ListenerUtil;
+import android.support.annotation.AnimRes;
+import android.support.annotation.AnimatorRes;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
 import org.fs.mvvm.R;
 import org.fs.mvvm.commands.ICommand;
 import org.fs.mvvm.commands.RelayCommand;
 import org.fs.mvvm.utils.Objects;
 
 public final class ViewCompatBindingAdapter {
+
+  private final static String BIND_ANIM               = "bindings:anim";
+  private final static String BIND_ANIM_LISTENER      = "bindings:animListener";
+
+  private final static String BIND_ANIMATOR           = "bindings:animator";
+  private final static String BIND_INTERPOLATOR       = "bindings:interpolator";
+  private final static String BIND_ANIMATOR_LISTENER  = "bindings:animatorListener";
 
   private final static String BIND_COMMAND            = "bindings:command";
   private final static String BIND_COMMAND_PARAMETER  = "bindings:commandParameter";
@@ -35,6 +49,56 @@ public final class ViewCompatBindingAdapter {
 
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  @BindingAdapter(
+    value = {
+      BIND_ANIM,
+      BIND_INTERPOLATOR,
+      BIND_ANIM_LISTENER
+    },
+    requireAll = false
+  )
+  public static void viewRegisterAnim(View view, @AnimRes int anim, Interpolator interpolator, Animation.AnimationListener listener) {
+    view.clearAnimation();
+    if (anim > 0) {
+      final Animation animation = AnimationUtils.loadAnimation(view.getContext(), anim);
+      if (animation != null) {
+        if (interpolator != null) {
+          animation.setInterpolator(interpolator);
+        }
+        if (listener != null) {
+          animation.setAnimationListener(listener);
+        }
+        view.setAnimation(animation);
+        animation.start();
+      }
+    }
+  }
+
+  @BindingAdapter(
+    value = {
+      BIND_ANIMATOR,
+      BIND_INTERPOLATOR,
+      BIND_ANIMATOR_LISTENER
+    },
+    requireAll = false
+  )
+  public static void viewRegisterAnimator(View view, @AnimatorRes int anim, Interpolator interpolator, Animator.AnimatorListener listener) {
+    view.clearAnimation();
+    if (anim > 0) {
+      final Animator animator = AnimatorInflater.loadAnimator(view.getContext(), anim);
+      if (animator != null) {
+        if (interpolator != null) {
+          animator.setInterpolator(interpolator);
+        }
+        if (listener != null) {
+          animator.addListener(listener);
+        }
+        animator.setTarget(view);
+        animator.start();
+      }
+    }
   }
 
   @BindingAdapter({ BIND_NOTIFY_TEXT })
