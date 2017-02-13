@@ -55,7 +55,9 @@ public abstract class PagerBindingAdapter<D extends BaseObservable, V extends Ab
       V viewHolder = createViewHolder(dataBinding, viewType);
       final D item = getItemAt(position);
       bindViewHolder(item, viewHolder, position);
-      return dataBinding.getRoot();
+      final ViewGroup layout = (ViewGroup) dataBinding.getRoot();
+      container.addView(layout);
+      return layout;
     }
     throw new RuntimeException("View context is killed yet you try to access it.");
   }
