@@ -17,28 +17,51 @@ package org.fs.mvvm.adapters;
 
 import android.databinding.BindingAdapter;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.widget.ImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import java.io.InputStream;
 import org.fs.mvvm.utils.Objects;
 
 public final class ImageViewCompatBindingAdapter {
 
-  private final static String BIND_IMAGE_URL          = "bindings:imageUrl";
-  private final static String BIND_ERROR_IMAGE        = "bindings:errorImage";
-  private final static String BIND_PLACEHOLDER_IMAGE  = "bindings:placeHolderImage";
+  private final static String BIND_IMAGE_URL                = "bindings:imageUrl";
+  private final static String BIND_REQUEST_BUILDER          = "bindings:requestBuilder";
+  private final static String BIND_ERROR_IMAGE              = "bindings:errorImage";
+  private final static String BIND_PLACEHOLDER_IMAGE        = "bindings:placeHolderImage";
 
   private ImageViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
   @BindingAdapter(
-      value = {
-        BIND_IMAGE_URL,
-        BIND_PLACEHOLDER_IMAGE,
-        BIND_ERROR_IMAGE
-      },
-      requireAll = false
+    value = {
+      BIND_IMAGE_URL,
+      BIND_REQUEST_BUILDER
+  })
+  public static void viewImageRegisterRequestBuilder(ImageView viewImage, String imageUrl, GenericRequestBuilder<Uri, InputStream, ?, ?> requestBuilder) {
+    if (!Objects.isNullOrEmpty(imageUrl)) {
+      if (imageUrl.startsWith("http") || imageUrl.startsWith("https")) {
+        requestBuilder = requestBuilder.load(Uri.parse(imageUrl))
+            .diskCacheStrategy(DiskCacheStrategy.SOURCE);
+      } else {
+        requestBuilder = requestBuilder.load(Uri.parse(imageUrl))
+            .diskCacheStrategy(DiskCacheStrategy.NONE);
+      }
+      requestBuilder.into(viewImage);
+    }
+  }
+
+  @BindingAdapter(
+    value = {
+      BIND_IMAGE_URL,
+      BIND_PLACEHOLDER_IMAGE,
+      BIND_ERROR_IMAGE
+    },
+    requireAll = false
   )
   public static void viewImageRegisterImageUrl(ImageView viewImage, String imageUrl, Drawable placeholder, Drawable error) {
     //instead of throwing error we just ignore binding if there is no url present
