@@ -32,7 +32,11 @@ import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
 
+import static android.R.attr.text;
+
 public final class TextViewCompatBindingAdapter {
+
+  private final static String BIND_REQUEST_FOCUS  = "bindings:requestFocus";
 
   private final static String BIND_BEFORE_CHANGED = "bindings:beforeChanged";
   private final static String BIND_AFTER_CHANGED  = "bindings:afterChanged";
@@ -48,6 +52,13 @@ public final class TextViewCompatBindingAdapter {
 
   private TextViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
+  }
+
+  @BindingAdapter({ BIND_REQUEST_FOCUS })
+  public static void viewTextViewRegisterRequestFocus(TextView viewText, boolean shouldReqeustFocus) {
+    if (shouldReqeustFocus) {
+      viewText.requestFocus();
+    }
   }
 
   @BindingAdapter({ BIND_IME_OPTIONS })

@@ -19,6 +19,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.adapters.ListenerUtil;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +34,20 @@ import org.fs.mvvm.utils.Objects;
 
 public final class TextInputLayoutCompatBindingAdapter {
 
+  private final static String BIND_HINT          = "bindings:hint";
   private final static String BIND_VALIDATOR     = "bindings:validator";
   private final static String BIND_ERROR_STRING  = "bindings:errorString";
 
   private TextInputLayoutCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  @BindingAdapter({ BIND_HINT })
+  public static <S extends CharSequence> void viewTextInputLayoutRegisterHintText(TextInputLayout viewTextInputLayout, S text) {
+    if (!TextUtils.isEmpty(text)) {
+      viewTextInputLayout.setHint(text);
+      viewTextInputLayout.setHintEnabled(true);
+    }
   }
 
   @BindingAdapter({ BIND_VALIDATOR, BIND_ERROR_STRING })
