@@ -19,12 +19,20 @@ import android.databinding.BindingAdapter;
 import android.databinding.adapters.ListenerUtil;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.fs.mvvm.R;
 import org.fs.mvvm.commands.ICommand;
 import org.fs.mvvm.commands.RelayCommand;
+import org.fs.mvvm.metadata.BindingCompat;
 import org.fs.mvvm.utils.Objects;
 
 public final class ViewCompatBindingAdapter {
+
+  private final static Pattern validator = Pattern.compile("binding=(\\w*, )relativeSource=\\{source=(\\w*, )ancestor=\\{(.+)\\}\\}");
+  private final static String splitter = ", ";
+
+  private final static String BIND_BIND               = "bindings:bind";
 
   private final static String BIND_COMMAND            = "bindings:command";
   private final static String BIND_COMMAND_PARAMETER  = "bindings:commandParameter";
@@ -35,6 +43,20 @@ public final class ViewCompatBindingAdapter {
 
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
+  }
+
+  @BindingAdapter({ BIND_BIND })
+  public static void viewRegisterBinding(View view, String str) {
+    final Matcher matcher = validator.matcher(str);
+    if (matcher.find()) {
+      final String[] binding = str.split(splitter, 2);
+      if (binding.length != 2) {
+        throw new RuntimeException("invalid property definition check bindings");
+      }
+      BindingCompat.bind(binding, view);
+    } else {
+      throw new RuntimeException("you should use valid binding options");
+    }
   }
 
   @BindingAdapter({ BIND_NOTIFY_TEXT })

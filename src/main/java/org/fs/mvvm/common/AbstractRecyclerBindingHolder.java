@@ -104,7 +104,7 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
   /**
    * tracks attach for adding listener to root view
    */
-  public final void onAttach() {
+  public void onAttach() {
     //this viewHolder set's its listener on first so we can track it in our listener
     ListenerUtil.trackListener(view(), this, R.id.onClickListener);
     view().setOnClickListener(this);
@@ -113,7 +113,7 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
   /**
    * tracks detach for removing listener to root view
    */
-  public final void onDetach() {
+  public void onDetach() {
     view().setOnClickListener(null);
   }
 
