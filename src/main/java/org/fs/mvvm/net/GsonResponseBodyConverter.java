@@ -23,12 +23,12 @@ import okhttp3.ResponseBody;
 import org.fs.mvvm.utils.Preconditions;
 import retrofit2.Converter;
 
-public class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
+class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
 
   private final Gson           mGson;
   private final TypeAdapter<T> mTypeAdapter;
 
-  public GsonResponseBodyConverter(final TypeAdapter<T> mTypeAdapter, final Gson mGson) {
+  GsonResponseBodyConverter(final TypeAdapter<T> mTypeAdapter, final Gson mGson) {
     this.mGson = mGson;
     this.mTypeAdapter = mTypeAdapter;
   }

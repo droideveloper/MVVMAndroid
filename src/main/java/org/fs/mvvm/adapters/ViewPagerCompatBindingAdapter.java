@@ -27,6 +27,7 @@ import org.fs.mvvm.R;
 import org.fs.mvvm.common.AbstractEntity;
 import org.fs.mvvm.common.AbstractPagerBindingAdapter;
 import org.fs.mvvm.common.AbstractPagerStateBindingAdapter;
+import org.fs.mvvm.common.PagerBindingAdapter;
 import org.fs.mvvm.data.PropertyInfo;
 import org.fs.mvvm.listeners.OnPageScrollStateChanged;
 import org.fs.mvvm.listeners.OnPageScrolled;
@@ -55,7 +56,7 @@ public final class ViewPagerCompatBindingAdapter {
   @InverseBindingAdapter(attribute = BIND_SELECTED_PAGE,
       event = BIND_SELECTED_PAGE_ATTR_CHANGED
   )
-  public int viewPagerRetreiveSelectedPage(ViewPager viewPager) {
+  public int viewPagerProvideSelectedPage(ViewPager viewPager) {
     return viewPager.getCurrentItem();
   }
 
@@ -129,6 +130,12 @@ public final class ViewPagerCompatBindingAdapter {
             }
           } else if (pagerAdapter instanceof AbstractPagerStateBindingAdapter<?>) {
             AbstractPagerStateBindingAdapter<?> typedAdapter = (AbstractPagerStateBindingAdapter<?>) pagerAdapter;
+            Properties.setPropertyInfo(viewPager, new PropertyInfo<>(typedAdapter.getItemAt(position)), R.id.viewPager_selectedItem);
+            if (itemAttrChanged != null) {
+              itemAttrChanged.onChange();
+            }
+          } else if (pagerAdapter instanceof PagerBindingAdapter<?, ?>) {
+            PagerBindingAdapter<?, ?> typedAdapter = (PagerBindingAdapter<?, ?>) pagerAdapter;
             Properties.setPropertyInfo(viewPager, new PropertyInfo<>(typedAdapter.getItemAt(position)), R.id.viewPager_selectedItem);
             if (itemAttrChanged != null) {
               itemAttrChanged.onChange();

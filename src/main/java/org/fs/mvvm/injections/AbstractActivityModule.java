@@ -15,37 +15,37 @@
  */
 package org.fs.mvvm.injections;
 
-import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.v7.app.AppCompatActivity;
 import dagger.Module;
 import dagger.Provides;
-import org.fs.mvvm.utils.Objects;
+import org.fs.mvvm.data.IView;
 import org.fs.mvvm.utils.Preconditions;
 
 @Module
 public class AbstractActivityModule {
 
   @LayoutRes private final int layoutResourceId;
-  private final Object view;
+  private final IView view;
 
-  public AbstractActivityModule(Object view, @LayoutRes int layoutResourceId) {
+  public AbstractActivityModule(IView view, @LayoutRes int layoutResourceId) {
     Preconditions.checkNotNull(view, "view is null");
     Preconditions.checkConditionMeet(layoutResourceId >= 0, "layout id must be positive");
     this.view = view;
     this.layoutResourceId = layoutResourceId;
   }
 
-  @Provides @ForActivity public Activity provideActivity() {
-    return Objects.toObject(view);
+  @Provides @ForActivity public AppCompatActivity provideActivity() {
+    return (AppCompatActivity) view.getContext();
   }
 
-  @Provides @ForActivity public ViewDataBinding provideViewDataBinding(Activity activity) {
+  @Provides @ForActivity public ViewDataBinding provideViewDataBinding(AppCompatActivity activity) {
     return DataBindingUtil.setContentView(activity, layoutResourceId);
   }
 
-  @Provides @ForActivity public Object provideView() {
+  @Provides @ForActivity public IView provideView() {
     return view;
   }
 }

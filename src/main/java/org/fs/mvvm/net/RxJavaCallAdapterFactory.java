@@ -29,7 +29,6 @@ import rx.Producer;
 import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Func1;
 
 /**
  * A {@linkplain CallAdapter.Factory call adapter} which uses RxJava for creating observables.
@@ -67,7 +66,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
    * Returns an instance which creates synchronous observables that
    * {@linkplain Observable#subscribeOn(Scheduler) subscribe on} {@code scheduler} by default.
    */
-  public static RxJavaCallAdapterFactory createWithScheduler(Scheduler scheduler) {
+  public static RxJavaCallAdapterFactory create(Scheduler scheduler) {
     if (scheduler == null) throw new NullPointerException("scheduler == null");
     return new RxJavaCallAdapterFactory(scheduler);
   }
@@ -133,7 +132,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
     return new SimpleCallAdapter(observableType, scheduler);
   }
 
-  static final class CallOnSubscribe<T> implements Observable.OnSubscribe<Response<T>> {
+  private static final class CallOnSubscribe<T> implements Observable.OnSubscribe<Response<T>> {
     private final Call<T> originalCall;
 
     CallOnSubscribe(Call<T> originalCall) {
@@ -151,7 +150,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
     }
   }
 
-  static final class RequestArbiter<T> extends AtomicBoolean implements Subscription, Producer {
+  private static final class RequestArbiter<T> extends AtomicBoolean implements Subscription, Producer {
     private final Call<T> call;
     private final Subscriber<? super Response<T>> subscriber;
 
@@ -191,7 +190,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
     }
   }
 
-  static final class ResponseCallAdapter implements CallAdapter<Observable<?>> {
+  private static final class ResponseCallAdapter implements CallAdapter<Observable<?>> {
     private final Type responseType;
     private final Scheduler scheduler;
 
@@ -213,7 +212,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
     }
   }
 
-  static final class SimpleCallAdapter implements CallAdapter<Observable<?>> {
+  private static final class SimpleCallAdapter implements CallAdapter<Observable<?>> {
     private final Type responseType;
     private final Scheduler scheduler;
 
@@ -228,7 +227,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
 
     @Override public <R> Observable<R> adapt(Call<R> call) {
       Observable<R> observable = Observable.create(new CallOnSubscribe<>(call)) //
-              .lift(OperatorMapResponseToBodyOrError.<R>instance());
+              .lift(OperatorMapResponseToBodyOrError.instance());
       if (scheduler != null) {
         return observable.subscribeOn(scheduler);
       }
@@ -236,7 +235,7 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
     }
   }
 
-  static final class ResultCallAdapter implements CallAdapter<Observable<?>> {
+  private static final class ResultCallAdapter implements CallAdapter<Observable<?>> {
     private final Type responseType;
     private final Scheduler scheduler;
 
@@ -251,15 +250,8 @@ public final class RxJavaCallAdapterFactory extends CallAdapter.Factory {
 
     @Override public <R> Observable<Result<R>> adapt(Call<R> call) {
       Observable<Result<R>> observable = Observable.create(new CallOnSubscribe<>(call)) //
-              .map(new Func1<Response<R>, Result<R>>() {
-                  @Override public Result<R> call(Response<R> response) {
-                      return Result.response(response);
-                  }
-              }).onErrorReturn(new Func1<Throwable, Result<R>>() {
-                  @Override public Result<R> call(Throwable throwable) {
-                      return Result.error(throwable);
-                  }
-              });
+              .map(Result::response)
+              .onErrorReturn(Result::error);
       if (scheduler != null) {
         return observable.subscribeOn(scheduler);
       }

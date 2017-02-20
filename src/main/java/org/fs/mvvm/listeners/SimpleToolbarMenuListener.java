@@ -1,6 +1,6 @@
 /*
- * MVVM Copyright (C) 2016 Fatih.
- *
+ * MVVM Copyright (C) 2017 Fatih.
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.injections;
+package org.fs.mvvm.listeners;
 
-import dagger.Module;
-import dagger.Provides;
-import org.fs.mvvm.data.IView;
-import org.fs.mvvm.utils.Preconditions;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
-@Module
-public class AbstractFragmentModule {
+public class SimpleToolbarMenuListener implements Toolbar.OnMenuItemClickListener {
 
-  private final IView view;
-
-  public AbstractFragmentModule(IView view) {
-    Preconditions.checkNotNull(view, "view is null");
-    this.view = view;
-  }
-
-  @Provides @ForFragment public IView provideView() {
-    return view;
+  @Override public boolean onMenuItemClick(MenuItem item) {
+    return false;
   }
 }

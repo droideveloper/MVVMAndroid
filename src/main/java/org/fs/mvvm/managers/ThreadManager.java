@@ -71,4 +71,13 @@ public final class ThreadManager {
       uiThread.postDelayed(action, delay);
     }
   }
+
+  /**
+   * Clears All Callbacks scheduled or not from stack
+   */
+  public static void clearAll() {
+    if (!Objects.isNullOrEmpty(uiThread)) {
+      uiThread.removeCallbacksAndMessages(null);
+    }
+  }
 }
