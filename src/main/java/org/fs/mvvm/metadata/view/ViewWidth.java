@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewWidth extends MetadataInfo<View, Integer> {
+public final class ViewWidth implements MetadataInfo<View, Integer> {
 
   private final View view;
 

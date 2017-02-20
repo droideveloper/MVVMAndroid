@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewMargin extends MetadataInfo<View, Integer[]> {
+public final class ViewMargin implements MetadataInfo<View, Integer[]> {
 
   private final View view;
 

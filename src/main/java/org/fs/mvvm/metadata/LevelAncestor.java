@@ -55,9 +55,9 @@ public class LevelAncestor extends AncestorInfo{
     try {
       int index = Integer.parseInt(property(INDEX_LEVEL));
       Class<?> type = typeof();
-      ViewGroup parent = (ViewGroup) view.getParent();
+      ViewGroup parent = null;
       while(index != 0) {
-        parent = (ViewGroup) parent.getParent();
+        parent = parent == null ? (ViewGroup) view.getParent() : (ViewGroup) parent.getParent();
         index--;
       }
       if (parent != null) {
@@ -68,7 +68,7 @@ public class LevelAncestor extends AncestorInfo{
           }
         }
       }
-      return null;
+      return type.isInstance(parent) ? parent : null;
     } catch (NumberFormatException error) {
       throw new RuntimeException("invalid number format for level property");
     }

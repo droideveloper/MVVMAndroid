@@ -17,6 +17,7 @@ package org.fs.mvvm.metadata;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,6 +91,7 @@ public final class BindingCompat {
     sRegistry.put(TextView.class.getSimpleName(), TextView.class);
     sRegistry.put(ViewPager.class.getSimpleName(), ViewPager.class);
     sRegistry.put(View.class.getSimpleName(), View.class);
+    sRegistry.put(LinearLayout.class.getSimpleName(), LinearLayout.class);
   }
 
   private BindingCompat() {
@@ -104,7 +106,9 @@ public final class BindingCompat {
   }
 
   public static <T, V> void bind(String[] source, final View view) {
-    MetadataInfo<T, V> metadata = forProperty(source[0].split("=")[1].trim(), Objects.toObject(view));
+    String property = source[0];
+    property = forValue(property);
+    MetadataInfo<T, V> metadata = forProperty(property, Objects.toObject(view));
     RelativeSource relativeSource = new RelativeSource(source[1], view);
     relativeSource.bind(metadata, null);
   }
@@ -130,5 +134,9 @@ public final class BindingCompat {
       }
     }
     return null;
+  }
+
+  private static String forValue(String pair) {
+    return pair.split("=")[1].trim();
   }
 }

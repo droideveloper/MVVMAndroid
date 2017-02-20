@@ -15,11 +15,11 @@
  */
 package org.fs.mvvm.data;
 
-public abstract class MetadataInfo<T, V> {
+public interface MetadataInfo<T, V> {
 
-  public abstract String named();
+  String named();
 
-  public abstract void set(V value);
+  void set(V value);
 
-  public abstract V get();
+  V get();
 }

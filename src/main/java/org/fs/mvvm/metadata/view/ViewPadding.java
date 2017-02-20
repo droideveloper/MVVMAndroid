@@ -19,7 +19,7 @@ import android.view.View;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewPadding extends MetadataInfo<View, Integer[]> {
+public final class ViewPadding implements MetadataInfo<View, Integer[]> {
 
   private final View view;
 
