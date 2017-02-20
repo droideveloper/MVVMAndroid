@@ -40,29 +40,13 @@ public final class BindingCompat {
   private final static Map<String, MetadataLoader<?, ?>> sMetadataLoaders;
 
   private final static Map<String, Class<?>> sRegistry;
-
   static {
     sMetadataLoaders  = new HashMap<>();
-    sMetadataLoaders.put("width", new MetadataLoader<View, Integer>() {
-      @Override public MetadataInfo<View, Integer> bind(View view, String property) {
-        return new ViewWidth(view);
-      }
-    });
-    sMetadataLoaders.put("height", new MetadataLoader<View, Integer>() {
-      @Override public MetadataInfo<View, Integer> bind(View view, String property) {
-        return new ViewHeight(view);
-      }
-    });
-    sMetadataLoaders.put("margin", new MetadataLoader<View, Integer[]>() {
-      @Override public MetadataInfo<View, Integer[]> bind(View view, String property) {
-        return new ViewMargin(view);
-      }
-    });
-    sMetadataLoaders.put("padding", new MetadataLoader<View, Integer[]>() {
-      @Override public MetadataInfo<View, Integer[]> bind(View view, String property) {
-        return new ViewPadding(view);
-      }
-    });
+
+    sMetadataLoaders.put("width", defaultsViewInteger());
+    sMetadataLoaders.put("height", defaultsViewInteger());
+    sMetadataLoaders.put("margin", defaultsViewIntegerArray());
+    sMetadataLoaders.put("padding", defaultsViewIntegerArray());
     sMetadataLoaders.put("selectedPage", new MetadataLoader<ViewPager, Integer>() {
       @Override public MetadataInfo<ViewPager, Integer> bind(ViewPager view, String property) {
         return new ViewPagerSelectedPage(view);
@@ -138,5 +122,29 @@ public final class BindingCompat {
 
   private static String forValue(String pair) {
     return pair.split("=")[1].trim();
+  }
+
+  private static MetadataLoader<View, Integer> defaultsViewInteger() {
+    return (view, property) -> {
+      if (property.equalsIgnoreCase("width")) {
+        return new ViewWidth(view);
+      } else if (property.equalsIgnoreCase("height")) {
+        return new ViewHeight(view);
+      } else {
+        throw new RuntimeException("not implemented\t" + property);
+      }
+    };
+  }
+
+  private static MetadataLoader<View, Integer[]> defaultsViewIntegerArray() {
+    return (view, property) -> {
+      if (property.equalsIgnoreCase("margin")) {
+        return new ViewMargin(view);
+      } else if(property.equalsIgnoreCase("padding")) {
+        return new ViewPadding(view);
+      } else {
+        throw new RuntimeException("not implemented\t" + property);
+      }
+    };
   }
 }

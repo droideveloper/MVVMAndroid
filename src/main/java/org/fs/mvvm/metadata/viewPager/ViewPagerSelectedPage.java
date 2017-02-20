@@ -19,7 +19,7 @@ import android.support.v4.view.ViewPager;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public class ViewPagerSelectedPage extends MetadataInfo<ViewPager, Integer> {
+public class ViewPagerSelectedPage implements MetadataInfo<ViewPager, Integer> {
 
   private final ViewPager viewPager;
 
