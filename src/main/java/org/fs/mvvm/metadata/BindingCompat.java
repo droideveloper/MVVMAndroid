@@ -15,6 +15,7 @@
  */
 package org.fs.mvvm.metadata;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,9 +25,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.fs.mvvm.data.AncestorInfo;
+import org.fs.mvvm.data.IConverter;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.metadata.textView.TextViewText;
 import org.fs.mvvm.metadata.textView.TextViewTextColor;
+import org.fs.mvvm.metadata.textView.TextViewTextSize;
+import org.fs.mvvm.metadata.view.ViewDrawable;
 import org.fs.mvvm.metadata.view.ViewHeight;
 import org.fs.mvvm.metadata.view.ViewMargin;
 import org.fs.mvvm.metadata.view.ViewPadding;
@@ -47,6 +51,11 @@ public final class BindingCompat {
     sMetadataLoaders.put("height", defaultsViewInteger());
     sMetadataLoaders.put("margin", defaultsViewIntegerArray());
     sMetadataLoaders.put("padding", defaultsViewIntegerArray());
+    sMetadataLoaders.put("background", new MetadataLoader<View, Drawable>() {
+      @Override public MetadataInfo<View, Drawable> bind(View view, String property) {
+        return new ViewDrawable(view);
+      }
+    });
     sMetadataLoaders.put("selectedPage", new MetadataLoader<ViewPager, Integer>() {
       @Override public MetadataInfo<ViewPager, Integer> bind(ViewPager view, String property) {
         return new ViewPagerSelectedPage(view);
@@ -62,6 +71,11 @@ public final class BindingCompat {
         return new TextViewTextColor(view);
       }
     });
+    sMetadataLoaders.put("textSize", new MetadataLoader<TextView, Float>() {
+      @Override public MetadataInfo<TextView, Float> bind(TextView view, String property) {
+        return new TextViewTextSize(view);
+      }
+    });
   }
 
   static {
@@ -70,6 +84,9 @@ public final class BindingCompat {
     sAncestorLoaders.put(Pattern.compile("id=(\\w+)"), ResourceAncestor::new);
   }
 
+  /**
+   * At least for now register all the views I support for this kind of binding
+   */
   static {
     sRegistry = new HashMap<>();
     sRegistry.put(TextView.class.getSimpleName(), TextView.class);
@@ -89,12 +106,12 @@ public final class BindingCompat {
     return View.class;
   }
 
-  public static <T, V> void bind(String[] source, final View view) {
+  public static <T1, V1, V2> void bind(String[] source, final View view, IConverter<V2, V1> parser) {
     String property = source[0];
     property = forValue(property);
-    MetadataInfo<T, V> metadata = forProperty(property, Objects.toObject(view));
+    MetadataInfo<T1, V1> metadata = forProperty(property, Objects.toObject(view));
     RelativeSource relativeSource = new RelativeSource(source[1], view);
-    relativeSource.bind(metadata, null);
+    relativeSource.bind(metadata, parser);
   }
 
   public static AncestorInfo forPattern(String binding, View view) {

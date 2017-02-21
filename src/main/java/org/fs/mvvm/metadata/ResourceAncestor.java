@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import org.fs.mvvm.data.AncestorInfo;
 import org.fs.mvvm.utils.Objects;
 
-public class ResourceAncestor extends AncestorInfo {
+public final class ResourceAncestor extends AncestorInfo {
 
   private final static Pattern PATTERN = Pattern.compile("ancestor=\\{(.+)\\}");
   private final static String  REGEX = ", ";
@@ -64,7 +64,7 @@ public class ResourceAncestor extends AncestorInfo {
     if (id != 0) {
       return parent.findViewById(id);
     }
-    return null;
+    return parent;
   }
 
   private String property(int index) {

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public class TextViewText implements MetadataInfo<TextView, CharSequence> {
+public final class TextViewText implements MetadataInfo<TextView, CharSequence> {
 
   private final TextView textView;
 

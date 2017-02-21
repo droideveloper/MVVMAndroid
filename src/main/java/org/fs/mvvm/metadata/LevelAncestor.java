@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 import org.fs.mvvm.data.AncestorInfo;
 import org.fs.mvvm.utils.Objects;
 
-public class LevelAncestor extends AncestorInfo{
+public final class LevelAncestor extends AncestorInfo{
 
   private final static Pattern PATTERN = Pattern.compile("ancestor=\\{(.+)\\}");
   private final static String  REGEX = ", ";

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public class TextViewTextColor implements MetadataInfo<TextView, Integer> {
+public final class TextViewTextColor implements MetadataInfo<TextView, Integer> {
 
   private final TextView textView;
 

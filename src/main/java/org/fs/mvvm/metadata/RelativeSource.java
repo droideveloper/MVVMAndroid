@@ -24,7 +24,7 @@ import org.fs.mvvm.data.IConverter;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public class RelativeSource {
+public final class RelativeSource {
 
   private final static Pattern PATTERN = Pattern.compile("relativeSource=\\{(.+)\\}");
   private final static String  REGEX = ", ";
@@ -35,7 +35,6 @@ public class RelativeSource {
   private final static int INDEX_ANCESTOR = 1;
 
   private final View view;
-  private final String source;
   private final Matcher matcher;
 
   public RelativeSource(final String source, final View view) {
@@ -46,7 +45,6 @@ public class RelativeSource {
     if (Objects.isNullOrEmpty(source)) {
       throw new RuntimeException("binding can not be null");
     }
-    this.source = source;
     this.matcher = PATTERN.matcher(source);
     if (!matcher.find()) {
       throw new RuntimeException("binding is invalid");

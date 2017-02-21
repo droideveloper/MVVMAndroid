@@ -13,32 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.metadata.viewPager;
+package org.fs.mvvm.metadata.view;
 
-import android.support.v4.view.ViewPager;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.view.View;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewPagerSelectedPage implements MetadataInfo<ViewPager, Integer> {
+public final class ViewDrawable implements MetadataInfo<View, Drawable> {
 
-  private final ViewPager viewPager;
+  private final View view;
 
-  public ViewPagerSelectedPage(final ViewPager viewPager) {
-    if (Objects.isNullOrEmpty(viewPager)) {
-      throw new RuntimeException("viewPager can not be null");
+  public ViewDrawable(final View view) {
+    if(Objects.isNullOrEmpty(view)) {
+      throw new RuntimeException("view can not be null");
     }
-    this.viewPager = viewPager;
+    this.view = view;
   }
 
   @Override public String named() {
-    return "selectedPage";
+    return "background";
   }
 
-  @Override public void set(Integer value) {
-    viewPager.setCurrentItem(value, true);
+  @Override public void set(Drawable value) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+      view.setBackground(value);
+    } else {
+      view.setBackgroundDrawable(value);
+    }
   }
 
-  @Override public Integer get() {
-    return viewPager.getCurrentItem();
+  @Override public Drawable get() {
+    return view.getBackground();
   }
 }

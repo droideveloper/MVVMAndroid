@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.metadata.viewPager;
+package org.fs.mvvm.metadata.textView;
 
-import android.support.v4.view.ViewPager;
+import android.widget.TextView;
 import org.fs.mvvm.data.MetadataInfo;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewPagerSelectedPage implements MetadataInfo<ViewPager, Integer> {
+public final class TextViewTextSize implements MetadataInfo<TextView, Float> {
 
-  private final ViewPager viewPager;
+  private final TextView textView;
 
-  public ViewPagerSelectedPage(final ViewPager viewPager) {
-    if (Objects.isNullOrEmpty(viewPager)) {
-      throw new RuntimeException("viewPager can not be null");
+  public TextViewTextSize(final TextView textView) {
+    if (Objects.isNullOrEmpty(textView)) {
+      throw new RuntimeException("view can not be null");
     }
-    this.viewPager = viewPager;
+    this.textView = textView;
   }
 
   @Override public String named() {
-    return "selectedPage";
+    return "textSize";
   }
 
-  @Override public void set(Integer value) {
-    viewPager.setCurrentItem(value, true);
+  @Override public void set(Float value) {
+    textView.setTextSize(value);
   }
 
-  @Override public Integer get() {
-    return viewPager.getCurrentItem();
+  @Override public Float get() {
+    return textView.getTextSize();
   }
 }
