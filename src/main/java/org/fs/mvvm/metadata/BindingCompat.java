@@ -18,6 +18,7 @@ package org.fs.mvvm.metadata;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 import org.fs.mvvm.data.AncestorInfo;
 import org.fs.mvvm.data.IConverter;
 import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.metadata.absListView.AbsListViewSelectedPosition;
 import org.fs.mvvm.metadata.textView.TextViewText;
 import org.fs.mvvm.metadata.textView.TextViewTextColor;
 import org.fs.mvvm.metadata.textView.TextViewTextSize;
@@ -74,6 +76,11 @@ public final class BindingCompat {
     sMetadataLoaders.put("textSize", new MetadataLoader<TextView, Float>() {
       @Override public MetadataInfo<TextView, Float> bind(TextView view, String property) {
         return new TextViewTextSize(view);
+      }
+    });
+    sMetadataLoaders.put("selectedPosition", new MetadataLoader<AbsListView, Integer>() {
+      @Override public MetadataInfo<AbsListView, Integer> bind(AbsListView view, String property) {
+        return new AbsListViewSelectedPosition(view);
       }
     });
   }
