@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.net;
+package org.fs.mvvm.net.converter;
 
-import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import java.io.IOException;
@@ -25,19 +24,17 @@ import retrofit2.Converter;
 
 class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
 
-  private final Gson           mGson;
-  private final TypeAdapter<T> mTypeAdapter;
+  private final TypeAdapter<T> typeAdapter;
 
-  GsonResponseBodyConverter(final TypeAdapter<T> mTypeAdapter, final Gson mGson) {
-    this.mGson = mGson;
-    this.mTypeAdapter = mTypeAdapter;
+  GsonResponseBodyConverter(final TypeAdapter<T> typeAdapter) {
+    this.typeAdapter = typeAdapter;
   }
 
   @Override public T convert(ResponseBody value) throws IOException {
     Preconditions.checkNotNull(value, "response error");
     try {
-      JsonReader reader = mGson.newJsonReader(value.charStream());
-      return mTypeAdapter.read(reader);
+      JsonReader reader = new JsonReader(value.charStream());
+      return typeAdapter.read(reader);
     } finally {
       value.close();
     }

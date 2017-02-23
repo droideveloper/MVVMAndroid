@@ -16,28 +16,27 @@
 package org.fs.mvvm.data;
 
 import org.fs.mvvm.listeners.Callback;
-import rx.Observable;
 
-public interface IUsecase<T> {
+public interface IUsecase<T, V> {
 
   /**
    * checks subscription is unsubscribed or not
    *
    * @return a boolean.
    */
-  boolean isUnsubscribed();
+  boolean isDisposed();
 
   /**
    * cancels if subscription is active.
    */
-  void unsubscribe();
+  void dispose();
 
   /**
    * Gets observer of usecase
    *
    * @return an observer type of T
    */
-  Observable<T> sync();
+  V sync();
 
   /**
    * async execution of usecase

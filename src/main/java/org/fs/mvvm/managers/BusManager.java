@@ -15,14 +15,11 @@
  */
 package org.fs.mvvm.managers;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.subjects.PublishSubject;
-import rx.subjects.SerializedSubject;
-import rx.subjects.Subject;
 
 public final class BusManager {
 
@@ -31,75 +28,44 @@ public final class BusManager {
   /**
    * Pool that we keep track of our busManager in hand.
    */
-  private final Subject<Object, Object> rxBus = new SerializedSubject<>(PublishSubject.create());
+  private final PublishSubject<Object> rxBus = PublishSubject.create();
 
   /**
    * sends object to every subscription we made for this bus.
    *
    * @param event event instance to send
    */
-  public <T extends IEvent> void send(T event) {
+  public <T extends IEvent> void post(T event) {
     Preconditions.checkNotNull(event, "event is null");
     rxBus.onNext(event);
   }
 
   /**
-   * registers for this pool for event with only call callback.
+   * registers for this pool for event with only call consumer.
    *
-   * @param callback callback to be called for event.
+   * @param consumer consumer to be called for event.
    * @return Subscription instance holds onto it.
    */
-  public <T extends IEvent> Subscription register(Action1<T> callback) {
-    Preconditions.checkNotNull(callback, "callback as action is null");
+  public <T extends IEvent> Disposable register(Consumer<T> consumer) {
+    Preconditions.checkNotNull(consumer, "consumer as action is null");
     return rxBus.subscribe((e) -> {
       T event = Objects.toObject(e);
       if (!Objects.isNullOrEmpty(event)) {
-        callback.call(event);
+        consumer.accept(event);
       }
     });
   }
 
-  /**
-   * registers for this pool for event with all call callback.
-   *
-   * @param callback callback to be called for event.
-   * @return Subscription instance holds onto it.
-   */
-  public <T extends IEvent> Subscription register(Subscriber<T> callback) {
-    Preconditions.checkNotNull(callback, "callback as subscriber is null");
-    //registered as this don't know better or not
-    return rxBus.subscribe(new Subscriber<Object>() {
-      @Override public void onStart() {
-        super.onStart();
-        callback.onStart();
-      }
-
-      @Override public void onNext(Object o) {
-        T event = Objects.toObject(o);
-        if (!Objects.isNullOrEmpty(event)) {
-          callback.onNext(event);
-        }
-      }
-
-      @Override public void onCompleted() {
-        callback.onCompleted();
-      }
-
-      @Override public void onError(Throwable e) {
-        callback.onError(e);
-      }
-    });
-  }
 
   /**
    * unregisters from this pool.
    *
-   * @param callback callback to be removed from pool.
+   * @param disposable disposable to be removed from pool.
    */
-  public void unregister(Subscription callback) {
-    Preconditions.checkNotNull(callback, "callback as subscription is null");
-    if (!callback.isUnsubscribed()) {
-      callback.unsubscribe();
+  public void unregister(Disposable disposable) {
+    Preconditions.checkNotNull(disposable, "callback as subscription is null");
+    if (!disposable.isDisposed()) {
+      disposable.dispose();
     }
   }
 
@@ -108,23 +74,8 @@ public final class BusManager {
    * @param event event to send be aware event must be implementation of IEvent
    * @param <E> type of Event
    */
-  public static <E extends IEvent> void Send(E event) {
-    if (!Objects.isNullOrEmpty(IMPL)) {
-      IMPL.send(event);
-    }
-  }
-
-  /**
-   * Register clone
-   * @param callback action to register on success event
-   * @param <E> type of event
-   * @return subscription of this callback
-   */
-  public static <E extends IEvent> Subscription Register(Action1<E> callback) {
-    if (!Objects.isNullOrEmpty(IMPL)) {
-      return IMPL.register(callback);
-    }
-    return null;
+  public static <E extends IEvent> void send(E event) {
+    IMPL.post(event);
   }
 
   /**
@@ -133,20 +84,15 @@ public final class BusManager {
    * @param <E> type of event listened for
    * @return subscription of this callback
    */
-  public static <E extends IEvent> Subscription Register(Subscriber<E> callback) {
-    if (!Objects.isNullOrEmpty(IMPL)) {
-      return IMPL.register(callback);
-    }
-    return null;
+  public static <E extends IEvent> Disposable add(Consumer<E> callback) {
+    return IMPL.register(callback);
   }
 
   /**
    * Unregister clone
-   * @param callback callback to be unregistered
+   * @param disposable callback to be unregistered
    */
-  public static void Unregister(Subscription callback) {
-    if (!Objects.isNullOrEmpty(IMPL)) {
-      IMPL.unregister(callback);
-    }
+  public static void remove(Disposable disposable) {
+    IMPL.unregister(disposable);
   }
 }

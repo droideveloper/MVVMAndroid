@@ -22,10 +22,13 @@ import android.databinding.ObservableList;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
+import android.util.AndroidRuntimeException;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.ref.WeakReference;
@@ -37,13 +40,11 @@ import java8.util.stream.StreamSupport;
 import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEvent;
 import org.fs.mvvm.utils.Preconditions;
-import rx.Subscription;
-import rx.functions.Action1;
 
 import static android.databinding.ObservableList.OnListChangedCallback;
 
 public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>> extends RecyclerView.Adapter<V>
-  implements Action1<SelectedEvent<D>> {
+  implements Consumer<SelectedEvent<D>> {
 
   public final static int SINGLE_SELECTION_MODE   = 0x01;
   public final static int MULTIPLE_SELECTION_MODE = 0x02;
@@ -54,13 +55,13 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
   private final List<Integer>                 selection;
   private final int                           selectionMode;
 
-  private Action1<Integer>                    singlePositionCallback;
-  private Action1<List<Integer>>              multiPositionCallback;
+  private Consumer<Integer>                    singlePositionCallback;
+  private Consumer<List<Integer>>              multiPositionCallback;
 
-  private Action1<D>                          singleItemCallback;
-  private Action1<List<D>>                    multiItemCallback;
+  private Consumer<D>                          singleItemCallback;
+  private Consumer<List<D>>                    multiItemCallback;
 
-  private Subscription eventSubs;
+  private Disposable disposable;
 
   public AbstractRecyclerBindingAdapter(Context context, ObservableList<D> itemSource, int selectionMode) {
     this.itemSource = itemSource;
@@ -72,33 +73,33 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     this.contextReference = context != null ? new WeakReference<>(context) : null;
   }
 
-  @Override public final void onAttachedToRecyclerView(RecyclerView recyclerView) {
-    eventSubs = busManager.register(this);
+  @Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    disposable = busManager.register(this);
     itemSource.addOnListChangedCallback(itemSourceObserver);
   }
 
-  @Override public final void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+  @Override public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
     if (contextReference != null) {
       contextReference.clear();
     }
     itemSource.removeOnListChangedCallback(itemSourceObserver);
-    busManager.unregister(eventSubs);
-    eventSubs = null;
+    busManager.unregister(disposable);
+    disposable = null;
   }
   //singleMode selectedPosition
-  public final void setSinglePositionCallback(Action1<Integer> singlePositionCallback) {
+  public final void setSinglePositionCallback(Consumer<Integer> singlePositionCallback) {
     this.singlePositionCallback = singlePositionCallback;
   }
   //singleMode selectedItem
-  public final void setSingleItemCallback(Action1<D> singleItemCallback) {
+  public final void setSingleItemCallback(Consumer<D> singleItemCallback) {
     this.singleItemCallback = singleItemCallback;
   }
   //multiMode selectedPositions
-  public final void setMultiPositionCallback(Action1<List<Integer>> multiPositionCallback) {
+  public final void setMultiPositionCallback(Consumer<List<Integer>> multiPositionCallback) {
     this.multiPositionCallback = multiPositionCallback;
   }
   //multiMode selectedItems
-  public final void setMultiItemCallback(Action1<List<D>> multiItemCallback) {
+  public final void setMultiItemCallback(Consumer<List<D>> multiItemCallback) {
     this.multiItemCallback = multiItemCallback;
   }
 
@@ -133,7 +134,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
    * Listens for click events of its child views on viewHolders
    * @param event selection event
    */
-  @Override public final void call(SelectedEvent<D> event) {
+  @Override public final void accept(SelectedEvent<D> event) throws Exception {
     if (isSingleMode()) {
       addSelectionIndex(event.selectedItemAdapterPosition(), true);
     } else {
@@ -215,33 +216,43 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     }
     //notify viewModel if we provide callback
     if (multiPositionCallback != null) {
-      multiPositionCallback.call(selection);
+      try {
+        multiPositionCallback.accept(selection);
+      } catch (Exception error) {
+        throw new AndroidRuntimeException("selection not executable " + selection, error);
+      }
     }
     //notification
     if (multiItemCallback != null) {
-      multiItemCallback.call(
-          StreamSupport.stream(selection)
+      try {
+        multiItemCallback.accept(StreamSupport.stream(selection)
             .map(itemSource::get)
-            .collect(Collectors.toList())
-      );
+            .collect(Collectors.toList()));
+      } catch (Exception error) {
+        throw new AndroidRuntimeException("selection not executable " + selection, error);
+      }
     }
     //notification
     if (singlePositionCallback != null) {
-      singlePositionCallback.call(
-          StreamSupport.stream(selection)
-              .findFirst()
-              .orElse(-1)
-      );
+      try {
+        singlePositionCallback.accept(StreamSupport.stream(selection)
+            .findFirst()
+            .orElse(-1));
+      } catch (Exception error) {
+        throw new AndroidRuntimeException("selection not executable " + selection, error);
+      }
     }
     //notification
     if (singleItemCallback != null) {
-      singleItemCallback.call(
-          StreamSupport.stream(selection)
+      try {
+        singleItemCallback.accept(StreamSupport.stream(selection)
             .filter(x -> x >= 0)
             .map(itemSource::get)
             .findFirst()
-            .orElse(null)
-      );
+            .orElse(null));
+      } catch (Exception error) {
+        throw new AndroidRuntimeException("selection not executable " + selection, error);
+      }
     }
     notifyItemChanged(position);
   }

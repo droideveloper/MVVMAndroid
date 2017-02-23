@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.net;
+package org.fs.mvvm.net.converter;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
@@ -28,32 +28,32 @@ import retrofit2.Retrofit;
 
 public class GsonConverterFactory extends Converter.Factory {
 
-  private final Gson mGson;
+  private final Gson gson;
 
-  public static GsonConverterFactory create(Gson mGson) {
-    return new GsonConverterFactory(mGson);
+  public static GsonConverterFactory create(Gson gson) {
+    return new GsonConverterFactory(gson);
   }
 
   public static GsonConverterFactory create() {
     return new GsonConverterFactory(new Gson());
   }
 
-  private GsonConverterFactory(final Gson mGson) {
-    Preconditions.checkNotNull(mGson, "gson instance is null");
-    this.mGson = mGson;
+  private GsonConverterFactory(final Gson gson) {
+    Preconditions.checkNotNull(gson, "gson instance is null");
+    this.gson = gson;
   }
 
   @Override public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
     TypeAdapter<?> typeAdapter = typeAdapterFromType(type);
-    return new GsonResponseBodyConverter<>(typeAdapter, mGson);
+    return new GsonResponseBodyConverter<>(typeAdapter);
   }
 
   @Override public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations, Annotation[] methodAnnotations, Retrofit retrofit) {
     TypeAdapter<?> typeAdapter = typeAdapterFromType(type);
-    return new GsonRequestBodyConverter<>(typeAdapter, mGson);
+    return new GsonRequestBodyConverter<>(typeAdapter);
   }
 
   private TypeAdapter<?> typeAdapterFromType(Type type) {
-    return mGson.getAdapter(TypeToken.get(type));
+    return gson.getAdapter(TypeToken.get(type));
   }
 }
