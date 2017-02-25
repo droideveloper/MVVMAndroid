@@ -18,7 +18,6 @@ package org.fs.mvvm.managers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
-import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
 
 public final class BusManager {
@@ -28,7 +27,7 @@ public final class BusManager {
   /**
    * Pool that we keep track of our busManager in hand.
    */
-  private final PublishSubject<Object> rxBus = PublishSubject.create();
+  private final PublishSubject<IEvent> rxBus = PublishSubject.create();
 
   /**
    * sends object to every subscription we made for this bus.
@@ -46,14 +45,9 @@ public final class BusManager {
    * @param consumer consumer to be called for event.
    * @return Subscription instance holds onto it.
    */
-  public <T extends IEvent> Disposable register(Consumer<T> consumer) {
+  public Disposable register(Consumer<? super IEvent> consumer) {
     Preconditions.checkNotNull(consumer, "consumer as action is null");
-    return rxBus.subscribe((e) -> {
-      T event = Objects.toObject(e);
-      if (!Objects.isNullOrEmpty(event)) {
-        consumer.accept(event);
-      }
-    });
+    return rxBus.subscribe(consumer);
   }
 
 
@@ -63,8 +57,7 @@ public final class BusManager {
    * @param disposable disposable to be removed from pool.
    */
   public void unregister(Disposable disposable) {
-    Preconditions.checkNotNull(disposable, "callback as subscription is null");
-    if (!disposable.isDisposed()) {
+    if (disposable != null && !disposable.isDisposed()) {
       disposable.dispose();
     }
   }
@@ -81,10 +74,9 @@ public final class BusManager {
   /**
    * Register clone
    * @param callback callback that registered for 3 method, success, error and completion
-   * @param <E> type of event listened for
    * @return subscription of this callback
    */
-  public static <E extends IEvent> Disposable add(Consumer<E> callback) {
+  public static Disposable add(Consumer<? super IEvent> callback) {
     return IMPL.register(callback);
   }
 

@@ -38,13 +38,14 @@ import java8.util.stream.Collectors;
 import java8.util.stream.IntStreams;
 import java8.util.stream.StreamSupport;
 import org.fs.mvvm.managers.BusManager;
+import org.fs.mvvm.managers.IEvent;
 import org.fs.mvvm.managers.SelectedEvent;
 import org.fs.mvvm.utils.Preconditions;
 
 import static android.databinding.ObservableList.OnListChangedCallback;
 
 public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>> extends RecyclerView.Adapter<V>
-  implements Consumer<SelectedEvent<D>> {
+  implements Consumer<IEvent> {
 
   public final static int SINGLE_SELECTION_MODE   = 0x01;
   public final static int MULTIPLE_SELECTION_MODE = 0x02;
@@ -132,13 +133,16 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
 
   /**
    * Listens for click events of its child views on viewHolders
-   * @param event selection event
+   * @param evt selection event
    */
-  @Override public final void accept(SelectedEvent<D> event) throws Exception {
-    if (isSingleMode()) {
-      addSelectionIndex(event.selectedItemAdapterPosition(), true);
-    } else {
-      addSelectionIndex(event.selectedItemAdapterPosition(), false);
+  @Override public final void accept(IEvent evt) throws Exception {
+    if (evt instanceof SelectedEvent) {
+      SelectedEvent<D> event = (SelectedEvent<D>) evt;
+      if (isSingleMode()) {
+        addSelectionIndex(event.selectedItemAdapterPosition(), true);
+      } else {
+        addSelectionIndex(event.selectedItemAdapterPosition(), false);
+      }
     }
   }
 
