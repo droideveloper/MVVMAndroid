@@ -20,7 +20,7 @@ import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
 import android.support.v4.widget.SwipeRefreshLayout;
 import java.util.Locale;
-import org.fs.mvvm.data.IConverter;
+import org.fs.mvvm.data.ConverterType;
 import org.fs.mvvm.listeners.OnRefreshed;
 import org.fs.mvvm.utils.Preconditions;
 
@@ -54,7 +54,7 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
         BIND_CONVERTER
       }
   )
-  public static <T> void viewSwipeRefreshLayoutRegisterObject(SwipeRefreshLayout viewSwipeLayout, T object, IConverter<T, Boolean> converter) {
+  public static <T> void viewSwipeRefreshLayoutRegisterObject(SwipeRefreshLayout viewSwipeLayout, T object, ConverterType<T, Boolean> converter) {
     Preconditions.checkNotNull(converter, "converter is null");
     Boolean newValue = converter.convert(object, Locale.getDefault());
     viewSwipeLayout.setRefreshing(newValue);

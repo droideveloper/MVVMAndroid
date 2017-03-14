@@ -1,6 +1,6 @@
 /*
- * MVVM Copyright (C) 2016 Fatih.
- *
+ * MVVM Copyright (C) 2017 Fatih.
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,18 +15,11 @@
  */
 package org.fs.mvvm.data;
 
-public final class Validation {
+public interface MetadataInfoType<T, V> {
 
-  public final static Validation VALID = new Validation(true);
-  public final static Validation INVALID = new Validation(false);
+  String named();
 
-  private final boolean isSuccess;
+  void set(V value);
 
-  public Validation(boolean isSuccess) {
-    this.isSuccess = isSuccess;
-  }
-
-  public boolean isSuccess() {
-    return this.isSuccess;
-  }
+  V get();
 }

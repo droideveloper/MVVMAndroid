@@ -38,57 +38,28 @@ public abstract class AbstractPagerBindingAdapter<D extends BaseObservable> exte
     this.itemSource.addOnListChangedCallback(itemSourceObserver);
   }
 
-  /**
-   * calls for clearing notifications from our adapter since we do not want it keep calling
-   * notifications of itemSourceObserver.
-   */
+
   public void clearAdapter() {
     if (itemSource != null) {
       itemSource.removeOnListChangedCallback(itemSourceObserver);
     }
   }
 
-  /**
-   * Gets size of the entities
-   *
-   * @return int if null it returns 0
-   */
   @Override public int getCount() {
     return itemSource != null ? itemSource.size() : 0;
   }
 
-  /**
-   * Returns object's toString value of implementation or
-   * if you provide custom do modify it.
-   *
-   * @param position position of title required (specially for PagerTitleStrip or PagerTabStrip)
-   * @return String value or nothing at all.
-   */
   @Override public CharSequence getPageTitle(int position) {
     final D item = getItemAt(position);
     return Objects.isNullOrEmpty(item) ? super.getPageTitle(position) : item.toString();
   }
 
-  /***
-   * Returns fragment instance in given position
-   * lower level
-   *
-   * @param position position of fragment
-   * @return Fragment instance or null
-   */
   @Override public final Fragment getItem(int position) {
     final D item = getItemAt(position);
     final int viewType = getItemViewType(position);
     return onBindView(item, viewType);
   }
 
-
-  /**
-   * Gets item at position for this adapter entity
-   *
-   * @param position position of entity
-   * @return D type of entity or null if position is invalid.
-   */
   public final D getItemAt(int position) {
     if (position >= 0 && position < getCount()) {
       return itemSource.get(position);
@@ -96,12 +67,6 @@ public abstract class AbstractPagerBindingAdapter<D extends BaseObservable> exte
     return null;
   }
 
-  /**
-   * Gets index of item on adapter
-   *
-   * @param item item to search
-   * @return index of found item or -1 if not found
-   */
   public final int getIndexOf(D item) {
     if (item == null) {
       return  -1;
@@ -110,63 +75,24 @@ public abstract class AbstractPagerBindingAdapter<D extends BaseObservable> exte
     }
   }
 
-  /**
-   * Converted in similar side as if it's recyclerAdapter for easy use all
-   *
-   * @param item item of this adapter for position
-   * @param viewType view type of this adapter for position
-   * @return Fragment instance or null
-   */
   protected abstract Fragment onBindView(final D item, int viewType);
 
-  /**
-   * Returns viewType for selected position
-   *
-   * @param position position of viewType
-   * @return int type of view
-   */
   protected abstract int getItemViewType(int position);
 
-  /**
-   * Returns if log enabled for this adapter instance
-   *
-   * @return true or false
-   */
   protected abstract boolean isLogEnabled();
 
-  /**
-   * Returns string representation of this class instance
-   *
-   * @return string value
-   */
   protected abstract String getClassTag();
 
-  /**
-   * String message to log as Debug
-   *
-   * @param msg message to log
-   */
   protected final void log(String msg) {
     log(Log.DEBUG, msg);
   }
 
-  /**
-   * String message to log as given priority
-   *
-   * @param level priority of log
-   * @param msg message to log
-   */
   protected final void log(int level, String msg) {
     if (isLogEnabled()) {
       Log.println(level, getClassTag(), msg);
     }
   }
 
-  /**
-   * Error to log as Error level
-   *
-   * @param error error caused
-   */
   protected final void log(Throwable error) {
     StringWriter strWriter = new StringWriter();
     PrintWriter ptrWriter = new PrintWriter(strWriter);
@@ -174,10 +100,6 @@ public abstract class AbstractPagerBindingAdapter<D extends BaseObservable> exte
     log(Log.ERROR, strWriter.toString());
   }
 
-  /**
-   * keeps and eye on my data source and if change occured it will notify adapter that we will do
-   * little less about this
-   */
   private final OnListChangedCallback<ObservableList<D>> itemSourceObserver
       = new OnListChangedCallback<ObservableList<D>>() {
 

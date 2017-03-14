@@ -16,10 +16,10 @@
 package org.fs.mvvm.metadata.absListView;
 
 import android.widget.AbsListView;
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.MetadataInfoType;
 import org.fs.mvvm.utils.Objects;
 
-public final class AbsListViewSelectedPosition implements MetadataInfo<AbsListView, Integer> {
+public final class AbsListViewSelectedPosition implements MetadataInfoType<AbsListView, Integer> {
 
   private final AbsListView listView;
 

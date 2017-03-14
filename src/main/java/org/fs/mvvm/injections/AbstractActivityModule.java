@@ -21,16 +21,16 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
 import dagger.Module;
 import dagger.Provides;
-import org.fs.mvvm.data.IView;
+import org.fs.mvvm.data.ViewType;
 import org.fs.mvvm.utils.Preconditions;
 
 @Module
 public class AbstractActivityModule {
 
   @LayoutRes private final int layoutResourceId;
-  private final IView view;
+  private final ViewType view;
 
-  public AbstractActivityModule(IView view, @LayoutRes int layoutResourceId) {
+  public AbstractActivityModule(ViewType view, @LayoutRes int layoutResourceId) {
     Preconditions.checkNotNull(view, "view is null");
     Preconditions.checkConditionMeet(layoutResourceId >= 0, "layout id must be positive");
     this.view = view;
@@ -45,7 +45,7 @@ public class AbstractActivityModule {
     return DataBindingUtil.setContentView(activity, layoutResourceId);
   }
 
-  @Provides @ForActivity public IView provideView() {
+  @Provides @ForActivity public ViewType provideView() {
     return view;
   }
 }

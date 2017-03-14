@@ -17,10 +17,10 @@ package org.fs.mvvm.metadata.view;
 
 import android.view.View;
 import android.view.ViewGroup;
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.MetadataInfoType;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewHeight implements MetadataInfo<View, Integer> {
+public final class ViewHeight implements MetadataInfoType<View, Integer> {
 
   private final View view;
 

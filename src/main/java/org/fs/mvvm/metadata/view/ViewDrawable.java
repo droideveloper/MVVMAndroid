@@ -18,10 +18,10 @@ package org.fs.mvvm.metadata.view;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.MetadataInfoType;
 import org.fs.mvvm.utils.Objects;
 
-public final class ViewDrawable implements MetadataInfo<View, Drawable> {
+public final class ViewDrawable implements MetadataInfoType<View, Drawable> {
 
   private final View view;
 

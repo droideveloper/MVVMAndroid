@@ -27,7 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import java.util.Locale;
 import org.fs.mvvm.R;
-import org.fs.mvvm.data.IValidator;
+import org.fs.mvvm.data.ValidatorType;
 import org.fs.mvvm.data.Validation;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Objects;
@@ -51,7 +51,7 @@ public final class TextInputLayoutCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_VALIDATOR, BIND_ERROR_STRING })
-  public static <S extends CharSequence, E extends CharSequence> void viewTextInputLayoutRegisterValidator(TextInputLayout viewTextLayout, IValidator<S> validator, E errorString) {
+  public static <S extends CharSequence, E extends CharSequence> void viewTextInputLayoutRegisterValidator(TextInputLayout viewTextLayout, ValidatorType<S> validator, E errorString) {
     TextView viewText = findChildTextView(viewTextLayout);
     if (viewText != null) {
       final TextWatcher newListener;

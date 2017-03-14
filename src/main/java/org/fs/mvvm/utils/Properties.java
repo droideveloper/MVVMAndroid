@@ -26,14 +26,6 @@ public class Properties {
 
   private final static SparseArray<WeakHashMap<View, PropertyInfo<?>>> sProperties = new SparseArray<>();
 
-  /**
-   * Gets property on view reference with provides ids on view using pre defined ids are advised.
-   *
-   * @param view view instance we store those values
-   * @param propertyId pre defined property id
-   * @param <T> type of property value
-   * @return propertyInfo previously changed or stored
-   */
   public static <T> PropertyInfo<T> getPropertyInfo(View view, int propertyId) {
     if (AppCompat.isBuildSDKAvailable(VERSION_CODES.ICE_CREAM_SANDWICH)) {
       Object propertyInfo = view.getTag(propertyId);
@@ -50,14 +42,6 @@ public class Properties {
     }
   }
 
-  /**
-   * Sets property on view reference with provided ids on view using pre defined ids are advised.
-   *
-   * @param view view instance we store those values
-   * @param propertyInfo property information
-   * @param propertyId pre defined property id
-   * @param <T> type of property value
-   */
   public static <T> void setPropertyInfo(View view, PropertyInfo<T> propertyInfo, int propertyId) {
     if (AppCompat.isBuildSDKAvailable(VERSION_CODES.ICE_CREAM_SANDWICH)) {
       view.setTag(propertyId, propertyInfo);

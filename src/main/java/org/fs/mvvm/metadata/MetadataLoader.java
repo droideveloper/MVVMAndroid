@@ -15,8 +15,8 @@
  */
 package org.fs.mvvm.metadata;
 
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.MetadataInfoType;
 
 public interface MetadataLoader<T, V> {
-  MetadataInfo<T, V> bind(T view, String property);
+  MetadataInfoType<T, V> bind(T view, String property);
 }

@@ -24,15 +24,13 @@ import android.text.TextWatcher;
 import android.widget.TextView;
 import java.util.Locale;
 import org.fs.mvvm.R;
-import org.fs.mvvm.data.IConverter;
+import org.fs.mvvm.data.ConverterType;
 import org.fs.mvvm.listeners.OnAfterChanged;
 import org.fs.mvvm.listeners.OnBeforeChanged;
 import org.fs.mvvm.listeners.OnSoftKeyboardAction;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Invokes;
 import org.fs.mvvm.utils.Objects;
-
-import static android.R.attr.text;
 
 public final class TextViewCompatBindingAdapter {
 
@@ -76,7 +74,7 @@ public final class TextViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_CONVERTER, BIND_FROM_OBJECT })
-  public static <T, S extends CharSequence> void viewTextRegisterObject(TextView viewText, IConverter<T, S> converter, T object) {
+  public static <T, S extends CharSequence> void viewTextRegisterObject(TextView viewText, ConverterType<T, S> converter, T object) {
     if (converter != null) {
       final S textStr = Invokes.invoke(o -> {
         return converter.convert(o, Locale.getDefault());

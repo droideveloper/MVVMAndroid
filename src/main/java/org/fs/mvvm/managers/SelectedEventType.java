@@ -17,12 +17,12 @@ package org.fs.mvvm.managers;
 
 import android.databinding.BaseObservable;
 
-public final class SelectedEvent<D extends BaseObservable> implements IEvent {
+public final class SelectedEventType<D extends BaseObservable> implements EventType {
 
   private final D   selectedItem;
   private final int selectedItemAdapterPosition;
 
-  public SelectedEvent(final D selectedItem, final int selectedItemAdapterPosition) {
+  public SelectedEventType(final D selectedItem, final int selectedItemAdapterPosition) {
     this.selectedItem = selectedItem;
     this.selectedItemAdapterPosition = selectedItemAdapterPosition;
   }

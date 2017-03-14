@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.support.annotation.StringRes;
 import android.view.View;
 
-public interface IView {
+public interface ViewType {
 
   /**
    * Shows user error on SnackBar instance with

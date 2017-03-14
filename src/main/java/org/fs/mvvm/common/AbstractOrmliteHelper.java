@@ -26,24 +26,10 @@ import java.sql.SQLException;
 
 public abstract class AbstractOrmliteHelper extends OrmLiteSqliteOpenHelper {
 
-  /**
-   * Public constructor
-   *
-   * @param context context
-   * @param dbName dbName in final static
-   * @param dbVersion dbVersion in final static
-   * @param dbConfig R.raw.ormlite_config.txt
-   */
   public AbstractOrmliteHelper(Context context, String dbName, int dbVersion, int dbConfig) {
     super(context, dbName, null, dbVersion, dbConfig);
   }
 
-  /**
-   * onCreate lifecycle for sql db
-   *
-   * @param database database
-   * @param connectionSource connection
-   */
   @Override public final void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
     try {
       createTables(connectionSource);
@@ -52,14 +38,6 @@ public abstract class AbstractOrmliteHelper extends OrmLiteSqliteOpenHelper {
     }
   }
 
-  /**
-   * onUpdate lifecycle for sql db
-   *
-   * @param database database
-   * @param connectionSource connection
-   * @param oldVersion prev version
-   * @param newVersion new version
-   */
   @Override public final void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
     try {
       dropTables(connectionSource);
@@ -69,20 +47,11 @@ public abstract class AbstractOrmliteHelper extends OrmLiteSqliteOpenHelper {
     }
   }
 
-  /**
-   * Log string message with Debug level.
-   *
-   * @param msg a string for log.
-   */
+
   protected void log(String msg) {
     log(Log.DEBUG, msg);
   }
 
-  /**
-   * Log error or exception with Error level using its stackTrace as message.
-   *
-   * @param error an exception for log.
-   */
   protected void log(Throwable error) {
     StringWriter strWriter = new StringWriter();
     PrintWriter ptrWriter = new PrintWriter(strWriter);
@@ -90,45 +59,17 @@ public abstract class AbstractOrmliteHelper extends OrmLiteSqliteOpenHelper {
     log(Log.ERROR, strWriter.toString());
   }
 
-  /**
-   * End level of printing logs on android monitor.
-   *
-   * @param level a level of log.
-   * @param msg a string message for log.
-   */
   protected void log(int level, String msg) {
     if (isLogEnabled()) {
       Log.println(level, getClassTag(), msg);
     }
   }
 
-  /**
-   * Logging enabled for this class or not.
-   *
-   * @return a boolean.
-   */
   protected abstract boolean isLogEnabled();
 
-  /**
-   * Tag for this class in order to use it in logging
-   *
-   * @return a string.
-   */
   protected abstract String getClassTag();
 
-  /**
-   * createTable lifecycle
-   *
-   * @param cs connection
-   * @throws SQLException error
-   */
   protected abstract void createTables(ConnectionSource cs) throws SQLException;
 
-  /**
-   * dropTable lifecycle
-   *
-   * @param cs connection
-   * @throws SQLException error
-   */
   protected abstract void dropTables(ConnectionSource cs) throws SQLException;
 }

@@ -20,8 +20,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.fs.mvvm.data.AncestorInfo;
-import org.fs.mvvm.data.IConverter;
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.ConverterType;
+import org.fs.mvvm.data.MetadataInfoType;
 import org.fs.mvvm.utils.Objects;
 
 public final class RelativeSource {
@@ -51,14 +51,14 @@ public final class RelativeSource {
     }
   }
 
-  public <T1, V1, T2, V2> void bind(MetadataInfo<T1, V1> setter, IConverter<V2, V1> parser) {
+  public <T1, V1, T2, V2> void bind(MetadataInfoType<T1, V1> setter, ConverterType<V2, V1> parser) {
     final String source = property(INDEX_SOURCE);
     final String[] properties = matcher.group(1).split(REGEX, 2);
     final AncestorInfo ancestor = BindingCompat.forPattern(properties[INDEX_ANCESTOR], view);
     if(ancestor != null) {
       final View view = ancestor.view();
       if (view != null) {
-        final MetadataInfo<T2, V2> getter = BindingCompat.forProperty(source, Objects.toObject(ancestor.view()));
+        final MetadataInfoType<T2, V2> getter = BindingCompat.forProperty(source, Objects.toObject(ancestor.view()));
         if(getter != null) {
           if (parser != null) {
             setter.set(parser.convert(getter.get(), Locale.getDefault()));

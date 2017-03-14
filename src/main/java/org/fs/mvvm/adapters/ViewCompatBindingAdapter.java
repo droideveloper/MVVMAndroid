@@ -29,9 +29,9 @@ import android.view.animation.Interpolator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.fs.mvvm.R;
-import org.fs.mvvm.commands.ICommand;
-import org.fs.mvvm.commands.RelayCommand;
-import org.fs.mvvm.data.IConverter;
+import org.fs.mvvm.commands.CommandType;
+import org.fs.mvvm.commands.RelayCommandType;
+import org.fs.mvvm.data.ConverterType;
 import org.fs.mvvm.metadata.BindingCompat;
 import org.fs.mvvm.utils.Objects;
 
@@ -65,7 +65,7 @@ public final class ViewCompatBindingAdapter {
       BIND_BIND,
       BIND_PARSER
   }, requireAll = false)
-  public static <V1, V2> void viewRegisterBinding(View view, String str, IConverter<V2, V1> parser) {
+  public static <V1, V2> void viewRegisterBinding(View view, String str, ConverterType<V2, V1> parser) {
     if (!Objects.isNullOrEmpty(str)) {
       final Matcher matcher = validator.matcher(str);
       if (matcher.find()) {
@@ -139,7 +139,7 @@ public final class ViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_NOTIFY_TEXT, BIND_ACTION_TEXT, BIND_RELAY_COMMAND })
-  public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, RelayCommand command) {
+  public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, RelayCommandType command) {
     if (!Objects.isNullOrEmpty(notifyText)) {
       final Snackbar snackbar = Snackbar.make(view, notifyText, Snackbar.LENGTH_LONG);
       snackbar.setAction(actionText, v -> {
@@ -157,7 +157,7 @@ public final class ViewCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static <T> void viewRegisterCommandWithOrWithoutParameter(View view, ICommand<T> command, T param) {
+  public static <T> void viewRegisterCommandWithOrWithoutParameter(View view, CommandType<T> command, T param) {
     final View.OnClickListener newListener;
     if (command == null) {
       newListener = null;

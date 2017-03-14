@@ -38,14 +38,14 @@ import java8.util.stream.Collectors;
 import java8.util.stream.IntStreams;
 import java8.util.stream.StreamSupport;
 import org.fs.mvvm.managers.BusManager;
-import org.fs.mvvm.managers.IEvent;
-import org.fs.mvvm.managers.SelectedEvent;
+import org.fs.mvvm.managers.EventType;
+import org.fs.mvvm.managers.SelectedEventType;
 import org.fs.mvvm.utils.Preconditions;
 
 import static android.databinding.ObservableList.OnListChangedCallback;
 
 public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>> extends RecyclerView.Adapter<V>
-  implements Consumer<IEvent> {
+  implements Consumer<EventType> {
 
   public final static int SINGLE_SELECTION_MODE   = 0x01;
   public final static int MULTIPLE_SELECTION_MODE = 0x02;
@@ -131,13 +131,9 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     return itemSource != null ? itemSource.size() : 0;
   }
 
-  /**
-   * Listens for click events of its child views on viewHolders
-   * @param evt selection event
-   */
-  @Override public final void accept(IEvent evt) throws Exception {
-    if (evt instanceof SelectedEvent) {
-      SelectedEvent<D> event = (SelectedEvent<D>) evt;
+  @Override public final void accept(EventType evt) throws Exception {
+    if (evt instanceof SelectedEventType) {
+      SelectedEventType<D> event = (SelectedEventType<D>) evt;
       if (isSingleMode()) {
         addSelectionIndex(event.selectedItemAdapterPosition(), true);
       } else {
@@ -146,12 +142,6 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     }
   }
 
-  /**
-   * Gets item at specified position
-   *
-   * @param position position of item
-   * @return item object
-   */
   protected final D getItemAt(int position) {
     if (position >= 0 && position < getItemCount()) {
       return itemSource.get(position);
@@ -159,29 +149,16 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     return null;
   }
 
-  /**
-   * logs message with Debug level
-   * @param msg log message
-   */
   protected final void log(String msg) {
     log(Log.DEBUG, msg);
   }
 
-  /**
-   * logs messages with given log level
-   * @param level level of log
-   * @param msg log message
-   */
   protected final void log(int level, String msg) {
     if (isLogEnabled()) {
       Log.println(level, getClassTag(), msg);
     }
   }
 
-  /**
-   * logs Exceptions on androidLog with Error level
-   * @param error error to print
-   */
   protected final void log(Throwable error) {
     StringWriter strWriter = new StringWriter();
     PrintWriter ptrWriter = new PrintWriter(strWriter);
@@ -189,21 +166,10 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     log(Log.ERROR, strWriter.toString());
   }
 
-  /**
-   * is position is selected or not.
-   *
-   * @param position position to check if selected.
-   * @return true or false
-   */
   private boolean isSelected(int position) {
     return selection.contains(position);
   }
 
-  /**
-   * helps to store selection on our list.
-   * @param position position to check
-   * @param clearBefore for singleMode usage
-   */
   private void addSelectionIndex(int position, boolean clearBefore) {
     //don't have it so select it.
     if (!selection.contains(position)) {
@@ -261,26 +227,14 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     notifyItemChanged(position);
   }
 
-  /**
-   * Returns if selection is singleMode or not
-   * @return true or false
-   */
   public final boolean isSingleMode() {
     return selectionMode == SINGLE_SELECTION_MODE;
   }
 
-  /**
-   * Provides context instance it might be null.
-   * @return context instance.
-   */
   private final Context context() {
     return contextReference != null ? contextReference.get() : null;
   }
 
-  /**
-   * Provides layout inflater factory instance it might be null.
-   * @return LayoutInflater instance
-   */
   private final LayoutInflater factory() {
     Context context = context();
     if (context != null) {
@@ -289,49 +243,17 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     return null;
   }
 
-  /**
-   * true or false whether log enabled or not
-   * <li>advised to use BuildConfig.DEBUG that only log for debug builds.</li>
-   * @return true or false
-   */
   protected abstract boolean isLogEnabled();
 
-  /**
-   * Tag for log provided for this class
-   * @return string for this class
-   */
   protected abstract String getClassTag();
 
-  /**
-   * Register viewHolder and Data item on viewHolder with viewBindings provide BR id of layout variable
-   * possibly BR.item
-   * @param item item data
-   * @param viewHolder view holder
-   */
   protected abstract void bindDataViewHolder(D item, V viewHolder);
 
-  /**
-   * Creates viewHolder for specific type of view.
-   * @param binding binding of this layout
-   * @param busManager busManager to communicate with viewHolder
-   * @param viewType type of viewHolder we create according to viewType
-   * @return ViewHolder instance for this adapter
-   */
   protected abstract V createDataViewHolder(ViewDataBinding binding, BusManager busManager, int viewType);
 
-  /**
-   * Returns layout resources for viewType
-   * @param viewType view type for layout
-   * @return resource id of layout
-   */
   @LayoutRes
   protected abstract int layoutResource(int viewType);
 
-  /**
-   * this listener will observe any change on ObservableList or ObservableArrayList then
-   * we grab that change on source itself to notify our recycler adapter
-   * with this we achieve quite nice adapter less boiler plate code.
-   */
   private final OnListChangedCallback<ObservableList<D>> itemSourceObserver = new OnListChangedCallback<ObservableList<D>>() {
 
     @Override public void onChanged(ObservableList<D> itemSource) {

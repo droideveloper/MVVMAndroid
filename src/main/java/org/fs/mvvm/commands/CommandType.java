@@ -1,6 +1,6 @@
 /*
- * MVVM Copyright (C) 2017 Fatih.
- *  
+ * MVVM Copyright (C) 2016 Fatih.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.data;
+package org.fs.mvvm.commands;
 
-public interface MetadataInfo<T, V> {
+public interface CommandType<T> {
 
-  String named();
+  boolean canExecute(T param);
 
-  void set(V value);
-
-  V get();
+  void execute(T param);
 }

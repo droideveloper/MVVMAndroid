@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.commands;
+package org.fs.mvvm.data;
 
-public interface IAction {
+import java.util.Locale;
 
-  /**
-   * Non-parameterized version of Action.execute(Object param)
-   */
-  void execute();
+public interface ConverterType<T, R> {
+
+  R convert(T object, Locale locale);
 }

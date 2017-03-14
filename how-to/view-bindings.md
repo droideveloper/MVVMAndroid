@@ -7,8 +7,8 @@ You can use this binding class on instances of `android.view.View`.
   * [Non-Parameterized Commands](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#non-parameterized-commands)
 
 2. Notify
-  * [With-Action](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#with-action)
-  * [Without-Action](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#without-action)
+  * [With-Action](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#with-parameterizedActionType)
+  * [Without-Action](https://github.com/droideveloper/MVVMAndroid/blob/master/how-to/view-bindings.md#without-parameterizedActionType)
 
 
 ### Commands ###

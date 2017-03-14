@@ -17,33 +17,17 @@ package org.fs.mvvm.utils;
 
 public final class Preconditions {
 
-  /**
-   * Private constructor.
-   */
+
   private Preconditions() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
-  /**
-   * Checks any object whether it is null or not if it is null throws exception
-   * with provided error string.
-   *
-   * @param object object instance for check.
-   * @param errorMessage message string if it is null.
-   * @param <T> Type of the object
-   */
   public static <T> void checkNotNull(T object, String errorMessage) {
     if (object == null) {
       throw new IllegalArgumentException(errorMessage);
     }
   }
 
-  /**
-   * Checks if any condition true or not if not true exception thrown with provided error string
-   *
-   * @param condition condition to check
-   * @param errorMessage error message to be shown
-   */
   public static void checkConditionMeet(boolean condition, String errorMessage) {
     if (!condition) {
       throw new IllegalArgumentException(errorMessage);

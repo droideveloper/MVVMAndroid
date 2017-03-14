@@ -18,49 +18,27 @@ package org.fs.mvvm.commands;
 import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
 
-public final class ParameterizedRelayCommand<T> implements ICommand<T> {
+public final class ParameterizedRelayCommandType<T> implements CommandType<T> {
 
-  private final Action<T> execution;
-  private final Predicate<T> isExecution;
+  private final ParameterizedActionType<T> execution;
+  private final PredicateType<T> isExecution;
 
-  /**
-   * Constructor with Execution provided.
-   *
-   * @param execution Action command provided.
-   */
-  public ParameterizedRelayCommand(Action<T> execution) {
+  public ParameterizedRelayCommandType(ParameterizedActionType<T> execution) {
     this(execution, (param) -> !Objects.isNullOrEmpty(param));
   }
 
-  /**
-   * Constructor with Execution and Parameter control provided.
-   *
-   * @param execution Action command provided.
-   * @param isExecution Predicate command provided.
-   */
-  public ParameterizedRelayCommand(Action<T> execution, Predicate<T> isExecution) {
+  public ParameterizedRelayCommandType(ParameterizedActionType<T> execution, PredicateType<T> isExecution) {
     Preconditions.checkNotNull(execution, "action is null");
     Preconditions.checkNotNull(isExecution, "check is null");
     this.execution = execution;
     this.isExecution = isExecution;
   }
 
-  /**
-   * Checks if action can be executed
-   *
-   * @param param object param.
-   * @return true or false
-   */
   @Override public boolean canExecute(T param) {
     return this.isExecution != null
         && this.isExecution.canExecute(param);
   }
 
-  /**
-   * Execute action.
-   *
-   * @param param object param.
-   */
   @Override public void execute(T param) {
     this.execution.execute(param);
   }

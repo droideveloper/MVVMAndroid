@@ -22,25 +22,14 @@ import org.fs.mvvm.utils.Preconditions;
 
 public final class ThreadManager {
 
-  /**
-   * Main thread that created from looper.
-   */
   private final static Handler uiThread = new Handler(Looper.getMainLooper());
 
   private final static long DEFAULT_DELAY = 300L;
 
-  /**
-   * private constructor
-   */
   private ThreadManager() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
-  /**
-   * Executes action on mainThread
-   *
-   * @param action action to be executed on uiThread
-   */
   public static void runOnUiThread(Runnable action) {
     Preconditions.checkNotNull(action, "action is null");
     if (!Objects.isNullOrEmpty(uiThread)) {
@@ -48,22 +37,10 @@ public final class ThreadManager {
     }
   }
 
-  /**
-   * Executes action on mainThread with defaultDelay
-   *
-   * @param action action to be executed on uiThread
-   */
   public static void runOnUiThreadDelayed(Runnable action) {
     runOnUiThreadDelayed(action, DEFAULT_DELAY);
   }
 
-  /**
-   * Executes action on mainThread with provided delay
-   * if delay is negative or zero error thrown
-   *
-   * @param action action to be executed on uiThread
-   * @param delay delay to postpone execution
-   */
   public static void runOnUiThreadDelayed(Runnable action, long delay) {
     Preconditions.checkNotNull(action, "action is null");
     Preconditions.checkConditionMeet(delay > 0L, "delay must be positive");
@@ -72,9 +49,6 @@ public final class ThreadManager {
     }
   }
 
-  /**
-   * Clears All Callbacks scheduled or not from stack
-   */
   public static void clearAll() {
     if (!Objects.isNullOrEmpty(uiThread)) {
       uiThread.removeCallbacksAndMessages(null);

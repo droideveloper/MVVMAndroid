@@ -18,7 +18,7 @@ package org.fs.mvvm.utils;
 import java.lang.reflect.Field;
 import java8.util.function.Function;
 import org.fs.mvvm.BuildConfig;
-import org.fs.mvvm.commands.Action;
+import org.fs.mvvm.commands.ParameterizedActionType;
 
 public final class Invokes {
 
@@ -27,15 +27,15 @@ public final class Invokes {
   }
 
   /**
-   * Lambda helper that executes action with one param
+   * Lambda helper that executes parameterizedActionType with one param
    *
-   * @param action lambda
+   * @param parameterizedActionType lambda
    * @param object lambda param
    * @param <T> type of param
    */
-  public static <T> void invoke(Action<T> action, T object) {
-    Preconditions.checkNotNull(action, "action is null");
-    action.execute(object);
+  public static <T> void invoke(ParameterizedActionType<T> parameterizedActionType, T object) {
+    Preconditions.checkNotNull(parameterizedActionType, "parameterizedActionType is null");
+    parameterizedActionType.execute(object);
   }
 
   /**

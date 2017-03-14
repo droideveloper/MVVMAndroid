@@ -17,20 +17,20 @@ package org.fs.mvvm.injections;
 
 import dagger.Module;
 import dagger.Provides;
-import org.fs.mvvm.data.IView;
+import org.fs.mvvm.data.ViewType;
 import org.fs.mvvm.utils.Preconditions;
 
 @Module
 public class AbstractFragmentModule {
 
-  private final IView view;
+  private final ViewType view;
 
-  public AbstractFragmentModule(IView view) {
+  public AbstractFragmentModule(ViewType view) {
     Preconditions.checkNotNull(view, "view is null");
     this.view = view;
   }
 
-  @Provides @ForFragment public IView provideView() {
+  @Provides @ForFragment public ViewType provideView() {
     return view;
   }
 }

@@ -23,20 +23,10 @@ public class PropertyInfo<T> {
     this.propertyValue = propertyValue;
   }
 
-  /**
-   * PropertyValue Getter
-   *
-   * @return propertyValue
-   */
   public T getPropertyValue() {
     return this.propertyValue;
   }
 
-  /**
-   * PropertyValue Setter
-   *
-   * @param propertyValue propertyValue
-   */
   public void setPropertyValue(T propertyValue) {
     this.propertyValue = propertyValue;
   }

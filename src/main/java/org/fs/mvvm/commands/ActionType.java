@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.data;
+package org.fs.mvvm.commands;
 
-import java.util.Locale;
+public interface ActionType {
 
-public interface IValidator<T> {
-
-  /**
-   * Validation that handles if given object is valid for result else they provide string
-   *
-   * @param object object to be validated
-   * @param locale locale of user
-   * @return Validation result
-   */
-  Validation validate(T object, Locale locale);
+  void execute();
 }

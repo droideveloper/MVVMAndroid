@@ -111,9 +111,6 @@ public abstract class PagerBindingAdapter<D extends BaseObservable, V extends Ab
 
   protected abstract String getClassTag();
 
-  /**
-   * Observer for DataSet that might change after its lifecycle
-   */
   private final ObservableList.OnListChangedCallback<ObservableList<D>> itemSourceObserver
       = new ObservableList.OnListChangedCallback<ObservableList<D>>() {
 

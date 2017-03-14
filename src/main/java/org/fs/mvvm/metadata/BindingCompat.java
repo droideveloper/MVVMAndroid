@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.fs.mvvm.data.AncestorInfo;
-import org.fs.mvvm.data.IConverter;
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.ConverterType;
+import org.fs.mvvm.data.MetadataInfoType;
 import org.fs.mvvm.metadata.absListView.AbsListViewSelectedPosition;
 import org.fs.mvvm.metadata.textView.TextViewText;
 import org.fs.mvvm.metadata.textView.TextViewTextColor;
@@ -54,32 +54,32 @@ public final class BindingCompat {
     sMetadataLoaders.put("margin", defaultsViewIntegerArray());
     sMetadataLoaders.put("padding", defaultsViewIntegerArray());
     sMetadataLoaders.put("background", new MetadataLoader<View, Drawable>() {
-      @Override public MetadataInfo<View, Drawable> bind(View view, String property) {
+      @Override public MetadataInfoType<View, Drawable> bind(View view, String property) {
         return new ViewDrawable(view);
       }
     });
     sMetadataLoaders.put("selectedPage", new MetadataLoader<ViewPager, Integer>() {
-      @Override public MetadataInfo<ViewPager, Integer> bind(ViewPager view, String property) {
+      @Override public MetadataInfoType<ViewPager, Integer> bind(ViewPager view, String property) {
         return new ViewPagerSelectedPage(view);
       }
     });
     sMetadataLoaders.put("text", new MetadataLoader<TextView, CharSequence>() {
-      @Override public MetadataInfo<TextView, CharSequence> bind(TextView view, String property) {
+      @Override public MetadataInfoType<TextView, CharSequence> bind(TextView view, String property) {
         return new TextViewText(view);
       }
     });
     sMetadataLoaders.put("textColor", new MetadataLoader<TextView, Integer>() {
-      @Override public MetadataInfo<TextView, Integer> bind(TextView view, String property) {
+      @Override public MetadataInfoType<TextView, Integer> bind(TextView view, String property) {
         return new TextViewTextColor(view);
       }
     });
     sMetadataLoaders.put("textSize", new MetadataLoader<TextView, Float>() {
-      @Override public MetadataInfo<TextView, Float> bind(TextView view, String property) {
+      @Override public MetadataInfoType<TextView, Float> bind(TextView view, String property) {
         return new TextViewTextSize(view);
       }
     });
     sMetadataLoaders.put("selectedPosition", new MetadataLoader<AbsListView, Integer>() {
-      @Override public MetadataInfo<AbsListView, Integer> bind(AbsListView view, String property) {
+      @Override public MetadataInfoType<AbsListView, Integer> bind(AbsListView view, String property) {
         return new AbsListViewSelectedPosition(view);
       }
     });
@@ -113,10 +113,10 @@ public final class BindingCompat {
     return View.class;
   }
 
-  public static <T1, V1, V2> void bind(String[] source, final View view, IConverter<V2, V1> parser) {
+  public static <T1, V1, V2> void bind(String[] source, final View view, ConverterType<V2, V1> parser) {
     String property = source[0];
     property = forValue(property);
-    MetadataInfo<T1, V1> metadata = forProperty(property, Objects.toObject(view));
+    MetadataInfoType<T1, V1> metadata = forProperty(property, Objects.toObject(view));
     RelativeSource relativeSource = new RelativeSource(source[1], view);
     relativeSource.bind(metadata, parser);
   }
@@ -133,7 +133,7 @@ public final class BindingCompat {
     return null;
   }
 
-  public static <T, V> MetadataInfo<T, V> forProperty(String property, T view) {
+  public static <T, V> MetadataInfoType<T, V> forProperty(String property, T view) {
     for (Map.Entry<String, MetadataLoader<?, ?>> entry: sMetadataLoaders.entrySet()) {
       final String key = entry.getKey();
       if (key.equalsIgnoreCase(property)) {

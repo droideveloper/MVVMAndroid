@@ -13,17 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.data;
+package org.fs.mvvm.commands;
 
-import java.util.Locale;
+public interface ParameterizedActionType<T> {
 
-public interface IConverter<T, R> {
+  void execute(T param);
 
-  /**
-   *
-   * @param object Input type of the object if it would be String we might need to pass Locale too.
-   * @param locale Locale instance we would like to use along with if conversion is from String to etc.
-   * @return converted type of object might turn back null depend on your understanding of conversion
-   */
-  R convert(T object, Locale locale);
 }

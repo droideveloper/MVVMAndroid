@@ -26,20 +26,10 @@ import java8.util.stream.StreamSupport;
 
 public final class Objects {
 
-  /**
-   * Private constructor
-   */
   private Objects() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }
 
-  /**
-   * Checks if object null or empty if object instance is Collection, String or File
-   *
-   * @param object object instance to check
-   * @param <T> T type of the object
-   * @return true or false
-   */
   public static <T> boolean isNullOrEmpty(T object) {
     if (object == null) return true;
     if (object instanceof String) {
@@ -57,14 +47,6 @@ public final class Objects {
     return false;
   }
 
-  /**
-   * Casts object to parameter we looking for
-   * if it's not same type then we do nothing
-   *
-   * @param o object instance to cast
-   * @param <T> Type of cast
-   * @return T or null
-   */
   @SuppressWarnings("unchecked")
   public static <T> T toObject(Object o) {
     if (o == null) return null;
@@ -75,13 +57,6 @@ public final class Objects {
     }
   }
 
-  /**
-   * Sort given collection depending on filter method
-   * @param collection Collection to sort
-   * @param filter filter for sort operation
-   * @param <T> Type of Element
-   * @return sorted Collection or empty if Collection is empty
-   */
   public static <T> Collection<T> sort(Collection<T> collection, Comparator<T> filter) {
     if (!isNullOrEmpty(collection))  {
       StreamSupport.stream(collection)
@@ -91,13 +66,6 @@ public final class Objects {
     return Collections.emptyList();
   }
 
-  /**
-   * Filters collection item on condition
-   * @param collection Collection to filter
-   * @param condition condition to apply
-   * @param <T> Type of Element
-   * @return filtered Collection or empty if Collection is empty
-   */
   public static <T> Collection<T> filter(Collection<T> collection, Predicate<T> condition) {
     if (!isNullOrEmpty(collection)) {
       StreamSupport.stream(collection)

@@ -23,22 +23,13 @@ public final class Tuple<T> {
 
   private final List<T> args;
 
-  /**
-   * Arguments used for tuple that can take n argument of T
-   * @param args params
-   */
   public Tuple(T... args) {
     if(Objects.isNullOrEmpty(args)) {
-      throw new IllegalArgumentException("You should not pass non arguments on constructor since this is tuple we require args at leas 2 use RelayCommand for your command.");
+      throw new IllegalArgumentException("You should not pass non arguments on constructor since this is tuple we require args at leas 2 use RelayCommandType for your command.");
     }
     this.args = Arrays.asList(args);
   }
 
-  /**
-   * Get nth argument at index
-   * @param index argument at
-   * @return argument T or null if index is out of bounds or args is null
-   */
   public T get(final int index) {
     if(index >= 0 && index < args.size()) {
       return args.get(index);
@@ -46,10 +37,6 @@ public final class Tuple<T> {
     return null;
   }
 
-  /**
-   * Gets size of args
-   * @return 0 if null or empty else it will return count
-   */
   public final int size() {
     return Objects.isNullOrEmpty(args) ? 0 : args.size();
   }

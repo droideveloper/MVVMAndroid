@@ -13,15 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.commands;
+package org.fs.mvvm.data;
 
-public interface Predicate<T> {
+import org.fs.mvvm.listeners.Callback;
+
+public interface UsecaseType<T, V> {
 
   /**
-   * Checks if param is good enough to execute it's action.
+   * checks subscription is unsubscribed or not
    *
-   * @param param object param.
-   * @return true or false.
+   * @return a boolean.
    */
-  boolean canExecute(T param);
+  boolean isDisposed();
+
+  /**
+   * cancels if subscription is active.
+   */
+  void dispose();
+
+  /**
+   * Gets observer of usecase
+   *
+   * @return an observer type of T
+   */
+  V sync();
+
+  /**
+   * async execution of usecase
+   *
+   * @param callback callback that we get results
+   */
+  void async(Callback<T> callback);
 }

@@ -16,10 +16,10 @@
 package org.fs.mvvm.metadata.textView;
 
 import android.widget.TextView;
-import org.fs.mvvm.data.MetadataInfo;
+import org.fs.mvvm.data.MetadataInfoType;
 import org.fs.mvvm.utils.Objects;
 
-public final class TextViewText implements MetadataInfo<TextView, CharSequence> {
+public final class TextViewText implements MetadataInfoType<TextView, CharSequence> {
 
   private final TextView textView;
 

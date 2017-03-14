@@ -37,13 +37,13 @@ import java.util.List;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 import org.fs.mvvm.managers.BusManager;
-import org.fs.mvvm.managers.IEvent;
-import org.fs.mvvm.managers.SelectedEvent;
+import org.fs.mvvm.managers.EventType;
+import org.fs.mvvm.managers.SelectedEventType;
 import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
 
 public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends AbstractBindingHolder<D>> extends
-    BaseAdapter implements Consumer<IEvent> {
+    BaseAdapter implements Consumer<EventType> {
 
   public final static int SINGLE_SELECTION_MODE   = 0x01;
   public final static int MULTIPLE_SELECTION_MODE = 0x02;
@@ -62,14 +62,6 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
 
   private Disposable disposable;
 
-  /**
-   * Public constructor with selectionMode ex. singleMode or multiMode
-   * itemSource and context provided.
-   *
-   * @param context context instance we provide.
-   * @param itemSource ObservableList which is pretty easy use in next
-   * @param selectionMode selectionMode to track on adapter
-   */
   public AbstractBindingAdapter(Context context, ObservableList<D> itemSource, int selectionMode) {
     Preconditions.checkNotNull(itemSource, "itemSource is null");
     Preconditions.checkNotNull(context, "context is null");
@@ -101,10 +93,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     this.multiItemCallback = multiItemCallback;
   }
 
-  /**
-   * when we done with all we need to
-   * call this in order to clear stuff
-   */
+
   public final void clearAll() {
     if (contextReference != null) {
       contextReference.clear();
@@ -118,23 +107,10 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     }
   }
 
-  /**
-   * size of the itemSource
-   * @return int size of the itemSource
-   */
   @Override public int getCount() {
     return itemSource != null ? itemSource.size() : 0;
   }
 
-  /**
-   * CreateView old school createView method with ugly storage I would not advise you use this
-   * crappy adapter thing.
-   *
-   * @param position position to createView or storeView from loaded
-   * @param convertView convertView view instance we have previously or not
-   * @param parent parent for inflating
-   * @return convertView instance
-   */
   @Override public View getView(int position, View convertView, ViewGroup parent) {
     final int viewType = getItemViewType(position);
     final LayoutInflater factory = factory();
@@ -158,13 +134,10 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     return convertView;
   }
 
-  /**
-   * with viewHolder callback provides bridge with it's child without ugly reference on others
-   * @param evt selectedEvent here provided.
-   */
-  @Override public void accept(IEvent evt) throws Exception {
-    if (evt instanceof SelectedEvent) {
-      SelectedEvent<D> event = (SelectedEvent<D>) evt;
+
+  @Override public void accept(EventType evt) throws Exception {
+    if (evt instanceof SelectedEventType) {
+      SelectedEventType<D> event = (SelectedEventType<D>) evt;
       if (isSingleMode()) {
         addSelectionIndex(event.selectedItemAdapterPosition(), true);
       } else {
@@ -173,12 +146,6 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     }
   }
 
-  /**
-   * Item provided by itemSource
-   *
-   * @param position position of item in itemSource
-   * @return type of D as item
-   */
   protected D getItemAt(int position) {
     if (position >= 0 && position < getCount()) {
       return itemSource.get(position);
@@ -186,29 +153,16 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     return null;
   }
 
-  /**
-   * logs message with Debug level
-   * @param msg log message
-   */
   protected final void log(String msg) {
     log(Log.DEBUG, msg);
   }
 
-  /**
-   * logs messages with given log level
-   * @param level level of log
-   * @param msg log message
-   */
   protected final void log(int level, String msg) {
     if (isLogEnabled()) {
       Log.println(level, getClassTag(), msg);
     }
   }
 
-  /**
-   * logs Exceptions on androidLog with Error level
-   * @param error error to print
-   */
   protected final void log(Throwable error) {
     StringWriter strWriter = new StringWriter();
     PrintWriter ptrWriter = new PrintWriter(strWriter);
@@ -216,21 +170,10 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     log(Log.ERROR, strWriter.toString());
   }
 
-  /**
-   * is position is selected or not.
-   *
-   * @param position position to check if selected.
-   * @return true or false
-   */
   private boolean isSelected(int position) {
     return selection.contains(position);
   }
 
-  /**
-   * helps to store selection on our list.
-   * @param position position to check
-   * @param clearBefore for singleMode usage
-   */
   private void addSelectionIndex(int position, boolean clearBefore) {
     //don't have it so select it.
     if (!selection.contains(position)) {
@@ -290,64 +233,25 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     notifyDataSetChanged();
   }
 
-  /**
-   * Returns if selection is singleMode or not
-   * @return true or false
-   */
   public final boolean isSingleMode() {
     return selectionMode == SINGLE_SELECTION_MODE;
   }
 
-  /**
-   * true or false whether log enabled or not
-   * <li>advised to use BuildConfig.DEBUG that only log for debug builds.</li>
-   * @return true or false
-   */
   protected abstract boolean isLogEnabled();
 
-  /**
-   * Tag for log provided for this class
-   * @return string for this class
-   */
   protected abstract String getClassTag();
 
-  /**
-   * Register viewHolder and Data item on viewHolder with viewBindings provide BR id of layout variable
-   * possibly BR.item
-   * @param item item data
-   * @param viewHolder view holder
-   */
   protected abstract void bindDataViewHolder(D item, V viewHolder, int position);
 
-  /**
-   * Creates viewHolder for specific type of view.
-   * @param binding binding of this layout
-   * @param busManager busManager to communicate with viewHolder
-   * @param viewType type of viewHolder we create according to viewType
-   * @return ViewHolder instance for this adapter
-   */
   protected abstract V createDataViewHolder(ViewDataBinding binding, BusManager busManager, int viewType);
 
-  /**
-   * Returns layout resources for viewType
-   * @param viewType view type for layout
-   * @return resource id of layout
-   */
   @LayoutRes
   protected abstract int layoutResource(int viewType);
 
-  /**
-   * Context provided stored weakly
-   * @return context or null
-   */
   private Context getContext() {
     return contextReference != null ? contextReference.get() : null;
   }
 
-  /**
-   * LayoutInflater created with context if context is null then inflater is null
-   * @return null or layoutInflater instance
-   */
   private LayoutInflater factory() {
     Context context = getContext();
     if (context != null) {
@@ -356,9 +260,6 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     return null;
   }
 
-  /**
-   * itemSource will be tracked by listener
-   */
   private final ObservableList.OnListChangedCallback<ObservableList<D>>
     itemSourceObserver = new ObservableList.OnListChangedCallback<ObservableList<D>>() {
 

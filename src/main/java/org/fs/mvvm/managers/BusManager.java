@@ -24,66 +24,33 @@ public final class BusManager {
 
   private final static BusManager IMPL = new BusManager();
 
-  /**
-   * Pool that we keep track of our busManager in hand.
-   */
-  private final PublishSubject<IEvent> rxBus = PublishSubject.create();
+  private final PublishSubject<EventType> rxBus = PublishSubject.create();
 
-  /**
-   * sends object to every subscription we made for this bus.
-   *
-   * @param event event instance to send
-   */
-  public <T extends IEvent> void post(T event) {
+
+  public <T extends EventType> void post(T event) {
     Preconditions.checkNotNull(event, "event is null");
     rxBus.onNext(event);
   }
 
-  /**
-   * registers for this pool for event with only call consumer.
-   *
-   * @param consumer consumer to be called for event.
-   * @return Subscription instance holds onto it.
-   */
-  public Disposable register(Consumer<? super IEvent> consumer) {
+  public Disposable register(Consumer<? super EventType> consumer) {
     Preconditions.checkNotNull(consumer, "consumer as action is null");
     return rxBus.subscribe(consumer);
   }
 
-
-  /**
-   * unregisters from this pool.
-   *
-   * @param disposable disposable to be removed from pool.
-   */
   public void unregister(Disposable disposable) {
     if (disposable != null && !disposable.isDisposed()) {
       disposable.dispose();
     }
   }
 
-  /**
-   * Send clone
-   * @param event event to send be aware event must be implementation of IEvent
-   * @param <E> type of Event
-   */
-  public static <E extends IEvent> void send(E event) {
+  public static <E extends EventType> void send(E event) {
     IMPL.post(event);
   }
 
-  /**
-   * Register clone
-   * @param callback callback that registered for 3 method, success, error and completion
-   * @return subscription of this callback
-   */
-  public static Disposable add(Consumer<? super IEvent> callback) {
+  public static Disposable add(Consumer<? super EventType> callback) {
     return IMPL.register(callback);
   }
 
-  /**
-   * Unregister clone
-   * @param disposable callback to be unregistered
-   */
   public static void remove(Disposable disposable) {
     IMPL.unregister(disposable);
   }

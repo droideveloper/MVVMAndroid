@@ -23,7 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.TextView;
-import org.fs.mvvm.commands.ICommand;
+import org.fs.mvvm.commands.CommandType;
 import org.fs.mvvm.listeners.OnNavigated;
 import org.fs.mvvm.listeners.SimpleTextWatcher;
 import org.fs.mvvm.utils.Invokes;
@@ -104,7 +104,7 @@ public class ToolbarCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static <T> void viewToolbarRegisterNavigationListener(Toolbar viewToolbar, OnNavigated callback, T param, ICommand<T> command,
+  public static <T> void viewToolbarRegisterNavigationListener(Toolbar viewToolbar, OnNavigated callback, T param, CommandType<T> command,
       InverseBindingListener subTitleAttrChanged, InverseBindingListener titleAttrChanged) {
     if (callback == null && param == null && command == null) {
       viewToolbar.setNavigationOnClickListener(null);

@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.commands;
+package org.fs.mvvm.data;
 
-public interface ICommand<T> {
+import java.util.Locale;
 
-  /**
-   * Can execute command.
-   *
-   * @param param object param.
-   * @return true or false
-   */
-  boolean canExecute(T param);
+public interface ValidatorType<T> {
 
   /**
-   * Execute command.
+   * Validation that handles if given object is valid for result else they provide string
    *
-   * @param param object param.
+   * @param object object to be validated
+   * @param locale locale of user
+   * @return Validation result
    */
-  void execute(T param);
+  Validation validate(T object, Locale locale);
 }

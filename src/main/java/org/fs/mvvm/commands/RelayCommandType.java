@@ -13,11 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.managers;
+package org.fs.mvvm.commands;
 
-public interface IEvent {
+import org.fs.mvvm.utils.Preconditions;
 
-  /**
-   *  TYPE_DEFINITION
-   */
+public final class RelayCommandType implements CommandType<Object> {
+
+  private final ActionType execution;
+
+  public RelayCommandType(ActionType execution) {
+    Preconditions.checkNotNull(execution, "action is null.");
+    this.execution = execution;
+  }
+
+  @Override public boolean canExecute(Object param) {
+    return true;
+  }
+
+  @Override public void execute(Object param) {
+    this.execution.execute();
+  }
 }

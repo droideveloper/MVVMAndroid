@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.commands;
+package org.fs.mvvm.managers;
 
-public interface Action<T> {
+public interface EventType {
 
   /**
-   * Parameter that we required in method.
-   *
-   * @param param parameter we need to pass in command
+   *  TYPE_DEFINITION
    */
-  void execute(T param);
-
 }
