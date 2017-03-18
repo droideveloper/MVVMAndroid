@@ -21,7 +21,10 @@ import android.databinding.adapters.ListenerUtil;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.widget.TextView;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 import java.util.Locale;
 import org.fs.mvvm.R;
 import org.fs.mvvm.data.ConverterType;
@@ -65,19 +68,25 @@ public final class TextViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_ON_SOFT_KEYBOARD_ACTION })
-  public static void viewTextViewRegisterOnSoftKeyboardActionListener(TextView viewText, OnSoftKeyboardAction onSoftKeyboard) {
+  public static void viewTextViewRegisterOnSoftKeyboardActionListener(TextView viewText, final OnSoftKeyboardAction onSoftKeyboard) {
     if (onSoftKeyboard == null) {
       viewText.setOnEditorActionListener(null);
     } else {
-      viewText.setOnEditorActionListener((v, id, e) -> onSoftKeyboard.onEditorAction(id));
+      viewText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        @Override public boolean onEditorAction(TextView v, int id, KeyEvent event) {
+          return onSoftKeyboard.onEditorAction(id);
+        }
+      });
     }
   }
 
   @BindingAdapter({ BIND_CONVERTER, BIND_FROM_OBJECT })
-  public static <T, S extends CharSequence> void viewTextRegisterObject(TextView viewText, ConverterType<T, S> converter, T object) {
+  public static <T, S extends CharSequence> void viewTextRegisterObject(TextView viewText, final ConverterType<T, S> converter, T object) {
     if (converter != null) {
-      final S textStr = Invokes.invoke(o -> {
-        return converter.convert(o, Locale.getDefault());
+      final S textStr = Invokes.invoke(new Function<T, S>() {
+        @Override public S apply(@NonNull T o) throws Exception {
+          return converter.convert(o, Locale.getDefault());
+        }
       }, object);
       if (!TextUtils.equals(textStr, viewText.getText())) {
         viewText.setText(textStr);
@@ -93,7 +102,7 @@ public final class TextViewCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewTextRegisterTextWatcher(TextView viewText, OnBeforeChanged beforeChanged, OnAfterChanged afterChanged, InverseBindingListener textAttrChanged) {
+  public static void viewTextRegisterTextWatcher(TextView viewText, final OnBeforeChanged beforeChanged, final OnAfterChanged afterChanged, final  InverseBindingListener textAttrChanged) {
     final TextWatcher newListener;
     if (Objects.isNullOrEmpty(beforeChanged) && Objects.isNullOrEmpty(afterChanged) && Objects.isNullOrEmpty(textAttrChanged)) {
       newListener = null;

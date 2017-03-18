@@ -40,6 +40,8 @@ import org.fs.mvvm.metadata.view.ViewWidth;
 import org.fs.mvvm.metadata.viewPager.ViewPagerSelectedPage;
 import org.fs.mvvm.utils.Objects;
 
+import static org.fs.mvvm.utils.Objects.toObject;
+
 public final class BindingCompat {
 
   private final static Map<Pattern, AncestorLoader> sAncestorLoaders;
@@ -87,8 +89,16 @@ public final class BindingCompat {
 
   static {
     sAncestorLoaders  = new HashMap<>();
-    sAncestorLoaders.put(Pattern.compile("level=(\\d+)"), LevelAncestor::new);
-    sAncestorLoaders.put(Pattern.compile("id=(\\w+)"), ResourceAncestor::new);
+    sAncestorLoaders.put(Pattern.compile("level=(\\d+)"), new AncestorLoader() {
+      @Override public AncestorInfo bind(String binding, View view) {
+        return new LevelAncestor(binding, view);
+      }
+    });
+    sAncestorLoaders.put(Pattern.compile("id=(\\w+)"), new AncestorLoader() {
+      @Override public AncestorInfo bind(String binding, View view) {
+        return new ResourceAncestor(binding, view);
+      }
+    });
   }
 
   /**
@@ -116,7 +126,8 @@ public final class BindingCompat {
   public static <T1, V1, V2> void bind(String[] source, final View view, ConverterType<V2, V1> parser) {
     String property = source[0];
     property = forValue(property);
-    MetadataInfoType<T1, V1> metadata = forProperty(property, Objects.toObject(view));
+    T1 v = Objects.toObject(view);
+    MetadataInfoType<T1, V1> metadata = forProperty(property, v);
     RelativeSource relativeSource = new RelativeSource(source[1], view);
     relativeSource.bind(metadata, parser);
   }
@@ -137,7 +148,7 @@ public final class BindingCompat {
     for (Map.Entry<String, MetadataLoader<?, ?>> entry: sMetadataLoaders.entrySet()) {
       final String key = entry.getKey();
       if (key.equalsIgnoreCase(property)) {
-        final MetadataLoader<T, V> loader = Objects.toObject(sMetadataLoaders.get(key));
+        final MetadataLoader<T, V> loader = toObject(sMetadataLoaders.get(key));
         return loader.bind(view, property);
       }
     }
@@ -149,25 +160,29 @@ public final class BindingCompat {
   }
 
   private static MetadataLoader<View, Integer> defaultsViewInteger() {
-    return (view, property) -> {
-      if (property.equalsIgnoreCase("width")) {
-        return new ViewWidth(view);
-      } else if (property.equalsIgnoreCase("height")) {
-        return new ViewHeight(view);
-      } else {
-        throw new RuntimeException("not implemented\t" + property);
+    return new MetadataLoader<View, Integer>() {
+      @Override public MetadataInfoType<View, Integer> bind(View view, String property) {
+        if (property.equalsIgnoreCase("width")) {
+          return new ViewWidth(view);
+        } else if (property.equalsIgnoreCase("height")) {
+          return new ViewHeight(view);
+        } else {
+          throw new RuntimeException("not implemented\t" + property);
+        }
       }
     };
   }
 
   private static MetadataLoader<View, Integer[]> defaultsViewIntegerArray() {
-    return (view, property) -> {
-      if (property.equalsIgnoreCase("margin")) {
-        return new ViewMargin(view);
-      } else if(property.equalsIgnoreCase("padding")) {
-        return new ViewPadding(view);
-      } else {
-        throw new RuntimeException("not implemented\t" + property);
+    return new MetadataLoader<View, Integer[]>() {
+      @Override public MetadataInfoType<View, Integer[]> bind(View view, String property) {
+        if (property.equalsIgnoreCase("margin")) {
+          return new ViewMargin(view);
+        } else if(property.equalsIgnoreCase("padding")) {
+          return new ViewPadding(view);
+        } else {
+          throw new RuntimeException("not implemented\t" + property);
+        }
       }
     };
   }

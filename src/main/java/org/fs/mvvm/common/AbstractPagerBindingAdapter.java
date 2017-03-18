@@ -38,7 +38,6 @@ public abstract class AbstractPagerBindingAdapter<D extends BaseObservable> exte
     this.itemSource.addOnListChangedCallback(itemSourceObserver);
   }
 
-
   public void clearAdapter() {
     if (itemSource != null) {
       itemSource.removeOnListChangedCallback(itemSourceObserver);

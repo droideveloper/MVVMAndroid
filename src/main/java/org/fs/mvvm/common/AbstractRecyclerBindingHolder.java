@@ -20,14 +20,14 @@ import android.databinding.ViewDataBinding;
 import android.databinding.adapters.ListenerUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import io.reactivex.Observer;
 import org.fs.mvvm.R;
-import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEventType;
 
 public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> extends RecyclerView.ViewHolder
     implements View.OnClickListener {
 
-  private final BusManager busManager;
+  private final Observer<SelectedEventType<D>> observable;
 
   private final ViewDataBinding binding;
 
@@ -36,10 +36,10 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
 
   private View.OnClickListener previousListener;
 
-  public AbstractRecyclerBindingHolder(ViewDataBinding binding, BusManager busManager) {
+  public AbstractRecyclerBindingHolder(ViewDataBinding binding, Observer<SelectedEventType<D>> observable) {
     super(binding.getRoot());
     this.binding = binding;
-    this.busManager = busManager;
+    this.observable = observable;
   }
 
   public final void setItem(int id, D item) {
@@ -75,6 +75,6 @@ public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> ex
   }
 
   @Override public final void onClick(View v) {
-    busManager.send(new SelectedEventType<>(item(), getAdapterPosition()));
+    observable.onNext(new SelectedEventType<>(item(), getAdapterPosition()));
   }
 }

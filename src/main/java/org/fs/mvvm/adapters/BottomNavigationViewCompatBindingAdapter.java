@@ -18,10 +18,10 @@ package org.fs.mvvm.adapters;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
-import java8.util.stream.IntStreams;
 import org.fs.mvvm.listeners.OnNavigationSelected;
 
 public class BottomNavigationViewCompatBindingAdapter {
@@ -40,12 +40,14 @@ public class BottomNavigationViewCompatBindingAdapter {
       event = BIND_MENU_ITEM_ATTR_CHANGED)
   public static int viewNavigationRetreiveMenuItem(BottomNavigationView viewNavigation) {
     final int size = viewNavigation.getMenu().size();
-    return IntStreams.range(0, size)
-        .mapToObj(viewNavigation.getMenu()::getItem)
-        .filter(MenuItem::isChecked)
-        .mapToInt(MenuItem::getItemId)
-        .findFirst()
-        .orElse(NO_ID);
+    final Menu menu = viewNavigation.getMenu();
+    for (int i = 0; i < size; i++) {
+      MenuItem item = menu.getItem(i);
+      if (item.isChecked()) {
+        return item.getItemId();
+      }
+    }
+    return NO_ID;
   }
 
   @BindingAdapter({ BIND_MENU_ITEM })
@@ -69,20 +71,21 @@ public class BottomNavigationViewCompatBindingAdapter {
       requireAll = false
   )
   public static void viewNavigationRegisterSelectionListener(BottomNavigationView viewNavigation,
-      OnNavigationSelected selectedListener, InverseBindingListener menuItemAttrChanged) {
+      final OnNavigationSelected selectedListener, final InverseBindingListener menuItemAttrChanged) {
     if (selectedListener == null && menuItemAttrChanged == null) {
       viewNavigation.setOnNavigationItemSelectedListener(null);
     } else {
-      viewNavigation.setOnNavigationItemSelectedListener(item -> {
-        if (menuItemAttrChanged != null) {
-          menuItemAttrChanged.onChange();
+      viewNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+          if (menuItemAttrChanged != null) {
+            menuItemAttrChanged.onChange();
+          }
+          if (selectedListener != null) {
+            return selectedListener.onNavigationSelected(item);
+          }
+          return false;
         }
-        if (selectedListener != null) {
-          return selectedListener.onNavigationSelected(item);
-        }
-        return false;
       });
     }
   }
-
 }

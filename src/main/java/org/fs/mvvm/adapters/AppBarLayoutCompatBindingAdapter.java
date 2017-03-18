@@ -63,18 +63,20 @@ public class AppBarLayoutCompatBindingAdapter {
       requireAll = false
   )
   public static void viewAppBarLayoutRegisterOffsetListener(AppBarLayout viewAppBarLayout,
-      AppBarLayout.OnOffsetChangedListener offsetListener, InverseBindingListener offsetAttrChanged) {
+      final AppBarLayout.OnOffsetChangedListener offsetListener, final InverseBindingListener offsetAttrChanged) {
     final AppBarLayout.OnOffsetChangedListener newListener;
     if (offsetAttrChanged == null && offsetListener == null) {
       newListener = null;
     } else {
-      newListener = (appBarLayout, verticalOffset) -> {
-        Properties.setPropertyInfo(appBarLayout, new PropertyInfo<>(verticalOffset), R.id.viewAppBarLayout_offset);
-        if (offsetListener != null) {
-          offsetListener.onOffsetChanged(appBarLayout, verticalOffset);
-        }
-        if (offsetAttrChanged != null) {
-          offsetAttrChanged.onChange();
+      newListener = new AppBarLayout.OnOffsetChangedListener() {
+        @Override public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+          Properties.setPropertyInfo(appBarLayout, new PropertyInfo<>(verticalOffset), R.id.viewAppBarLayout_offset);
+          if (offsetListener != null) {
+            offsetListener.onOffsetChanged(appBarLayout, verticalOffset);
+          }
+          if (offsetAttrChanged != null) {
+            offsetAttrChanged.onChange();
+          }
         }
       };
     }

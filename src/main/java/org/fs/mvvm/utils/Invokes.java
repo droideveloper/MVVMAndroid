@@ -15,8 +15,8 @@
  */
 package org.fs.mvvm.utils;
 
+import io.reactivex.functions.Function;
 import java.lang.reflect.Field;
-import java8.util.function.Function;
 import org.fs.mvvm.BuildConfig;
 import org.fs.mvvm.commands.ParameterizedActionType;
 
@@ -49,7 +49,12 @@ public final class Invokes {
    */
   public static <T, R> R invoke(Function<T, R> func, T object) {
     Preconditions.checkNotNull(func, "func is null");
-    return func.apply(object);
+    try {
+      return func.apply(object);
+    } catch (Exception error) {
+      error.printStackTrace();
+    }
+    return null;
   }
 
   public static <T> T getFieldValue(Field field, Object instance) {

@@ -48,6 +48,12 @@ public abstract class AbstractEntity extends BaseObservable
     }
   }
 
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) { }
+
   protected abstract boolean isLogEnabled();
 
   protected abstract String getClassTag();

@@ -18,10 +18,10 @@ package org.fs.mvvm.adapters;
 import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
-import java8.util.stream.IntStreams;
 import org.fs.mvvm.listeners.OnNavigationSelected;
 
 public class NavigationViewCompatBindingAdapter {
@@ -39,14 +39,15 @@ public class NavigationViewCompatBindingAdapter {
   @InverseBindingAdapter(attribute = BIND_MENU_ITEM,
       event = BIND_MENU_ITEM_ATTR_CHANGED)
   public static int viewNavigationRetreiveMenuItem(NavigationView viewNavigation) {
+    final int size = viewNavigation.getMenu().size();
     final Menu menu = viewNavigation.getMenu();
-    final int size = menu != null ? menu.size() : 0;
-    return IntStreams.range(0, size)
-        .mapToObj(viewNavigation.getMenu()::getItem)
-        .filter(MenuItem::isChecked)
-        .mapToInt(MenuItem::getItemId)
-        .findFirst()
-        .orElse(NO_ID);
+    for (int i = 0; i < size; i++) {
+      MenuItem item = menu.getItem(i);
+      if (item.isChecked()) {
+        return item.getItemId();
+      }
+    }
+    return NO_ID;
   }
 
   @BindingAdapter({ BIND_MENU_ITEM })
@@ -64,18 +65,20 @@ public class NavigationViewCompatBindingAdapter {
       requireAll = false
   )
   public static void viewNavigationRegisterSelectionListener(NavigationView viewNavigation,
-      OnNavigationSelected selectedListener, InverseBindingListener menuItemAttrChanged) {
+      final OnNavigationSelected selectedListener, final InverseBindingListener menuItemAttrChanged) {
     if (selectedListener == null && menuItemAttrChanged == null) {
       viewNavigation.setNavigationItemSelectedListener(null);
     } else {
-      viewNavigation.setNavigationItemSelectedListener(item -> {
-        if (menuItemAttrChanged != null) {
-          menuItemAttrChanged.onChange();
+      viewNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+          if (menuItemAttrChanged != null) {
+            menuItemAttrChanged.onChange();
+          }
+          if (selectedListener != null) {
+            return selectedListener.onNavigationSelected(item);
+          }
+          return false;
         }
-        if (selectedListener != null) {
-          return selectedListener.onNavigationSelected(item);
-        }
-        return false;
       });
     }
   }

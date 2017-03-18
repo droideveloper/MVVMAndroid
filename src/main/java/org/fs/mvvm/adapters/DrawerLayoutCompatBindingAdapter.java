@@ -65,9 +65,9 @@ public class DrawerLayoutCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewDrawerLayoutRegisterListeners(DrawerLayout viewDrawerLayout,
-      OnLayoutSlided slided, OnLayoutOpenedOrClosed openOrClose,
-      OnLayoutStateChanged stateChanged, InverseBindingListener isOpenAttrChanged) {
+  public static void viewDrawerLayoutRegisterListeners(final DrawerLayout viewDrawerLayout,
+      final OnLayoutSlided slided, final OnLayoutOpenedOrClosed openOrClose,
+      final OnLayoutStateChanged stateChanged, final InverseBindingListener isOpenAttrChanged) {
 
     final DrawerLayout.DrawerListener newListener;
     if (slided == null && openOrClose == null && stateChanged == null && isOpenAttrChanged == null) {

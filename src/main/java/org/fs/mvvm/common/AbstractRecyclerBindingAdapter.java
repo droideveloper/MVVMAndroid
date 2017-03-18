@@ -24,20 +24,17 @@ import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.AndroidRuntimeException;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java8.util.stream.Collectors;
-import java8.util.stream.IntStreams;
-import java8.util.stream.StreamSupport;
-import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.EventType;
 import org.fs.mvvm.managers.SelectedEventType;
 import org.fs.mvvm.utils.Preconditions;
@@ -52,7 +49,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
 
   private final ObservableList<D>             itemSource;
   private final WeakReference<Context>        contextReference;
-  private final BusManager                    busManager;
+  private final PublishSubject<SelectedEventType<D>> observer;
   private final List<Integer>                 selection;
   private final int                           selectionMode;
 
@@ -66,7 +63,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
 
   public AbstractRecyclerBindingAdapter(Context context, ObservableList<D> itemSource, int selectionMode) {
     this.itemSource = itemSource;
-    this.busManager = new BusManager();
+    this.observer = PublishSubject.create();
     this.selection = new ArrayList<>();
     Preconditions.checkConditionMeet(selectionMode >= SINGLE_SELECTION_MODE && selectionMode <= MULTIPLE_SELECTION_MODE,
         "invalid selection mode, select proper one.");
@@ -75,7 +72,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
   }
 
   @Override public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-    disposable = busManager.register(this);
+    disposable = observer.subscribe(this);
     itemSource.addOnListChangedCallback(itemSourceObserver);
   }
 
@@ -84,7 +81,9 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
       contextReference.clear();
     }
     itemSource.removeOnListChangedCallback(itemSourceObserver);
-    busManager.unregister(disposable);
+    if (!disposable.isDisposed()) {
+      disposable.dispose();
+    }
     disposable = null;
   }
   //singleMode selectedPosition
@@ -122,7 +121,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     LayoutInflater factory = factory();
     if (factory != null) {
       ViewDataBinding binding = DataBindingUtil.inflate(factory, layoutResource(viewType), parent, false);
-      return createDataViewHolder(binding, busManager, viewType);
+      return createDataViewHolder(binding, observer, viewType);
     }
     throw new IllegalArgumentException("we can not create factory inflater since our context instance got clean up, check out caller");
   }
@@ -174,8 +173,9 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     //don't have it so select it.
     if (!selection.contains(position)) {
       if (clearBefore) {
-        StreamSupport.stream(selection)
-                     .forEach(this::notifyItemChanged);
+        for (int i = 0, z = selection.size(); i < z; i++) {
+          notifyItemChanged(selection.get(i));
+        }
         selection.clear();
       }
       selection.add(position);
@@ -195,9 +195,12 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     //notification
     if (multiItemCallback != null) {
       try {
-        multiItemCallback.accept(StreamSupport.stream(selection)
-            .map(itemSource::get)
-            .collect(Collectors.toList()));
+        List<D> newCollection = new ArrayList<>();
+        for(int i = 0, z = selection.size(); i < z; i ++) {
+          int index = selection.get(i);
+          newCollection.add(itemSource.get(index));
+        }
+        multiItemCallback.accept(newCollection);
       } catch (Exception error) {
         throw new AndroidRuntimeException("selection not executable " + selection, error);
       }
@@ -205,9 +208,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     //notification
     if (singlePositionCallback != null) {
       try {
-        singlePositionCallback.accept(StreamSupport.stream(selection)
-            .findFirst()
-            .orElse(-1));
+        singlePositionCallback.accept(selection.get(0));
       } catch (Exception error) {
         throw new AndroidRuntimeException("selection not executable " + selection, error);
       }
@@ -215,11 +216,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     //notification
     if (singleItemCallback != null) {
       try {
-        singleItemCallback.accept(StreamSupport.stream(selection)
-            .filter(x -> x >= 0)
-            .map(itemSource::get)
-            .findFirst()
-            .orElse(null));
+        singleItemCallback.accept(itemSource.get(selection.get(0)));
       } catch (Exception error) {
         throw new AndroidRuntimeException("selection not executable " + selection, error);
       }
@@ -249,7 +246,7 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
 
   protected abstract void bindDataViewHolder(D item, V viewHolder);
 
-  protected abstract V createDataViewHolder(ViewDataBinding binding, BusManager busManager, int viewType);
+  protected abstract V createDataViewHolder(ViewDataBinding binding, Observer<SelectedEventType<D>> observer, int viewType);
 
   @LayoutRes
   protected abstract int layoutResource(int viewType);
@@ -269,20 +266,17 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     }
 
     @Override public void onItemRangeMoved(ObservableList<D> itemSource, int start, int to, int count) {
-      //create start indexes
-      final List<Integer> starts = IntStreams.iterate(start, next -> next + 1)
-          .limit(count)
-          .boxed()
-          .collect(Collectors.toList());
-      //create end indexes
-      final List<Integer> ends = IntStreams.iterate(to, next -> next + 1)
-          .limit(count)
-          .boxed()
-          .collect(Collectors.toList());
-      //loop over them and notify adapter
-      IntStreams.range(0, count)
-          .mapToObj(index -> new Pair<>(starts.get(index), ends.get(index)))
-          .forEach(position -> notifyItemMoved(position.first, position.second));
+      List<Integer> starts = new ArrayList<>();
+      for (; start < (start + count); start++) {
+        starts.add(start);
+      }
+      List<Integer> ends = new ArrayList<>();
+      for (; to < (to + count); to++) {
+        ends.add(to);
+      }
+      for (int i = 0; i < count; i++) {
+        notifyItemMoved(starts.get(i), ends.get(i));
+      }
     }
 
     @Override public void onItemRangeRemoved(ObservableList<D> itemSource, int start, int count) {

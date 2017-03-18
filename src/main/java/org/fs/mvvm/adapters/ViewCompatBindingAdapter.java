@@ -139,12 +139,14 @@ public final class ViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_NOTIFY_TEXT, BIND_ACTION_TEXT, BIND_RELAY_COMMAND })
-  public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, RelayCommandType command) {
+  public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, final RelayCommandType command) {
     if (!Objects.isNullOrEmpty(notifyText)) {
       final Snackbar snackbar = Snackbar.make(view, notifyText, Snackbar.LENGTH_LONG);
-      snackbar.setAction(actionText, v -> {
-        command.execute(null);
-        snackbar.dismiss();
+      snackbar.setAction(actionText, new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          command.execute(null);
+          snackbar.dismiss();
+        }
       });
       snackbar.show();
     }
@@ -157,18 +159,20 @@ public final class ViewCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static <T> void viewRegisterCommandWithOrWithoutParameter(View view, CommandType<T> command, T param) {
+  public static <T> void viewRegisterCommandWithOrWithoutParameter(final View view, final CommandType<T> command, final T param) {
     final View.OnClickListener newListener;
     if (command == null) {
       newListener = null;
     } else {
       final View.OnClickListener oldListener = ListenerUtil.getListener(view, R.id.onClickListener);
-      newListener = v -> {
-        if (command.canExecute(param)) {
-          command.execute(param);
-        }
-        if (oldListener != null) {
-          oldListener.onClick(view);
+      newListener = new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          if (command.canExecute(param)) {
+            command.execute(param);
+          }
+          if (oldListener != null) {
+            oldListener.onClick(view);
+          }
         }
       };
     }

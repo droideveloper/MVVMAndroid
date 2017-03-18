@@ -19,9 +19,9 @@ import android.databinding.BaseObservable;
 import android.databinding.ViewDataBinding;
 import android.databinding.adapters.ListenerUtil;
 import android.view.View;
+import io.reactivex.Observer;
 import java.lang.ref.WeakReference;
 import org.fs.mvvm.R;
-import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.SelectedEventType;
 import org.fs.mvvm.utils.Preconditions;
 
@@ -29,17 +29,16 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
     View.OnClickListener {
 
   private final WeakReference<View> view;
-  private final BusManager          busManager;
-  private final ViewDataBinding     binding;
+  private final Observer<SelectedEventType<D>> observer;
+  private final ViewDataBinding binding;
 
   private D item;
   private int position;
 
-
-  public AbstractBindingHolder(ViewDataBinding binding, BusManager busManager) {
+  public AbstractBindingHolder(ViewDataBinding binding, Observer<SelectedEventType<D>> observer) {
     Preconditions.checkNotNull(binding, "binding is null");
     this.binding = binding;
-    this.busManager = busManager;
+    this.observer = observer;
     this.view = new WeakReference<>(binding.getRoot());
     ListenerUtil.trackListener(view(), this, R.id.onClickListener);
     view().setOnClickListener(this);
@@ -65,6 +64,6 @@ public abstract class AbstractBindingHolder<D extends BaseObservable> implements
   }
 
   @Override public final void onClick(View v) {
-    busManager.send(new SelectedEventType<>(item, position));
+    observer.onNext(new SelectedEventType<>(item, position));
   }
 }

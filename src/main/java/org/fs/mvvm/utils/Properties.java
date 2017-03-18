@@ -29,7 +29,8 @@ public class Properties {
   public static <T> PropertyInfo<T> getPropertyInfo(View view, int propertyId) {
     if (AppCompat.isBuildSDKAvailable(VERSION_CODES.ICE_CREAM_SANDWICH)) {
       Object propertyInfo = view.getTag(propertyId);
-      return propertyInfo != null ? Objects.toObject(propertyInfo) : null;
+      if (Objects.isNullOrEmpty(propertyInfo)) { return null; }
+      return Objects.toObject(propertyInfo);
     } else {
       synchronized (sProperties) {
         WeakHashMap<View, PropertyInfo<?>> properties = sProperties.get(propertyId);
@@ -37,7 +38,8 @@ public class Properties {
           return null;
         }
         final PropertyInfo<?> propertyInfo = properties.get(view);
-        return propertyInfo != null ? Objects.toObject(propertyInfo) : null;
+        if (Objects.isNullOrEmpty(propertyInfo)) { return null; }
+        return Objects.toObject(propertyInfo);
       }
     }
   }

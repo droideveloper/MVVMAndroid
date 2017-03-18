@@ -27,16 +27,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java8.util.stream.Collectors;
-import java8.util.stream.StreamSupport;
-import org.fs.mvvm.managers.BusManager;
 import org.fs.mvvm.managers.EventType;
 import org.fs.mvvm.managers.SelectedEventType;
 import org.fs.mvvm.utils.Objects;
@@ -48,17 +47,17 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
   public final static int SINGLE_SELECTION_MODE   = 0x01;
   public final static int MULTIPLE_SELECTION_MODE = 0x02;
 
-  private final ObservableList<D>       itemSource;
-  private final WeakReference<Context>  contextReference;
-  private final BusManager              busManager;
-  private final List<Integer>           selection;
-  private final int                     selectionMode;
+  private final ObservableList<D> itemSource;
+  private final WeakReference<Context> contextReference;
+  private final PublishSubject<SelectedEventType<D>> observer;
+  private final List<Integer> selection;
+  private final int selectionMode;
 
-  private Consumer<Integer>             singlePositionCallback;
-  private Consumer<List<Integer>>       multiPositionCallback;
+  private Consumer<Integer> singlePositionCallback;
+  private Consumer<List<Integer>> multiPositionCallback;
 
-  private Consumer<D>                   singleItemCallback;
-  private Consumer<List<D>>             multiItemCallback;
+  private Consumer<D> singleItemCallback;
+  private Consumer<List<D>> multiItemCallback;
 
   private Disposable disposable;
 
@@ -67,12 +66,12 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     Preconditions.checkNotNull(context, "context is null");
     Preconditions.checkConditionMeet(selectionMode >= SINGLE_SELECTION_MODE && selectionMode <= MULTIPLE_SELECTION_MODE,
         "selectionMode is invalid");
-    this.busManager = new BusManager();
+    this.observer = PublishSubject.create();
     this.itemSource = itemSource;
     this.contextReference = new WeakReference<>(context);
     this.selectionMode = selectionMode;
     this.selection = new ArrayList<>();
-    disposable = busManager.register(this);
+    disposable = observer.subscribe(this);
     this.itemSource.addOnListChangedCallback(itemSourceObserver);
   }
 
@@ -93,13 +92,12 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     this.multiItemCallback = multiItemCallback;
   }
 
-
   public final void clearAll() {
     if (contextReference != null) {
       contextReference.clear();
     }
-    if (disposable != null) {
-      busManager.unregister(disposable);
+    if (!disposable.isDisposed()) {
+      disposable.dispose();
       disposable = null;
     }
     if (itemSource != null) {
@@ -119,7 +117,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     }
     if (convertView == null) {
       ViewDataBinding binding = DataBindingUtil.inflate(factory, layoutResource(viewType), parent, false);
-      V viewHolder = createDataViewHolder(binding, busManager, viewType);
+      V viewHolder = createDataViewHolder(binding, observer, viewType);
       convertView = binding.getRoot();
       convertView.setTag(viewHolder);
     }
@@ -178,8 +176,9 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     //don't have it so select it.
     if (!selection.contains(position)) {
       if (clearBefore) {
-        StreamSupport.stream(selection)
-            .forEach(x -> notifyDataSetChanged());
+        for(int i = 0, z = selection.size(); i < z; i ++) {
+          notifyDataSetChanged();
+        }
         selection.clear();
       }
       selection.add(position);
@@ -199,10 +198,12 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     //notification
     if (multiItemCallback != null) {
       try {
-        multiItemCallback.accept(StreamSupport.stream(selection)
-                .map(itemSource::get)
-                .collect(Collectors.toList())
-        );
+        List<D> newCollection = new ArrayList<>();
+        for(int i = 0, z = selection.size(); i < z; i ++) {
+          int index = selection.get(i);
+          newCollection.add(itemSource.get(index));
+        }
+        multiItemCallback.accept(newCollection);
       } catch (Exception error) {
         throw new AndroidRuntimeException("selection not executable " + selection, error);
       }
@@ -210,10 +211,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     //notification
     if (singlePositionCallback != null) {
       try {
-        singlePositionCallback.accept(StreamSupport.stream(selection)
-                .findFirst()
-                .orElse(-1)
-        );
+        singlePositionCallback.accept(selection.get(0));
       } catch (Exception error) {
         throw new AndroidRuntimeException("selection not executable " + selection, error);
       }
@@ -221,11 +219,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
     //notification
     if (singleItemCallback != null) {
       try {
-        singleItemCallback.accept(StreamSupport.stream(selection)
-            .filter(x -> x >= 0)
-            .map(itemSource::get)
-            .findFirst()
-            .orElse(null));
+        singleItemCallback.accept(itemSource.get(selection.get(0)));
       } catch (Exception error) {
         throw new AndroidRuntimeException("selection not executable " + selection, error);
       }
@@ -243,7 +237,7 @@ public abstract class AbstractBindingAdapter<D extends BaseObservable, V extends
 
   protected abstract void bindDataViewHolder(D item, V viewHolder, int position);
 
-  protected abstract V createDataViewHolder(ViewDataBinding binding, BusManager busManager, int viewType);
+  protected abstract V createDataViewHolder(ViewDataBinding binding, Observer<SelectedEventType<D>> observer, int viewType);
 
   @LayoutRes
   protected abstract int layoutResource(int viewType);

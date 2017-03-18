@@ -16,13 +16,13 @@
 package org.fs.mvvm.utils;
 
 import android.text.TextUtils;
+import io.reactivex.functions.Predicate;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java8.util.function.Predicate;
-import java8.util.stream.Collectors;
-import java8.util.stream.StreamSupport;
+import java.util.List;
 
 public final class Objects {
 
@@ -57,20 +57,33 @@ public final class Objects {
     }
   }
 
-  public static <T> Collection<T> sort(Collection<T> collection, Comparator<T> filter) {
-    if (!isNullOrEmpty(collection))  {
-      StreamSupport.stream(collection)
-          .sorted(filter)
-          .collect(Collectors.toList());
+  public static <T> boolean equals(T lhs, T rhs) {
+    return lhs == rhs;
+  }
+
+  public static <T> List<T> sort(List<T> collection, Comparator<T> filter) {
+    if (!isNullOrEmpty(collection)) {
+      Collections.sort(collection, filter);
+      return collection;
     }
     return Collections.emptyList();
   }
 
-  public static <T> Collection<T> filter(Collection<T> collection, Predicate<T> condition) {
+  public static <T> List<T> filter(List<T> collection, Predicate<T> predicate) {
     if (!isNullOrEmpty(collection)) {
-      StreamSupport.stream(collection)
-          .filter(condition)
-          .collect(Collectors.toList());
+      List<T> newCollection = new ArrayList<>();
+      for (int i = 0, z = collection.size(); i < z; i++) {
+        final T item = collection.get(i);
+        try {
+          if (predicate.test(item)) {
+            newCollection.add(item);
+          }
+        } catch (Exception error) {
+          error.printStackTrace();
+          break;
+        }
+      }
+      return newCollection;
     }
     return Collections.emptyList();
   }

@@ -19,6 +19,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -177,7 +178,12 @@ public final class Files {
 
   public static void zip(File target, File directory, int bufferSize) throws IOException {
     if (directory.isDirectory()) {
-      List<File> files = Arrays.asList(directory.listFiles((parent, name) -> name.matches("/^[a-zA-Z]/g")));
+
+      List<File> files = Arrays.asList(directory.listFiles(new FilenameFilter() {
+        @Override public boolean accept(File dir, String name) {
+          return name.matches("/^[a-zA-Z]/g");
+        }
+      }));
       for (int index = 0, z = files.size(); index < z; index++) {
         compress(target, files.get(index), bufferSize);
       }

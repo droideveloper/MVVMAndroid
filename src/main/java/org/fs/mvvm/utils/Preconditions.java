@@ -17,7 +17,6 @@ package org.fs.mvvm.utils;
 
 public final class Preconditions {
 
-
   private Preconditions() {
     throw new IllegalArgumentException("you can not have instance of this object.");
   }

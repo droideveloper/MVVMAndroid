@@ -23,7 +23,10 @@ import android.databinding.adapters.ListenerUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import java.util.Collection;
+import java.util.List;
 import org.fs.mvvm.R;
 import org.fs.mvvm.common.AbstractEntity;
 import org.fs.mvvm.common.AbstractRecyclerBindingAdapter;
@@ -184,7 +187,9 @@ public final class RecyclerViewCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewRecyclerSetLayoutManager(RecyclerView viewRecycler, RecyclerView.LayoutManager layoutManager, InverseBindingListener isLoadingAttrChanged) {
+  public static void viewRecyclerSetLayoutManager(final RecyclerView viewRecycler,
+      final RecyclerView.LayoutManager layoutManager,
+      final InverseBindingListener isLoadingAttrChanged) {
     if (layoutManager != null) {
       viewRecycler.setLayoutManager(layoutManager);
       viewRecycler.setHasFixedSize(true);
@@ -237,36 +242,44 @@ public final class RecyclerViewCompatBindingAdapter {
     requireAll = false
   )
   public static <T extends AbstractRecyclerBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractRecyclerBindingHolder<D>>
-    void viewRecyclerRegisterAdapter(RecyclerView viewRecycler, T itemSource,
-      InverseBindingListener positionAttrChanged, InverseBindingListener itemAttrChanged,
-      InverseBindingListener positionsAttrChanged, InverseBindingListener itemsAttrChanged) {
+    void viewRecyclerRegisterAdapter(final RecyclerView viewRecycler, final T itemSource,
+      final InverseBindingListener positionAttrChanged, final InverseBindingListener itemAttrChanged,
+      final InverseBindingListener positionsAttrChanged, final InverseBindingListener itemsAttrChanged) {
     //do not throw error if adapter is null, just ignore
       if (itemSource != null) {
         //singleMode
         if (itemSource.isSingleMode()) {
-          itemSource.setSingleItemCallback((item) -> {
-            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(item), R.id.viewRecycler_selectedItem);
-            if (itemAttrChanged != null) {
-              itemAttrChanged.onChange();
+          itemSource.setSingleItemCallback(new Consumer<D>() {
+            @Override public void accept(@NonNull D item) throws Exception {
+              Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(item), R.id.viewRecycler_selectedItem);
+              if (itemAttrChanged != null) {
+                itemAttrChanged.onChange();
+              }
             }
           });
-          itemSource.setSinglePositionCallback((position) -> {
-            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(position), R.id.viewRecycler_selectedPosition);
-            if (positionAttrChanged != null) {
-              positionAttrChanged.onChange();
+          itemSource.setSinglePositionCallback(new Consumer<Integer>() {
+            @Override public void accept(@NonNull Integer position) throws Exception {
+              Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(position), R.id.viewRecycler_selectedPosition);
+              if (positionAttrChanged != null) {
+                positionAttrChanged.onChange();
+              }
             }
           });
         } else {//multiMode
-          itemSource.setMultiItemCallback((items) -> {
-            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(items), R.id.viewRecycler_selectedItems);
-            if (itemsAttrChanged != null) {
-              itemsAttrChanged.onChange();
+          itemSource.setMultiItemCallback(new Consumer<List<D>>() {
+            @Override public void accept(@NonNull List<D> items) throws Exception {
+              Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(items), R.id.viewRecycler_selectedItems);
+              if (itemsAttrChanged != null) {
+                itemsAttrChanged.onChange();
+              }
             }
           });
-          itemSource.setMultiPositionCallback((positions) -> {
-            Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(positions), R.id.viewRecycler_selectedPositions);
-            if (positionsAttrChanged != null) {
-              positionsAttrChanged.onChange();
+          itemSource.setMultiPositionCallback(new Consumer<List<Integer>>() {
+            @Override public void accept(@NonNull List<Integer> positions) throws Exception {
+              Properties.setPropertyInfo(viewRecycler, new PropertyInfo<>(positions), R.id.viewRecycler_selectedPositions);
+              if (positionsAttrChanged != null) {
+                positionsAttrChanged.onChange();
+              }
             }
           });
         }

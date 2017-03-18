@@ -98,9 +98,9 @@ public final class ViewPagerCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewPagerRegisterListeners(ViewPager viewPager, OnPageScrolled pageScrolled,
-      OnPageSelected pageSelected, OnPageScrollStateChanged pageScrollStateChanged,
-      InverseBindingListener selectedPageAttrChanged, InverseBindingListener itemAttrChanged) {
+  public static void viewPagerRegisterListeners(final ViewPager viewPager, final OnPageScrolled pageScrolled,
+     final OnPageSelected pageSelected, final OnPageScrollStateChanged pageScrollStateChanged,
+     final InverseBindingListener selectedPageAttrChanged, final InverseBindingListener itemAttrChanged) {
     final ViewPager.OnPageChangeListener newListener;
     if (pageScrolled == null && pageSelected == null && pageScrollStateChanged == null
         && selectedPageAttrChanged == null && itemAttrChanged == null) {

@@ -67,16 +67,18 @@ public class SwipeRefreshLayoutCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewSwipeRefreshLayoutRegisterCallback(SwipeRefreshLayout viewSwipeLayout, OnRefreshed callback, InverseBindingListener isRefreshingAttrChanged) {
+  public static void viewSwipeRefreshLayoutRegisterCallback(SwipeRefreshLayout viewSwipeLayout,final  OnRefreshed callback,final InverseBindingListener isRefreshingAttrChanged) {
     if (callback == null && isRefreshingAttrChanged == null) {
       viewSwipeLayout.setOnRefreshListener(null);
     } else {
-      viewSwipeLayout.setOnRefreshListener(() -> {
-        if (isRefreshingAttrChanged != null) {
-          isRefreshingAttrChanged.onChange();
-        }
-        if (callback != null) {
-          callback.onRefreshed();
+      viewSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        @Override public void onRefresh() {
+          if (isRefreshingAttrChanged != null) {
+            isRefreshingAttrChanged.onChange();
+          }
+          if (callback != null) {
+            callback.onRefreshed();
+          }
         }
       });
     }

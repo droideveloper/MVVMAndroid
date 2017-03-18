@@ -60,8 +60,8 @@ public class SlidingPaneLayoutCompatBindingAdapter {
       },
       requireAll = false
   )
-  public static void viewSlidingPaneLayoutRegisterListeners(SlidingPaneLayout viewSlidingPaneLayout, OnLayoutSlided slided,
-      OnLayoutOpenedOrClosed openOrClose, InverseBindingListener isOpenAttrChanged) {
+  public static void viewSlidingPaneLayoutRegisterListeners(final SlidingPaneLayout viewSlidingPaneLayout, final OnLayoutSlided slided,
+      final OnLayoutOpenedOrClosed openOrClose, final InverseBindingListener isOpenAttrChanged) {
     if (slided == null && openOrClose == null && isOpenAttrChanged == null) {
       viewSlidingPaneLayout.setPanelSlideListener(null);
     } else {

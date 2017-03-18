@@ -23,21 +23,23 @@ import org.fs.mvvm.utils.Preconditions;
 public final class BusManager {
 
   private final static BusManager IMPL = new BusManager();
-
   private final PublishSubject<EventType> rxBus = PublishSubject.create();
 
+  private BusManager() {
+    throw new RuntimeException("You can not have instance of this type");
+  }
 
-  public <T extends EventType> void post(T event) {
+  <T extends EventType> void post(T event) {
     Preconditions.checkNotNull(event, "event is null");
     rxBus.onNext(event);
   }
 
-  public Disposable register(Consumer<? super EventType> consumer) {
+  Disposable register(Consumer<? super EventType> consumer) {
     Preconditions.checkNotNull(consumer, "consumer as action is null");
     return rxBus.subscribe(consumer);
   }
 
-  public void unregister(Disposable disposable) {
+  void unregister(Disposable disposable) {
     if (disposable != null && !disposable.isDisposed()) {
       disposable.dispose();
     }

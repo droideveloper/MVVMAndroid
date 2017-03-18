@@ -51,7 +51,7 @@ public final class TextInputLayoutCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_VALIDATOR, BIND_ERROR_STRING })
-  public static <S extends CharSequence, E extends CharSequence> void viewTextInputLayoutRegisterValidator(TextInputLayout viewTextLayout, ValidatorType<S> validator, E errorString) {
+  public static <S extends CharSequence, E extends CharSequence> void viewTextInputLayoutRegisterValidator(final TextInputLayout viewTextLayout, final ValidatorType<S> validator, final E errorString) {
     TextView viewText = findChildTextView(viewTextLayout);
     if (viewText != null) {
       final TextWatcher newListener;
@@ -63,7 +63,8 @@ public final class TextInputLayoutCompatBindingAdapter {
           @Override public void afterTextChanged(Editable s) {
             Validation validation = null;
             if (validator != null) {
-              validation = validator.validate(Objects.toObject(s), Locale.getDefault());
+              S obj = Objects.toObject(s);
+              validation = validator.validate(obj, Locale.getDefault());
             }
             if (validation != null) {
               if (!validation.isSuccess()) {

@@ -20,16 +20,19 @@ import android.databinding.BindingAdapter;
 import android.databinding.InverseBindingAdapter;
 import android.databinding.InverseBindingListener;
 import android.widget.AbsListView;
+import android.widget.ListView;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 import java.util.Collection;
-import java8.util.Objects;
+import java.util.List;
 import org.fs.mvvm.R;
 import org.fs.mvvm.common.AbstractBindingAdapter;
 import org.fs.mvvm.common.AbstractBindingHolder;
 import org.fs.mvvm.common.AbstractEntity;
 import org.fs.mvvm.data.PropertyInfo;
 import org.fs.mvvm.listeners.SimpleListViewScrollListener;
+import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Properties;
-import android.widget.ListView;
 
 public final class ListViewCompatBindingAdapter {
 
@@ -170,8 +173,8 @@ public final class ListViewCompatBindingAdapter {
   }
 
   @BindingAdapter({ BIND_IS_LOADING_ATTR_CHANGED })
-  public static void registerScrollListener(ListView viewList, InverseBindingListener isLoadingAttrChanged) {
-    PropertyInfo<Boolean> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_isLoadMore);
+  public static void registerScrollListener(final ListView viewList, final InverseBindingListener isLoadingAttrChanged) {
+    final PropertyInfo<Boolean> propertyInfo = Properties.getPropertyInfo(viewList, R.id.viewList_isLoadMore);
     if (propertyInfo != null) {
       final AbsListView.OnScrollListener newListener = new SimpleListViewScrollListener() {
         @Override public void onScroll(AbsListView view, int first, int visible, int total) {
@@ -207,35 +210,43 @@ public final class ListViewCompatBindingAdapter {
       requireAll = false
   )
   public static <T extends AbstractBindingAdapter<D, V>, D extends BaseObservable, V extends AbstractBindingHolder<D>>
-    void viewListRegisterAdapter(ListView viewList, T itemSource,
-      InverseBindingListener selectedPositionAttrChanged, InverseBindingListener selectedItemAttrChanged,
-      InverseBindingListener selectedPositionsAttrChanged, InverseBindingListener selectedItemsAttrChanged) {
+    void viewListRegisterAdapter(final ListView viewList, T itemSource,
+      final InverseBindingListener selectedPositionAttrChanged, final InverseBindingListener selectedItemAttrChanged,
+      final InverseBindingListener selectedPositionsAttrChanged, final InverseBindingListener selectedItemsAttrChanged) {
     //if our adapter not null we can use it
     if (itemSource != null) {
       if (itemSource.isSingleMode()) {
-        itemSource.setSingleItemCallback((item) -> {
-          Properties.setPropertyInfo(viewList, new PropertyInfo<>(item), R.id.viewList_selectedItem);
-          if (selectedItemAttrChanged != null) {
-            selectedItemAttrChanged.onChange();
+        itemSource.setSingleItemCallback(new Consumer<D>() {
+          @Override public void accept(@NonNull D item) throws Exception {
+            Properties.setPropertyInfo(viewList, new PropertyInfo<>(item), R.id.viewList_selectedItem);
+            if (selectedItemAttrChanged != null) {
+              selectedItemAttrChanged.onChange();
+            }
           }
         });
-        itemSource.setSinglePositionCallback((position) -> {
-          Properties.setPropertyInfo(viewList, new PropertyInfo<>(position), R.id.viewList_selectedPosition);
-          if (selectedPositionAttrChanged != null) {
-            selectedPositionAttrChanged.onChange();
+        itemSource.setSinglePositionCallback(new Consumer<Integer>() {
+          @Override public void accept(@NonNull Integer position) throws Exception {
+            Properties.setPropertyInfo(viewList, new PropertyInfo<>(position), R.id.viewList_selectedPosition);
+            if (selectedPositionAttrChanged != null) {
+              selectedPositionAttrChanged.onChange();
+            }
           }
         });
       } else {
-        itemSource.setMultiItemCallback((items) -> {
-          Properties.setPropertyInfo(viewList, new PropertyInfo<>(items), R.id.viewList_selectedItems);
-          if (selectedItemsAttrChanged != null) {
-            selectedItemsAttrChanged.onChange();
+        itemSource.setMultiItemCallback(new Consumer<List<D>>() {
+          @Override public void accept(@NonNull List<D> items) throws Exception {
+            Properties.setPropertyInfo(viewList, new PropertyInfo<>(items), R.id.viewList_selectedItems);
+            if (selectedItemsAttrChanged != null) {
+              selectedItemsAttrChanged.onChange();
+            }
           }
         });
-        itemSource.setMultiPositionCallback((positions) -> {
-          Properties.setPropertyInfo(viewList, new PropertyInfo<>(positions), R.id.viewRecycler_selectedPositions);
-          if (selectedPositionsAttrChanged != null) {
-            selectedPositionsAttrChanged.onChange();
+        itemSource.setMultiPositionCallback(new Consumer<List<Integer>>() {
+          @Override public void accept(@NonNull List<Integer> positions) throws Exception {
+            Properties.setPropertyInfo(viewList, new PropertyInfo<>(positions), R.id.viewRecycler_selectedPositions);
+            if (selectedPositionsAttrChanged != null) {
+              selectedPositionsAttrChanged.onChange();
+            }
           }
         });
       }

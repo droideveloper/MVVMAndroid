@@ -58,12 +58,14 @@ public final class RelativeSource {
     if(ancestor != null) {
       final View view = ancestor.view();
       if (view != null) {
-        final MetadataInfoType<T2, V2> getter = BindingCompat.forProperty(source, Objects.toObject(ancestor.view()));
+        T2 v = Objects.toObject(ancestor.view());
+        final MetadataInfoType<T2, V2> getter = BindingCompat.forProperty(source, v);
         if(getter != null) {
           if (parser != null) {
             setter.set(parser.convert(getter.get(), Locale.getDefault()));
           } else {
-            setter.set(Objects.toObject(getter.get()));
+            V1 value = Objects.toObject(getter.get());
+            setter.set(value);
           }
         }
       }
