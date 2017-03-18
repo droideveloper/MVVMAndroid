@@ -15,8 +15,13 @@
  */
 package org.fs.mvvm.common;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.fs.mvvm.data.AbstractViewModel;
@@ -25,24 +30,63 @@ public abstract class AbstractActivity<V extends AbstractViewModel<?>> extends
     AppCompatActivity {
 
 
-  protected void log(String msg) {
-    log(Log.DEBUG, msg);
-  }
-
-  protected void log(Throwable error) {
-    StringWriter strWriter = new StringWriter();
-    PrintWriter ptrWriter = new PrintWriter(strWriter);
-    error.printStackTrace(ptrWriter);
-    log(Log.ERROR, strWriter.toString());
-  }
-
-  protected void log(int level, String msg) {
-    if (isLogEnabled()) {
-      Log.println(level, getClassTag(), msg);
+  public void showError(String errorString) {
+    final View view = view();
+    if(view != null) {
+      Snackbar.make(view, errorString, Snackbar.LENGTH_LONG)
+          .show();
     }
   }
 
-  protected abstract boolean isLogEnabled();
+  public void showError(String errorString, String actionTextString, final View.OnClickListener callback) {
+    final View view = view();
+    if(view != null) {
+      final Snackbar snackbar = Snackbar.make(view, errorString, Snackbar.LENGTH_LONG);
+      snackbar.setAction(actionTextString, new View.OnClickListener() {
+        @Override public void onClick(View v) {
+          if (callback != null) {
+            callback.onClick(v);
+          }
+          snackbar.dismiss();
+        }
+      });
+      snackbar.show();
+    }
+  }
+
+  public String getStringResource(@StringRes int stringId) {
+    return getString(stringId);
+  }
+
+  public Context getContext() {
+    return this;
+  }
+
+  public boolean isAvailable() {
+    return !isFinishing();
+  }
+
+  @Nullable protected View view() {
+    return findViewById(android.R.id.content);
+  }
 
   protected abstract String getClassTag();
+  protected abstract boolean isLogEnabled();
+
+  protected void log(final String str) {
+    log(Log.DEBUG, str);
+  }
+
+  protected void log(Throwable error) {
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter  printWriter  = new PrintWriter(stringWriter);
+    error.printStackTrace(printWriter);
+    log(Log.ERROR, stringWriter.toString());
+  }
+
+  protected void log(final int lv, final String str) {
+    if(isLogEnabled()) {
+      Log.println(lv, getClassTag(), str);
+    }
+  }
 }

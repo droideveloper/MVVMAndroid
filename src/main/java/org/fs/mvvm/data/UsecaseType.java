@@ -15,33 +15,9 @@
  */
 package org.fs.mvvm.data;
 
-import org.fs.mvvm.listeners.Callback;
+import io.reactivex.Observable;
 
-public interface UsecaseType<T, V> {
+public interface UsecaseType<T> {
 
-  /**
-   * checks subscription is unsubscribed or not
-   *
-   * @return a boolean.
-   */
-  boolean isDisposed();
-
-  /**
-   * cancels if subscription is active.
-   */
-  void dispose();
-
-  /**
-   * Gets observer of usecase
-   *
-   * @return an observer type of T
-   */
-  V sync();
-
-  /**
-   * async execution of usecase
-   *
-   * @param callback callback that we get results
-   */
-  void async(Callback<T> callback);
+  Observable<T> async();
 }
