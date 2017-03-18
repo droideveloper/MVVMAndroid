@@ -25,10 +25,6 @@ public final class BusManager {
   private final static BusManager IMPL = new BusManager();
   private final PublishSubject<EventType> rxBus = PublishSubject.create();
 
-  private BusManager() {
-    throw new RuntimeException("You can not have instance of this type");
-  }
-
   <T extends EventType> void post(T event) {
     Preconditions.checkNotNull(event, "event is null");
     rxBus.onNext(event);
