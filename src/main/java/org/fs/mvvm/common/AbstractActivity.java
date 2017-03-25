@@ -29,6 +29,13 @@ import org.fs.mvvm.data.AbstractViewModel;
 public abstract class AbstractActivity<V extends AbstractViewModel<?>> extends
     AppCompatActivity {
 
+  public void showProgress() {
+    throw new RuntimeException("You should implement this method and not call super");
+  }
+
+  public void hideProgress() {
+    throw new RuntimeException("You should implement this method and not call super");
+  }
 
   public void showError(String errorString) {
     final View view = view();

@@ -22,6 +22,10 @@ import android.view.View;
 
 public interface ViewType {
 
+  void showProgress();
+
+  void hideProgress();
+
   /**
    * Shows user error on SnackBar instance with
    * long duration

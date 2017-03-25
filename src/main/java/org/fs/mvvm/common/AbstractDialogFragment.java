@@ -31,6 +31,14 @@ import org.fs.mvvm.data.AbstractViewModel;
 public abstract class AbstractDialogFragment <V extends AbstractViewModel<?>>
     extends DialogFragment {
 
+  public void showProgress() {
+    throw new RuntimeException("You should implement this method and not call super");
+  }
+
+  public void hideProgress() {
+    throw new RuntimeException("You should implement this method and not call super");
+  }
+
   public void showError(String errorString) {
     final View view = view();
     if(view != null) {
