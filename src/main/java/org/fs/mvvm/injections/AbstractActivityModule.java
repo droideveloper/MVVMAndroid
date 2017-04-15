@@ -28,7 +28,7 @@ import org.fs.mvvm.utils.Preconditions;
 public class AbstractActivityModule {
 
   @LayoutRes private final int layoutResourceId;
-  private final ViewType view;
+  protected final ViewType view;
 
   public AbstractActivityModule(ViewType view, @LayoutRes int layoutResourceId) {
     Preconditions.checkNotNull(view, "view is null");

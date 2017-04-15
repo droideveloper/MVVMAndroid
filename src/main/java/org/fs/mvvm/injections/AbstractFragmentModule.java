@@ -23,7 +23,7 @@ import org.fs.mvvm.utils.Preconditions;
 @Module
 public class AbstractFragmentModule {
 
-  private final ViewType view;
+  protected final ViewType view;
 
   public AbstractFragmentModule(ViewType view) {
     Preconditions.checkNotNull(view, "view is null");
