@@ -22,7 +22,6 @@ import android.view.View;
 import io.reactivex.Observer;
 import java.lang.ref.WeakReference;
 import org.fs.mvvm.R;
-import org.fs.mvvm.managers.SelectedEventType;
 import org.fs.mvvm.utils.Preconditions;
 
 public abstract class AbstractBindingHolder<D extends BaseObservable> implements

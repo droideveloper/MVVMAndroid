@@ -15,9 +15,9 @@
  */
 package org.fs.mvvm.data;
 
-import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
 
-public interface UsecaseType<T> {
+public interface UsecaseType {
 
-  Observable<T> async();
+  Disposable disposable();
 }

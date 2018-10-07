@@ -16,65 +16,20 @@
 package org.fs.mvvm.common;
 
 import android.databinding.BaseObservable;
-import android.databinding.ViewDataBinding;
-import android.databinding.adapters.ListenerUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import io.reactivex.Observer;
-import org.fs.mvvm.R;
-import org.fs.mvvm.managers.SelectedEventType;
 
-public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> extends RecyclerView.ViewHolder
-    implements View.OnClickListener {
+public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> extends RecyclerView.ViewHolder {
 
-  private final Observer<SelectedEventType<D>> observable;
-
-  private final ViewDataBinding binding;
-
-  private D item;
-
-
-  private View.OnClickListener previousListener;
-
-  public AbstractRecyclerBindingHolder(ViewDataBinding binding, Observer<SelectedEventType<D>> observable) {
-    super(binding.getRoot());
-    this.binding = binding;
-    this.observable = observable;
+  private AbstractRecyclerBindingHolder(View itemView) {
+    super(itemView);
   }
 
-  public final void setItem(int id, D item) {
-    this.item = item;
-    binding.setVariable(id, item);
-    binding.executePendingBindings();
+  public void bind(D entity) {
+    /*no-opt*/
   }
 
-  public final void setActivated(boolean isActivated) {
-    view().setActivated(isActivated);
-  }
-
-  public final ViewDataBinding binding() {
-    return this.binding;
-  }
-
-  public final View view() {
-    return this.itemView;
-  }
-
-  public final D item() {
-    return this.item;
-  }
-
-  public void onAttach() {
-    //this viewHolder set's its listener on first so we can track it in our listener
-    ListenerUtil.trackListener(view(), this, R.id.onClickListener);
-    view().setOnClickListener(this);
-  }
-
-  public void onDetach() {
-    view().setOnClickListener(null);
-  }
-
-  @Override public final void onClick(View v) {
-    observable.onNext(new SelectedEventType<>(item(), getAdapterPosition()));
+  public void unbind() {
+    /*no-opt*/
   }
 }

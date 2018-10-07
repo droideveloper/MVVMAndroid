@@ -38,7 +38,7 @@ public abstract class AbstractActivity<V extends AbstractViewModel<?>> extends
   }
 
   public void showError(String errorString) {
-    final View view = view();
+    final View view = getView();
     if(view != null) {
       Snackbar.make(view, errorString, Snackbar.LENGTH_LONG)
           .show();
@@ -46,23 +46,21 @@ public abstract class AbstractActivity<V extends AbstractViewModel<?>> extends
   }
 
   public void showError(String errorString, String actionTextString, final View.OnClickListener callback) {
-    final View view = view();
+    final View view = getView();
     if(view != null) {
       final Snackbar snackbar = Snackbar.make(view, errorString, Snackbar.LENGTH_LONG);
-      snackbar.setAction(actionTextString, new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (callback != null) {
-            callback.onClick(v);
-          }
-          snackbar.dismiss();
+      snackbar.setAction(actionTextString, v -> {
+        if (callback != null) {
+          callback.onClick(v);
         }
+        snackbar.dismiss();
       });
       snackbar.show();
     }
   }
 
-  public String getStringResource(@StringRes int stringId) {
-    return getString(stringId);
+  public String getStringRes(@StringRes int stringId, Object... args) {
+    return getString(stringId, args);
   }
 
   public Context getContext() {
@@ -73,7 +71,7 @@ public abstract class AbstractActivity<V extends AbstractViewModel<?>> extends
     return !isFinishing();
   }
 
-  @Nullable protected View view() {
+  @Nullable protected View getView() {
     return findViewById(android.R.id.content);
   }
 

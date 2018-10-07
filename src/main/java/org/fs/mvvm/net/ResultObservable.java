@@ -31,7 +31,7 @@ final class ResultObservable<T> extends Observable<Result<T>> {
   }
 
   @Override protected void subscribeActual(Observer<? super Result<T>> observer) {
-    upstream.subscribe(new ResultObserver<T>(observer));
+    upstream.subscribe(new ResultObserver<>(observer));
   }
 
   private static class ResultObserver<R> implements Observer<Response<R>> {
@@ -51,7 +51,7 @@ final class ResultObservable<T> extends Observable<Result<T>> {
 
     @Override public void onError(Throwable throwable) {
       try {
-        observer.onNext(Result.<R>error(throwable));
+        observer.onNext(Result.error(throwable));
       } catch (Throwable t) {
         try {
           observer.onError(t);

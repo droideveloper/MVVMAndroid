@@ -179,11 +179,8 @@ public final class Files {
   public static void zip(File target, File directory, int bufferSize) throws IOException {
     if (directory.isDirectory()) {
 
-      List<File> files = Arrays.asList(directory.listFiles(new FilenameFilter() {
-        @Override public boolean accept(File dir, String name) {
-          return name.matches("/^[a-zA-Z]/g");
-        }
-      }));
+      List<File> files = Arrays.asList(directory.listFiles(
+          (dir, name) -> name.matches("/^[a-zA-Z]/g")));
       for (int index = 0, z = files.size(); index < z; index++) {
         compress(target, files.get(index), bufferSize);
       }

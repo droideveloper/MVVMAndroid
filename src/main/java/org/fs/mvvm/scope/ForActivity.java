@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.managers;
+package org.fs.mvvm.scope;
 
-public interface EventType {
+import java.lang.annotation.Retention;
+import javax.inject.Scope;
 
-  /**
-   *  TYPE_DEFINITION
-   */
-}
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+@Scope
+@Retention(RUNTIME)
+public @interface ForActivity { }

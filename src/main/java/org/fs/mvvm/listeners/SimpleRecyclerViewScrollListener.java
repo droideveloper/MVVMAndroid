@@ -16,14 +16,15 @@
 package org.fs.mvvm.listeners;
 
 import android.support.v7.widget.RecyclerView;
+import io.reactivex.annotations.NonNull;
 
 public class SimpleRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
 
-  @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+  @Override public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
     super.onScrolled(recyclerView, dx, dy);
   }
 
-  @Override public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+  @Override public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
     super.onScrollStateChanged(recyclerView, newState);
   }
 }

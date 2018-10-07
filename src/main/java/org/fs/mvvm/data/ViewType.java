@@ -49,9 +49,10 @@ public interface ViewType {
    * Returns string value from R.string.xxx
    *
    * @param stringId string id to look for
+   * @param args for parameters to bind
    * @return String value of id
    */
-  String getStringResource(@StringRes int stringId);
+  String getStringRes(@StringRes int stringId, Object... args);
 
   /**
    * startActivity callback

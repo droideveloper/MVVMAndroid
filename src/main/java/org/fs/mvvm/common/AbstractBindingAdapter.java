@@ -36,8 +36,7 @@ import java.io.StringWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import org.fs.mvvm.managers.EventType;
-import org.fs.mvvm.managers.SelectedEventType;
+import org.fs.mvvm.core.EventType;
 import org.fs.mvvm.utils.Objects;
 import org.fs.mvvm.utils.Preconditions;
 
