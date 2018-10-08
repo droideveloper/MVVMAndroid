@@ -33,30 +33,17 @@ public abstract class AbstractViewModel<V extends ViewType> extends BaseObservab
     this.view = view;
   }
 
-  public void onResume()  {}
-
-
-  public void onPause()   {}
-
-  public void onStart()   {}
-
-
-  public void onStop()    {}
-
-  public void onCreate()  {}
-
-  public void onDestroy() {}
-
-  public void onBackPressed() {}
-
+  public void onResume(){}
+  public void onPause(){}
+  public void onStart(){}
+  public void onStop(){}
+  public void onCreate(){}
+  public void onDestroy(){}
+  public void onBackPressed(){}
   public void restoreState(Bundle restoreState) {}
-
   public void storeState(Bundle storeState)     {}
-
   public void activityResult(int requestCode, int resultCode, Intent data) {}
-
   public void requestPermissionResult(int requestCode, String[] permissions, int[] grants) {}
-
   public boolean onOptionsItemSelected(MenuItem item) { return false; }
 
   protected void log(String msg) {

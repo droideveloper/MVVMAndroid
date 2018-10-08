@@ -15,49 +15,98 @@
  */
 package org.fs.mvvm.utils;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
+import io.reactivex.CompletableTransformer;
+import io.reactivex.MaybeTransformer;
 import io.reactivex.ObservableTransformer;
+import io.reactivex.SingleTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.schedulers.Schedulers;
 import org.fs.mvvm.data.ViewType;
 
 public final class RxUtility {
 
-  public static <T> ObservableTransformer<T, T> toAsync() {
-    return new ObservableTransformer<T, T>() {
-      @Override public ObservableSource<T> apply(Observable<T> source) {
-        return source
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread());
-      }
-    };
+  public static <T> ObservableTransformer<T, T> asyncObservable() {
+    return source -> source
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread());
   }
 
-  public static <T> ObservableTransformer<T, T> toAsyncAndUI(final ViewType view) {
-    return new ObservableTransformer<T, T>() {
-      @Override public ObservableSource<T> apply(Observable<T> source) {
-        return source
-            .compose(RxUtility.<T>toAsync())
-            .doOnSubscribe(new Consumer<Disposable>() {
-              @Override public void accept(@NonNull Disposable disposable) throws Exception {
-                if (view.isAvailable()) {
-                  view.showProgress();
-                }
-              }
-            }).doFinally(new Action() {
-              @Override public void run() throws Exception {
-                if (view.isAvailable()) {
-                  view.hideProgress();
-                }
-              }
-            });
-      }
-    };
+  public static <T> ObservableTransformer<T, T> asyncObservableAndUI(@Nullable final ViewType view) {
+    return source -> source
+      .compose(RxUtility.asyncObservable())
+      .doOnSubscribe(d -> {
+        if (view != null && view.isAvailable()) {
+          view.showProgress();
+        }
+      }).doFinally(() -> {
+        if (view != null && view.isAvailable()) {
+          view.hideProgress();
+        }
+      });
+  }
+
+  public static <T> SingleTransformer<T, T> asyncSingle() {
+    return source -> source
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  public static <T> SingleTransformer<T, T> asyncSingleAndUI(@Nullable final ViewType view) {
+    return source -> source
+      .compose(asyncSingle())
+      .doOnSuccess(d -> {
+        if (view != null && view.isAvailable()) {
+          view.showProgress();
+        }
+      }).doFinally(() -> {
+        if (view != null && view.isAvailable()) {
+          view.hideProgress();
+        }
+      });
+  }
+
+  public static <T> MaybeTransformer<T, T> asyncMaybe() {
+    return source -> source
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  public static <T> MaybeTransformer<T, T> asyncMaybeAndUI(@Nullable final ViewType view) {
+    return source -> source
+      .compose(asyncMaybe())
+      .doOnSubscribe(d -> {
+        if (view != null && view.isAvailable()) {
+          view.showProgress();
+        }
+      })
+      .doFinally(() -> {
+        if (view != null && view.isAvailable()) {
+          view.hideProgress();
+        }
+      });
+  }
+
+  public static CompletableTransformer asyncCompletable() {
+    return source -> source
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread());
+  }
+
+  public static CompletableTransformer asyncCompletableAndUI(@NonNull final ViewType view) {
+    return source -> source
+      .compose(asyncCompletable())
+      .doOnSubscribe(d -> {
+        if (view != null && view.isAvailable()) {
+          view.showProgress();
+        }
+      })
+      .doFinally(() -> {
+        if (view != null && view.isAvailable()) {
+          view.hideProgress();
+        }
+      });
   }
 
   private RxUtility() {

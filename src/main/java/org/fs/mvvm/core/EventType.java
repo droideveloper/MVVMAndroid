@@ -13,24 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.injections;
+package org.fs.mvvm.core;
 
-import dagger.Module;
-import dagger.Provides;
-import org.fs.mvvm.data.ViewType;
-import org.fs.mvvm.utils.Preconditions;
+public interface EventType {
 
-@Module
-public class AbstractFragmentModule {
-
-  protected final ViewType view;
-
-  public AbstractFragmentModule(ViewType view) {
-    Preconditions.checkNotNull(view, "view is null");
-    this.view = view;
-  }
-
-  @Provides @ForFragment public ViewType provideView() {
-    return view;
-  }
+  /**
+   *  TYPE_DEFINITION
+   */
 }

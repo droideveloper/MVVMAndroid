@@ -36,18 +36,18 @@ import org.fs.mvvm.utils.Properties;
 
 public final class ViewPagerCompatBindingAdapter {
 
-  private final static String BIND_ITEM_SOURCE    = "bindings:itemSource";
-  private final static String BIND_PAGE_ANIMATOR  = "bindings:pageAnimator";
+  private final static String BIND_ITEM_SOURCE    = "android:itemSource";
+  private final static String BIND_PAGE_ANIMATOR  = "android:pageAnimator";
 
-  private final static String BIND_PAGE_SCROLLED              = "bindings:onPageScrolled";
-  private final static String BIND_PAGE_SELECTED              = "bindings:onPageSelected";
-  private final static String BIND_PAGE_SCROLL_STATE_CHANGED  = "bindings:onPageScrollStateChanged";
+  private final static String BIND_PAGE_SCROLLED              = "android:onPageScrolled";
+  private final static String BIND_PAGE_SELECTED              = "android:onPageSelected";
+  private final static String BIND_PAGE_SCROLL_STATE_CHANGED  = "android:onPageScrollStateChanged";
 
-  private final static String BIND_SELECTED_PAGE              = "bindings:selectedPage";
-  private final static String BIND_SELECTED_PAGE_ATTR_CHANGED = "bindings:selectedPageAttrChanged";
+  private final static String BIND_SELECTED_PAGE              = "android:selectedPage";
+  private final static String BIND_SELECTED_PAGE_ATTR_CHANGED = "android:selectedPageAttrChanged";
 
-  private final static String BIND_SELECTED_ITEM              = "bindings:item";
-  private final static String BIND_SELECTED_ITEM_ATTR_CHANGED = "bindings:itemAttrChanged";
+  private final static String BIND_SELECTED_ITEM              = "android:item";
+  private final static String BIND_SELECTED_ITEM_ATTR_CHANGED = "android:itemAttrChanged";
 
   private ViewPagerCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");

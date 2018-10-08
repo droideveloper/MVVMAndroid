@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fs.mvvm.managers;
+package org.fs.mvvm.core;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;

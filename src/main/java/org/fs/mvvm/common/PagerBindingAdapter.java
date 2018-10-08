@@ -21,6 +21,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ObservableList;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,12 +42,12 @@ public abstract class PagerBindingAdapter<D extends BaseObservable, V extends Ab
     this.dataSource.addOnListChangedCallback(itemSourceObserver);
   }
 
-  @Override public void destroyItem(ViewGroup container, int position, Object object) {
+  @Override public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
     View view = Objects.toObject(object);
     container.removeView(view);
   }
 
-  @Override public Object instantiateItem(ViewGroup container, int position) {
+  @NonNull @Override public Object instantiateItem(@NonNull ViewGroup container, int position) {
     final Context context = container.getContext();
     final LayoutInflater factory = factory(context);
     final int viewType = getItemViewType(position);
@@ -62,7 +63,7 @@ public abstract class PagerBindingAdapter<D extends BaseObservable, V extends Ab
     throw new RuntimeException("View context is killed yet you try to access it.");
   }
 
-  @Override public boolean isViewFromObject(View view, Object object) {
+  @Override public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
     return view == object;
   }
 
@@ -77,7 +78,7 @@ public abstract class PagerBindingAdapter<D extends BaseObservable, V extends Ab
     return null;
   }
 
-  protected final LayoutInflater factory(Context context) {
+  private LayoutInflater factory(Context context) {
     return LayoutInflater.from(context);
   }
 
@@ -100,11 +101,8 @@ public abstract class PagerBindingAdapter<D extends BaseObservable, V extends Ab
 
   @LayoutRes
   protected abstract int layoutResource(int viewType);
-
   protected abstract int getItemViewType(int position);
-
   protected abstract V createViewHolder(ViewDataBinding binding, int viewType);
-
   protected abstract void bindViewHolder(D item, V viewHolder, int position);
 
   protected abstract boolean isLogEnabled();

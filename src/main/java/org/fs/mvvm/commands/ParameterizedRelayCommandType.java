@@ -24,11 +24,7 @@ public final class ParameterizedRelayCommandType<T> implements CommandType<T> {
   private final PredicateType<T> isExecution;
 
   public ParameterizedRelayCommandType(ParameterizedActionType<T> execution) {
-    this(execution, new PredicateType<T>() {
-      @Override public boolean canExecute(T param) {
-        return !Objects.isNullOrEmpty(param);
-      }
-    });
+    this(execution, param -> !Objects.isNullOrEmpty(param));
   }
 
   public ParameterizedRelayCommandType(ParameterizedActionType<T> execution, PredicateType<T> isExecution) {
