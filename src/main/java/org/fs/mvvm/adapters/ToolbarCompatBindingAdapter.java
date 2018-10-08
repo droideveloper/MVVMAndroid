@@ -35,20 +35,20 @@ public class ToolbarCompatBindingAdapter {
   private final static String FIELD_TITLE_TEXTVIEW      = "mTitleTextView";
   private final static String FIELD_SUB_TITLE_TEXTVIEW  = "mSubtitleTextView";
 
-  private final static String BIND_TITLE_TEXT = "bindings:titleText";
-  private final static String BIND_TITLE_TEXT_ATTR_CHANGED = "bindings:titleTextAttrChanged";
+  private final static String BIND_TITLE_TEXT = "android:titleText";
+  private final static String BIND_TITLE_TEXT_ATTR_CHANGED = "android:titleTextAttrChanged";
 
-  private final static String BIND_SUB_TITLE_TEXT = "bindings:subTitleText";
-  private final static String BIND_SUB_TITLE_TEXT_ATTR_CHANGED = "bindings:subTitleTextAttrChanged";
+  private final static String BIND_SUB_TITLE_TEXT = "android:subTitleText";
+  private final static String BIND_SUB_TITLE_TEXT_ATTR_CHANGED = "android:subTitleTextAttrChanged";
 
-  private final static String BIND_NAVIGATION_COMMAND = "bindings:navigationCommand";
-  private final static String BIND_NAVIGATION_COMMAND_PARAMETER = "bindings:navigationCommandParameter";
-  private final static String BIND_ON_NAVIGATED = "bindings:onNavigated";
+  private final static String BIND_NAVIGATION_COMMAND = "android:navigationCommand";
+  private final static String BIND_NAVIGATION_COMMAND_PARAMETER = "android:navigationCommandParameter";
+  private final static String BIND_ON_NAVIGATED = "android:onNavigated";
 
-  private final static String BIND_NAVIGATION_ICON_COMPAT = "bindings:navigationIconCompat";
+  private final static String BIND_NAVIGATION_ICON_COMPAT = "android:navigationIconCompat";
 
-  private final static String BIND_MENU = "bindings:toolbarMenu";
-  private final static String BIND_MENU_CALLBACK = "bindings:toolbarMenuCallback";
+  private final static String BIND_MENU = "android:toolbarMenu";
+  private final static String BIND_MENU_CALLBACK = "android:toolbarMenuCallback";
 
   private ToolbarCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");
@@ -110,15 +110,13 @@ public class ToolbarCompatBindingAdapter {
     if (callback == null && param == null && command == null) {
       viewToolbar.setNavigationOnClickListener(null);
     } else {
-      viewToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (callback != null) {
-            callback.onNavigated(v);
-          }
-          if (command != null) {
-            if (command.canExecute(param)) {
-              command.execute(param);
-            }
+      viewToolbar.setNavigationOnClickListener(v -> {
+        if (callback != null) {
+          callback.onNavigated(v);
+        }
+        if (command != null) {
+          if (command.canExecute(param)) {
+            command.execute(param);
           }
         }
       });

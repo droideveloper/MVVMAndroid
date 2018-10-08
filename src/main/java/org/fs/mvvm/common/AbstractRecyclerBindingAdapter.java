@@ -52,18 +52,15 @@ public abstract class AbstractRecyclerBindingAdapter<D extends BaseObservable, V
     super.onDetachedFromRecyclerView(recyclerView);
   }
 
-  @Override public final void onViewDetachedFromWindow(V viewHolder) {
-    viewHolder.onDetach();
-  }
-
-  @Override public final void onViewAttachedToWindow(V viewHolder) {
-    viewHolder.onAttach();
-  }
 
   @Override public final void onBindViewHolder(@NonNull V viewHolder, int position) {
-
+    viewHolder.bind(getItemAt(position));
   }
 
+  @Override public void onViewRecycled(@NonNull V holder) {
+    holder.unbind();
+    super.onViewRecycled(holder);
+  }
 
   @Override public final int getItemCount() {
     return itemSource != null ? itemSource.size() : 0;

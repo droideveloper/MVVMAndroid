@@ -27,20 +27,20 @@ import org.fs.mvvm.utils.Objects;
 
 public class WebViewCompatBindingAdapter {
 
-  private final static String BIND_BACK = "bindings:back";
-  private final static String BIND_BACK_ATTR_CHANGED = "bindings:backAttrChanged";
+  private final static String BIND_BACK = "android:back";
+  private final static String BIND_BACK_ATTR_CHANGED = "android:backAttrChanged";
 
-  private final static String BIND_NEXT = "bindings:next";
-  private final static String BIND_NEXT_ATTR_CHANGED = "bindings:nextAttrChanged";
+  private final static String BIND_NEXT = "android:next";
+  private final static String BIND_NEXT_ATTR_CHANGED = "android:nextAttrChanged";
 
-  private final static String BIND_LOAD_URL = "bindings:loadUrl";
+  private final static String BIND_LOAD_URL = "android:loadUrl";
 
-  private final static String BIND_CHROME_CLIENT = "bindings:chromeClient";
-  private final static String BIND_WEB_CLIENT = "bindings:webClient";
-  private final static String BIND_DOWNLOAD_CALLBACK = "bindings:downloadCallback";
+  private final static String BIND_CHROME_CLIENT = "android:chromeClient";
+  private final static String BIND_WEB_CLIENT = "android:webClient";
+  private final static String BIND_DOWNLOAD_CALLBACK = "android:downloadCallback";
 
-  private final static String BIND_JS_BRIDGE = "bindings:jsBridge";
-  private final static String BIND_BRIDGE_NAME = "bindings:bridgeName";
+  private final static String BIND_JS_BRIDGE = "android:jsBridge";
+  private final static String BIND_BRIDGE_NAME = "android:bridgeName";
 
   private WebViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object");

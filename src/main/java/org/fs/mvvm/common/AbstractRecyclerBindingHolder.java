@@ -21,7 +21,7 @@ import android.view.View;
 
 public abstract class AbstractRecyclerBindingHolder<D extends BaseObservable> extends RecyclerView.ViewHolder {
 
-  private AbstractRecyclerBindingHolder(View itemView) {
+  protected AbstractRecyclerBindingHolder(View itemView) {
     super(itemView);
   }
 

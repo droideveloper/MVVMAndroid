@@ -33,19 +33,19 @@ import org.fs.mvvm.utils.Objects;
 
 public final class ViewCompatBindingAdapter {
 
-  private final static String BIND_COMMAND            = "bindings:command";
-  private final static String BIND_COMMAND_PARAMETER  = "bindings:commandParameter";
+  private final static String BIND_COMMAND            = "android:command";
+  private final static String BIND_COMMAND_PARAMETER  = "android:commandParameter";
 
-  private final static String BIND_ANIM               = "bindings:anim";
-  private final static String BIND_ANIM_LISTENER      = "bindings:animListener";
+  private final static String BIND_ANIM               = "android:anim";
+  private final static String BIND_ANIM_LISTENER      = "android:animListener";
 
-  private final static String BIND_ANIMATOR           = "bindings:animator";
-  private final static String BIND_INTERPOLATOR       = "bindings:interpolator";
-  private final static String BIND_ANIMATOR_LISTENER  = "bindings:animatorListener";
+  private final static String BIND_ANIMATOR           = "android:animator";
+  private final static String BIND_INTERPOLATOR       = "android:interpolator";
+  private final static String BIND_ANIMATOR_LISTENER  = "android:animatorListener";
 
-  private final static String BIND_NOTIFY_TEXT        = "bindings:notifyText";
-  private final static String BIND_ACTION_TEXT        = "bindings:actionText";
-  private final static String BIND_RELAY_COMMAND      = "bindings:relayCommand";
+  private final static String BIND_NOTIFY_TEXT        = "android:notifyText";
+  private final static String BIND_ACTION_TEXT        = "android:actionText";
+  private final static String BIND_RELAY_COMMAND      = "android:relayCommand";
 
   private ViewCompatBindingAdapter() {
     throw new IllegalArgumentException("you can not have instance of this object.");
@@ -61,7 +61,7 @@ public final class ViewCompatBindingAdapter {
   )
   public static void viewRegisterAnim(View view, @AnimRes int anim, Interpolator interpolator, Animation.AnimationListener listener) {
     view.clearAnimation();
-    if (anim > 0) {
+    if (anim != 0) {
       final Animation animation = AnimationUtils.loadAnimation(view.getContext(), anim);
       if (animation != null) {
         if (interpolator != null) {
@@ -86,7 +86,7 @@ public final class ViewCompatBindingAdapter {
   )
   public static void viewRegisterAnimator(View view, @AnimatorRes int anim, Interpolator interpolator, Animator.AnimatorListener listener) {
     view.clearAnimation();
-    if (anim > 0) {
+    if (anim != 0) {
       final Animator animator = AnimatorInflater.loadAnimator(view.getContext(), anim);
       if (animator != null) {
         if (interpolator != null) {
@@ -113,11 +113,9 @@ public final class ViewCompatBindingAdapter {
   public static <S extends CharSequence, T extends CharSequence> void viewRegisterSnackbar(View view, S notifyText, T actionText, final RelayCommandType command) {
     if (!Objects.isNullOrEmpty(notifyText)) {
       final Snackbar snackbar = Snackbar.make(view, notifyText, Snackbar.LENGTH_LONG);
-      snackbar.setAction(actionText, new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          command.execute(null);
-          snackbar.dismiss();
-        }
+      snackbar.setAction(actionText, v -> {
+        command.execute(null);
+        snackbar.dismiss();
       });
       snackbar.show();
     }
@@ -136,14 +134,12 @@ public final class ViewCompatBindingAdapter {
       newListener = null;
     } else {
       final View.OnClickListener oldListener = ListenerUtil.getListener(view, R.id.onClickListener);
-      newListener = new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          if (command.canExecute(param)) {
-            command.execute(param);
-          }
-          if (oldListener != null) {
-            oldListener.onClick(view);
-          }
+      newListener = v -> {
+        if (command.canExecute(param)) {
+          command.execute(param);
+        }
+        if (oldListener != null) {
+          oldListener.onClick(view);
         }
       };
     }
